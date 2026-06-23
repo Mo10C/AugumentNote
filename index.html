@@ -3,399 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TFT オーグメント評価ノート (スマホ対応・完全版)</title>
+    <title>TFT オーグメント評価ノート</title>
     <style>
         :root {
-            --bg-color: #f7f9fc;
-            --container-bg: #ffffff;
-            --text-color: #333333;
-            --accent-color: #ffde6a;
-            --border-color: #e2e8f0;
+            --bg:#f7f9fc; --panel:#ffffff; --ink:#333; --sub:#64748b;
+            --accent:#ffde6a; --line:#e2e8f0;
+            --soku:#dc2626; --soku-bg:#fee2e2;
+            --tori:#d97706; --tori-bg:#fef9c3;
+            --da:#2563eb;   --da-bg:#dbeafe;
+            --batsu:#475569; --batsu-bg:#e2e8f0;
         }
-
+        * { box-sizing:border-box; }
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family:'Helvetica Neue',Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans',Meiryo,sans-serif;
+            background:var(--bg); color:var(--ink); margin:0; padding:10px;
         }
-
-        @media (min-width: 768px) {
-            body { padding: 20px; }
-        }
-
         h1 {
-            color: #4a5568;
-            font-size: 20px;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 0px #fff, 2px 2px 0px var(--accent-color);
-            text-align: center;
+            color:#4a5568; font-size:19px; margin:6px 0 12px; text-align:center;
+            text-shadow:1px 1px 0 #fff, 2px 2px 0 var(--accent);
+        }
+        .wrap { max-width:1280px; margin:0 auto; }
+
+        /* スティッキー操作バー（タブ＋フィルタ） */
+        .bar {
+            position:sticky; top:0; z-index:30; background:var(--panel);
+            border:2px solid #333; border-radius:14px; box-shadow:0 4px 0 #333;
+            padding:10px; margin-bottom:14px; display:flex; flex-direction:column; gap:9px;
+        }
+        .tabs { display:flex; gap:6px; }
+        .tab {
+            flex:1 1 0; padding:9px 6px; font-size:14px; font-weight:bold; text-align:center;
+            border:2px solid #333; border-radius:10px; background:#fff; box-shadow:2px 2px 0 #333;
+            cursor:pointer; white-space:nowrap; transition:transform .1s, box-shadow .1s;
+        }
+        .tab:active { transform:translate(1px,1px); box-shadow:0 0 0 #333; }
+        .tab[data-tier="silver"].active { background:#cbd5e1; }
+        .tab[data-tier="gold"].active   { background:#fef08a; }
+        .tab[data-tier="prism"].active  { background:#fbcfe8; }
+
+        .filters { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+        .search {
+            flex:1 1 100%; min-width:0; padding:8px 11px; font-size:14px; font-family:inherit;
+            border:2px solid #333; border-radius:10px;
+        }
+        .search:focus { outline:none; }
+        .fsel {
+            flex:1 1 0; min-width:96px; padding:7px 8px; font-size:13px; font-weight:bold; font-family:inherit;
+            border:2px solid #333; border-radius:10px; background:#fff; cursor:pointer;
+        }
+        .count { flex:0 0 auto; font-size:12px; font-weight:bold; color:var(--sub); margin-left:auto; padding:4px 2px; }
+        @media (min-width:640px){
+            .search { flex:1 1 200px; }
         }
 
-        @media (min-width: 768px) {
-            h1 { font-size: 24px; margin-bottom: 20px; }
+        /* カードグリッド：モバイル1列 → タブレット2列 → PC3列 */
+        .cards { display:grid; grid-template-columns:1fr; gap:12px; }
+        @media (min-width:680px){  .cards { grid-template-columns:repeat(2,1fr); } }
+        @media (min-width:1040px){ .cards { grid-template-columns:repeat(3,1fr); } }
+        .pane { display:none; }
+        .pane.active { display:block; }
+
+        /* 1オーグメント＝1カード */
+        .card {
+            display:flex; flex-direction:column; gap:9px; background:var(--panel);
+            border:2px solid #333; border-radius:14px; box-shadow:2px 2px 0 #333; padding:12px;
         }
+        .card.is-soku  { border-color:var(--soku);  box-shadow:2px 2px 0 var(--soku); }
+        .card.is-tori  { border-color:var(--tori);  box-shadow:2px 2px 0 var(--tori); }
+        .card.is-da    { border-color:var(--da);    box-shadow:2px 2px 0 var(--da); }
+        .card.is-batsu { opacity:.62; }
 
-        .container {
-            width: 100%;
-            max-width: 1300px;
-            background: var(--container-bg);
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
-            padding: 12px;
-            box-sizing: border-box;
+        .c-head { display:flex; align-items:center; gap:10px; }
+        .c-icon {
+            width:44px; height:44px; flex:0 0 auto; border-radius:10px; border:2px solid #333;
+            background:#222; object-fit:contain;
         }
-
-        @media (min-width: 768px) {
-            .container { padding: 20px; }
+        .c-title { flex:1 1 auto; min-width:0; font-weight:bold; font-size:15px; line-height:1.3; }
+        .prio {
+            flex:0 0 auto; width:62px; padding:7px 4px; font-size:14px; font-weight:bold; text-align:center;
+            border:2px solid #333; border-radius:10px; cursor:pointer; font-family:inherit; background:#fff;
+            text-align-last:center;
         }
+        .prio.p-soku  { color:var(--soku);  background:var(--soku-bg); }
+        .prio.p-tori  { color:var(--tori);  background:var(--tori-bg); }
+        .prio.p-da    { color:var(--da);    background:var(--da-bg); }
+        .prio.p-batsu { color:var(--batsu); background:var(--batsu-bg); }
 
-        /* タブスタイル */
-        .tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 15px;
-            border-bottom: 3px solid var(--border-color);
-            padding-bottom: 8px;
-            overflow-x: auto; /* スマホでタブがはみ出た時にスクロール可能に */
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .tab-button {
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: bold;
-            border: 2px solid #333;
-            border-radius: 10px 10px 0 0;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 2px 2px 0px #333;
-            background-color: #fff;
-            white-space: nowrap;
-        }
-
-        @media (min-width: 768px) {
-            .tab-button { padding: 10px 24px; font-size: 16px; border-radius: 12px 12px 0 0; }
-        }
-
-        .tab-button:active {
-            transform: translate(1px, 1px);
-            box-shadow: 0px 0px 0px #333;
-        }
-
-        .tab-button[data-tab="silver"].active { background-color: #cbd5e1; color: #333; }
-        .tab-button[data-tab="gold"].active { background-color: #fef08a; color: #333; }
-        .tab-button[data-tab="prism"].active { background-color: #fbcfe8; color: #333; }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* スマホ用：テーブルを横スクロール可能にするラッパー */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border: 2px solid #333;
-            border-radius: 12px;
-            margin-top: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            min-width: 1000px; /* スマホでも列が潰れないように最低横幅を確保 */
-        }
-
-        th, td {
-            padding: 10px 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            vertical-align: middle;
-        }
-
-        th {
-            background-color: #f1f5f9;
-            color: #4a5568;
-            font-weight: bold;
-            border-bottom: 2px solid #333;
-        }
-
-        th:last-child, td:last-child { border-right: none; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover { background-color: #f8fafc; }
-
-        /* 各列の幅 */
-        .col-priority { width: 90px; text-align: center; }
-        .col-name { width: 220px; font-weight: bold; }
-        .col-effect { width: 400px; font-size: 13px; line-height: 1.4; }
-        .col-genre { width: 100px; text-align: center; }
-        .col-round { width: 110px; text-align: center; }
-        .col-memo { width: 220px; }
-
-        /* アイコン画像 */
-        .aug-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            border: 1px solid #333;
-            vertical-align: middle;
-            margin-right: 8px;
-            background-color: #222;
-        }
-
-        .name-wrapper {
-            display: flex;
-            align-items: center;
-        }
-
-        /* フィルターコントロール */
-        .filter-control {
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 6px;
-            padding: 4px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 12px;
-            font-family: inherit;
-        }
-        .filter-control:focus {
-            border-color: #333;
-            outline: none;
-        }
-
-        /* ジャンルバッジ */
+        .genres { display:flex; flex-wrap:wrap; gap:5px; }
         .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            border: 1px solid #333;
+            display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:bold;
+            border:1px solid #333;
         }
-        .genre-money { background-color: #bbf7d0; }
-        .genre-battle { background-color: #fecaca; }
-        .genre-item { background-color: #bfdbfe; }
-        .genre-special { background-color: #e9d5ff; }
+        .genre-money   { background:#bbf7d0; }
+        .genre-battle  { background:#fecaca; }
+        .genre-item    { background:#bfdbfe; }
+        .genre-special { background:#e9d5ff; }
 
-        /* 出現ラウンドインプット */
-        .round-input {
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 6px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: bold;
-            background-color: #f8fafc;
-        }
-        .round-input:focus {
-            border-color: #333;
-            background-color: #fff;
-            outline: none;
-        }
+        .effect { font-size:13px; line-height:1.55; color:#1f2937; }
 
-        /* 優先度セレクトボックス */
-        .priority-select {
-            padding: 4px 6px;
-            font-weight: bold;
-            border-radius: 6px;
-            border: 2px solid #333;
-            cursor: pointer;
-            width: 100%;
-            box-sizing: border-box;
-            font-size: 13px;
+        .c-foot { border-top:1.5px dashed var(--line); padding-top:9px; display:flex; flex-direction:column; gap:8px; }
+        .field-row { display:flex; align-items:center; gap:8px; }
+        .field-lbl { flex:0 0 auto; font-size:11px; font-weight:bold; color:var(--sub); width:70px; }
+        .rchips { display:flex; gap:5px; flex-wrap:wrap; }
+        .rchip {
+            font-size:12px; font-weight:bold; border:1.5px solid #cbd5e1; border-radius:13px;
+            padding:3px 11px; cursor:pointer; background:#f8fafc; color:#94a3b8; user-select:none;
         }
-        .priority-select option { font-weight: bold; }
-        .p-soku { color: #dc2626; background-color: #fee2e2; }
-        .p-tori { color: #d97706; background-color: #fef9c3; }
-        .p-da { color: #2563eb; background-color: #dbeafe; }
-        .p-batsu { color: #000000; background-color: #e2e8f0; }
+        .rchip input { position:absolute; opacity:0; width:0; height:0; }
+        .rchip.on { background:var(--accent); color:#333; border-color:#333; }
+        .memo {
+            width:100%; border:1.5px solid #cbd5e1; border-radius:8px; padding:7px; font-family:inherit;
+            font-size:13px; resize:vertical; background:#fff;
+        }
+        .memo:focus { outline:none; border-color:#333; background:#fffdf2; }
 
-        /* 備考欄テキストエリア */
-        .memo-textarea {
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 6px;
-            font-family: inherit;
-            resize: vertical;
-            font-size: 13px;
-        }
-        .memo-textarea:focus {
-            border-color: #333;
-            outline: none;
-            background-color: #ffffec;
-        }
+        .empty { grid-column:1/-1; text-align:center; color:#94a3b8; font-weight:bold; padding:30px; }
     </style>
 </head>
 <body>
-
+<div class="wrap">
     <h1>TFT オーグメント評価ノート 📝</h1>
 
-    <div class="container">
+    <div class="bar">
         <div class="tabs">
-            <button class="tab-button active" data-tab="silver">銀 (Silver)</button>
-            <button class="tab-button" data-tab="gold">金 (Gold)</button>
-            <button class="tab-button" data-tab="prism">虹 (Prism)</button>
+            <button class="tab active" data-tier="silver">銀 Silver</button>
+            <button class="tab" data-tier="gold">金 Gold</button>
+            <button class="tab" data-tier="prism">虹 Prism</button>
         </div>
-
-        <div id="silver" class="tab-content active">
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="col-priority">
-                                優先度
-                                <select class="filter-control" id="filter-prio-silver" onchange="applyFilters('silver')">
-                                    <option value="">全表示</option>
-                                    <option value="soku">即</option>
-                                    <option value="tori">取</option>
-                                    <option value="da">妥</option>
-                                    <option value="batsu">×</option>
-                                </select>
-                            </th>
-                            <th class="col-name">
-                                名前
-                                <input type="text" class="filter-control" id="filter-name-silver" oninput="applyFilters('silver')" placeholder="検索...">
-                            </th>
-                            <th class="col-effect">
-                                効果
-                                <input type="text" class="filter-control" id="filter-effect-silver" oninput="applyFilters('silver')" placeholder="効果検索...">
-                            </th>
-                            <th class="col-genre">
-                                ジャンル
-                                <select class="filter-control" id="filter-genre-silver" onchange="applyFilters('silver')">
-                                    <option value="">すべて</option>
-                                    <option value="金策">金策</option>
-                                    <option value="戦闘">戦闘</option>
-                                    <option value="アイテム">アイテム</option>
-                                    <option value="特殊">特殊</option>
-                                </select>
-                            </th>
-                            <th class="col-round">
-                                出現ラウンド
-                                <input type="text" class="filter-control" id="filter-round-silver" oninput="applyFilters('silver')" placeholder="ラウンド検索...">
-                            </th>
-                            <th class="col-memo">
-                                備考
-                                <input type="text" class="filter-control" id="filter-memo-silver" oninput="applyFilters('silver')" placeholder="メモ検索...">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="silver-tbody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="gold" class="tab-content">
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="col-priority">
-                                優先度
-                                <select class="filter-control" id="filter-prio-gold" onchange="applyFilters('gold')">
-                                    <option value="">全表示</option>
-                                    <option value="soku">即</option>
-                                    <option value="tori">取</option>
-                                    <option value="da">妥</option>
-                                    <option value="batsu">×</option>
-                                </select>
-                            </th>
-                            <th class="col-name">
-                                名前
-                                <input type="text" class="filter-control" id="filter-name-gold" oninput="applyFilters('gold')" placeholder="検索...">
-                            </th>
-                            <th class="col-effect">
-                                効果
-                                <input type="text" class="filter-control" id="filter-effect-gold" oninput="applyFilters('gold')" placeholder="効果検索...">
-                            </th>
-                            <th class="col-genre">
-                                ジャンル
-                                <select class="filter-control" id="filter-genre-gold" onchange="applyFilters('gold')">
-                                    <option value="">すべて</option>
-                                    <option value="金策">金策</option>
-                                    <option value="戦闘">戦闘</option>
-                                    <option value="アイテム">アイテム</option>
-                                    <option value="特殊">特殊</option>
-                                </select>
-                            </th>
-                            <th class="col-round">
-                                出現ラウンド
-                                <input type="text" class="filter-control" id="filter-round-gold" oninput="applyFilters('gold')" placeholder="ラウンド検索...">
-                            </th>
-                            <th class="col-memo">
-                                備考
-                                <input type="text" class="filter-control" id="filter-memo-gold" oninput="applyFilters('gold')" placeholder="メモ検索...">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="gold-tbody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="prism" class="tab-content">
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="col-priority">
-                                優先度
-                                <select class="filter-control" id="filter-prio-prism" onchange="applyFilters('prism')">
-                                    <option value="">全表示</option>
-                                    <option value="soku">即</option>
-                                    <option value="tori">取</option>
-                                    <option value="da">妥</option>
-                                    <option value="batsu">×</option>
-                                </select>
-                            </th>
-                            <th class="col-name">
-                                名前
-                                <input type="text" class="filter-control" id="filter-name-prism" oninput="applyFilters('prism')" placeholder="検索...">
-                            </th>
-                            <th class="col-effect">
-                                効果
-                                <input type="text" class="filter-control" id="filter-effect-prism" oninput="applyFilters('prism')" placeholder="効果検索...">
-                            </th>
-                            <th class="col-genre">
-                                ジャンル
-                                <select class="filter-control" id="filter-genre-prism" onchange="applyFilters('prism')">
-                                    <option value="">すべて</option>
-                                    <option value="金策">金策</option>
-                                    <option value="戦闘">戦闘</option>
-                                    <option value="アイテム">アイテム</option>
-                                    <option value="特殊">特殊</option>
-                                </select>
-                            </th>
-                            <th class="col-round">
-                                出現ラウンド
-                                <input type="text" class="filter-control" id="filter-round-prism" oninput="applyFilters('prism')" placeholder="ラウンド検索...">
-                            </th>
-                            <th class="col-memo">
-                                備考
-                                <input type="text" class="filter-control" id="filter-memo-prism" oninput="applyFilters('prism')" placeholder="メモ検索...">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="prism-tbody"></tbody>
-                </table>
-            </div>
+        <div class="filters">
+            <input type="text" class="search" id="search" placeholder="🔍 名前・効果・メモで検索…">
+            <select class="fsel" id="filter-prio">
+                <option value="">優先度：全</option>
+                <option value="soku">即</option>
+                <option value="tori">取</option>
+                <option value="da">妥</option>
+                <option value="batsu">×</option>
+            </select>
+            <select class="fsel" id="filter-genre">
+                <option value="">ジャンル：全</option>
+                <option value="金策">金策</option>
+                <option value="戦闘">戦闘</option>
+                <option value="アイテム">アイテム</option>
+                <option value="特殊">特殊</option>
+            </select>
+            <select class="fsel" id="filter-round">
+                <option value="">ラウンド：全</option>
+                <option value="2-1">2-1</option>
+                <option value="3-2">3-2</option>
+                <option value="4-2">4-2</option>
+            </select>
+            <span class="count" id="count"></span>
         </div>
     </div>
 
-    <script>
-        // ベースの全オーグメントリスト。
-        // 指定された特定のオーグメント(シミュレータに存在するもの)だけ defaultRound: "2-1" を設定
+    <div id="pane-silver" class="pane active"><div class="cards" id="cards-silver"></div></div>
+    <div id="pane-gold"   class="pane"><div class="cards" id="cards-gold"></div></div>
+    <div id="pane-prism"  class="pane"><div class="cards" id="cards-prism"></div></div>
+</div>
+
+<script>
         const augmentsData = {
             silver: [
                 { name: "アイテム福袋", genre: "アイテム", icon: "itemgrabbag1.png", effect: "ランダムな完成アイテム1個を獲得する。", defaultRound: "2-1" },
@@ -416,9 +182,9 @@
                 { name: "グラスキャノン I", genre: "戦闘", icon: "glass_cannon.png", effect: "後列で戦闘を開始した味方が80%の体力で戦闘を開始するが、ダメージ増加効果を16%獲得する。" },
                 { name: "クリティカル サクセス", genre: "アイテム", icon: "criticalsuccess_i.png", effect: "「スパーリング グローブ」を1個獲得する。味方チームの通常攻撃が320回クリティカルになると、さらに2個獲得する。", defaultRound: "2-1" },
                 { name: "構成拡大", genre: "アイテム", icon: "branching-out-i.png", effect: "ランダムな紋章アイテムを1個獲得する。", defaultRound: "2-1" },
-                { name: "構成拡大+", genre: "アイテム", icon: "branching-out-i.png", effect: "ランダムな紋章アイテムを1個と「再合成装置」を1個獲得する。" },
+                { name: "構成拡大+", genre: "アイテム", icon: "crest_grab_plus.png", effect: "ランダムな紋章アイテムを1個と「再合成装置」を1個獲得する。" },
                 { name: "コグニティブ タックス", genre: "金策", icon: "cognitivetax_i.png", effect: "8ゴールドと1XPを獲得する。", defaultRound: "2-1" },
-                { name: "コグニティブ タックス+", genre: "金策", icon: "cognitivetax_i.png", effect: "12ゴールドと3XPを獲得する。" },
+                { name: "コグニティブ タックス+", genre: "金策", icon: "cognitive_plus.png", effect: "12ゴールドと3XPを獲得する。" },
                 { name: "ここがセンター", genre: "戦闘", icon: "center_stage.png", effect: "前列の中央で戦闘を開始した味方チャンピオンは、ダメージ増加効果が15%、最大体力が25%増加する。" },
                 { name: "混乱回復装置", genre: "特殊", icon: "recombobulator.png", effect: "フィールド上のチャンピオンを、コストティアが1つ上のランダムなチャンピオンに恒久的に変化させる(最大5体)。「磁力式除去装置」を2個獲得する。" },
                 { name: "ザ・タワー", genre: "戦闘", icon: "thetower_i.png", effect: "巨大な「ダミー」を獲得する。4秒ごとに最も近くにいる敵3体に対して電撃を放ち、最大体力の5%の確定ダメージを与える。", defaultRound: "2-1" },
@@ -446,7 +212,7 @@
                 { name: "忍耐の美徳", genre: "金策", icon: "patience.png", effect: "即座に4回リロール獲得。直前ラウンドで購入していない場合、1回分の無料リロールを獲得。" },
                 { name: "はしごを登れ I", genre: "戦闘", icon: "climb_ladder.png", effect: "味方倒されるたび、特性共有味方の魔力・攻撃力・防・魔防+3.5。" },
                 { name: "パンドラのアイテム", genre: "アイテム", icon: "pandoras_items.png", effect: "ラウンド開始時ベンチアイテムランダム変化。素材1個獲得。" },
-                { name: "ヒーリングオーブ I", genre: "戦闘", icon: "healing-orbs.png", effect: "敵死亡時に最も近い味方の体力が250回復する。" },
+                { name: "ヒーリングオーブ I", genre: "戦闘", icon: "healing_orbs.png", effect: "敵死亡時に最も近い味方の体力が250回復する。" },
                 { name: "庇護者のお供", genre: "特殊", icon: "caretaker_s-chosen-i.png", effect: "ランダムコスト2を1体。レベルアップ毎に同じユニット獲得。", defaultRound: "2-1" },
                 { name: "ファイアセール", genre: "特殊", icon: "firesale.png", effect: "毎ラウンド、ショップからランダムなコスト3以下を1体盗む。1G。" },
                 { name: "不完全アセンション", genre: "戦闘", icon: "partial_ascension.png", effect: "戦闘開始から12秒経過すると、ダメージ増加20%。" },
@@ -483,7 +249,7 @@
                 { name: "エグザイル II", genre: "戦闘", icon: "exiles.png", effect: "他の味方と隣接していないチャンピオンは、10秒間最大体力の30%のシールドを獲得。" },
                 { name: "エピックなロールダウン", genre: "金策", icon: "epic_roll.png", effect: "レベル8に到達すると、ショップの無料リロールを20回獲得する。" },
                 { name: "エポック", genre: "特殊", icon: "epoch_ii.png", effect: "このオーグメント獲得時、および各ステージ開始時に4 XPの経験値を獲得する。また、2回分の無料リロールを獲得する。", defaultRound: "2-1" },
-                { name: "エポック+", genre: "特殊", icon: "epoch_ii.png", effect: "獲得時および各ステージ開始時に8 XPと無料リロール2回を獲得。" },
+                { name: "エポック+", genre: "特殊", icon: "epoch.png", effect: "獲得時および各ステージ開始時に8 XPと無料リロール2回を獲得。" },
                 { name: "王冠とは重きもの", genre: "戦闘", icon: "heavyisthecrown_ii.png", effect: "「デマーシアの王冠」を獲得する。装備者は大きなボーナスを獲得する。装備者が倒されると、そのラウンドに敗北する。", defaultRound: "2-1" },
                 { name: "黄金の龍", genre: "戦闘", icon: "gold_dragon.png", effect: "「モーグル メイル」を獲得。チームスロットを2枠消費するが体力+700、耐久力+20%。" },
                 { name: "大きな福袋", genre: "アイテム", icon: "big_grab_bag.png", effect: "ランダムな素材アイテム3個、2ゴールド、「再合成装置」1個を獲得。", defaultRound: "2-1" },
@@ -491,7 +257,7 @@
                 { name: "お得な2", genre: "金策", icon: "two_healthy.png", effect: "前回の対人戦でボード上に配置していた種類の異なるコスト2のチャンピオン2体ごとに、1回のリロールを獲得する。コスト2のチャンピオンを1体獲得する。" },
                 { name: "俺だけレベルアップ", genre: "特殊", icon: "sololeveling_ii.png", effect: "次の5回の対人戦で、味方チームのサイズが1になるが、ボードに配置したチャンピオンはステータスが大幅に増加する。そのチャンピオンがキルを獲得するたびに1 XPの経験値を獲得する。その後、素材アイテムを2個獲得する。", defaultRound: "2-1" },
                 { name: "回収箱", genre: "アイテム", icon: "salvage2.png", effect: "即座にランダムな完成アイテムを1個獲得する。また、対人戦を8回終えると、素材アイテムを1個獲得する。チャンピオンを売却すると、完成アイテムが素材に解体される(タクティシャンアイテムと紋章は除く)。", defaultRound: "2-1" },
-                { name: "回収箱+", genre: "アイテム", icon: "salvage2.png", effect: "ランダム完成アイテム1個。4ラウンド毎に素材1。売却時、完成アイテムが素材に解体される。" },
+                { name: "回収箱+", genre: "アイテム", icon: "salvage_bin.png", effect: "ランダム完成アイテム1個。4ラウンド毎に素材1。売却時、完成アイテムが素材に解体される。" },
                 { name: "カフナフナ", genre: "戦闘", icon: "kahuna.png", effect: "通常攻撃5回ごとに、基本攻撃力の100%にあたる追加確定ダメージを与える。" },
                 { name: "神の鍛冶場", genre: "アイテム", icon: "job_s-done-ii.png", effect: "4個の「神のアーティファクト」から1個を選択する。", defaultRound: "2-1" },
                 { name: "起死回生 II", genre: "戦闘", icon: "second_wind.png", effect: "戦闘開始から10秒後、味方チームが減少体力の60%の体力を回復する。" },
@@ -522,7 +288,7 @@
                 { name: "生涯ブロンズ I", genre: "戦闘", icon: "bronze_for_life.png", effect: "ブロンズ特性1つごとに、味方チームが2%のダメージ増加効果を獲得。" },
                 { name: "衝突試験用ダミー", genre: "戦闘", icon: "crash_dummy.png", effect: "「ダミー」を2体獲得。開始時敵に向かって射出され、対象を1秒スタン。" },
                 { name: "神聖なる修正", genre: "特殊", icon: "holy_fix.png", effect: "「アービター」に2つ目の効果を追加。レオナとゾーイを獲得。" },
-                { name: "侵略者ゼド", genre: "特殊", icon: "zed.png", effect: "「ショウジンの矛」獲得。4-2以降、ショップにゼド（分身を出すコスト5）が出現。" },
+                { name: "侵略者ゼド", genre: "特殊", icon: "zed_hero.png", effect: "「ショウジンの矛」獲得。4-2以降、ショップにゼド（分身を出すコスト5）が出現。" },
                 { name: "好きなだけ泣くがいい", genre: "戦闘", icon: "crymeariver_ii.png", effect: "「女神の涙」を1個獲得する。味方チームが1のマナ自動回復を獲得する。戦闘開始から12秒後にこの効果は3になる。", defaultRound: "2-1" },
                 { name: "ステータスマシマシ", genre: "戦闘", icon: "stats_up.png", effect: "体力、攻撃力、魔力、物理・魔法防御、攻撃速度、マナがすべて4(4%)増加。" },
                 { name: "窃盗", genre: "特殊", icon: "theft.png", effect: "毎ラウンド、前回の戦闘で最初に倒した敵の★1コピーを獲得。計21G到達で盗賊のグローブ。" },
@@ -561,8 +327,8 @@
                 { name: "広がる根", genre: "アイテム", icon: "spreadingroots_ii.png", effect: "ランダムな紋章アイテム2個と1ゴールドを獲得する。", defaultRound: "2-1" },
                 { name: "広がる根+", genre: "アイテム", icon: "spreadingroots_ii.png", effect: "ランダムな紋章アイテム2個、「再合成装置」1個と2ゴールドを獲得する。" },
                 { name: "ブースターパック", genre: "特殊", icon: "boosterpack1_ii.png", effect: "ランダムなチャンピオンを合計12ゴールド分獲得する(コスト3が1体以上確定！)。", defaultRound: "2-1" },
-                { name: "ブースターパック+", genre: "特殊", icon: "boosterpack1_ii.png", effect: "合計18G分のランダムなチャンピオン獲得（コスト4が1体以上確定）。" },
-                { name: "ブースターパック++", genre: "特殊", icon: "boosterpack1_ii.png", effect: "合計26G分のランダムなチャンピオン獲得（コスト5が1体以上確定）。" },
+                { name: "ブースターパック+", genre: "特殊", icon: "booster_pack.png", effect: "合計18G分のランダムなチャンピオン獲得（コスト4が1体以上確定）。" },
+                { name: "ブースターパック++", genre: "特殊", icon: "booster_pack.png", effect: "合計26G分のランダムなチャンピオン獲得（コスト5が1体以上確定）。" },
                 { name: "フォーが共にあらんことを", genre: "特殊", icon: "four_power.png", effect: "コスト4とジンが体力+144、攻撃速度+14%を獲得。ジンを1体獲得。" },
                 { name: "副作用", genre: "戦闘", icon: "side_effect.png", effect: "回復を受けるとその50%の魔法ダメージを対象に。5秒ごとに最大体力の4%回復。" },
                 { name: "複製", genre: "アイテム", icon: "replication-ii.png", effect: "3つの素材アイテムから1つを選ぶ。次の2ラウンドの間、その素材アイテムのコピーを1個獲得する。", defaultRound: "2-1" },
@@ -577,7 +343,7 @@
                 { name: "ボディーガードの訓練", genre: "戦闘", icon: "bodyguardstraining_ii.png", effect: "味方の物理防御と魔法防御が10増加し、プレイヤーレベル1ごとに3ずつ増加する。", defaultRound: "2-1" },
                 { name: "炎を強めて", genre: "アイテム", icon: "feedtheflames_ii.png", effect: "「サンファイア ケープ」を1個獲得する。燃焼を付与された敵を攻撃るとき、味方チームのオムニヴァンプが12%増加する。", defaultRound: "2-1" },
                 { name: "前借り", genre: "金策", icon: "advancedloan_ii.png", effect: "20ゴールドを獲得する。次のオーグメントのティアが1つ低くなる。", defaultRound: "2-1" },
-                { name: "前借り+", genre: "金策", icon: "advancedloan_ii.png", effect: "33ゴールドを獲得。次のオーグメントのティアが1つ低くなる。" },
+                { name: "前借り+", genre: "金策", icon: "loan.png", effect: "33ゴールドを獲得。次のオーグメントのティアが1つ低くなる。" },
                 { name: "待つ価値あり", genre: "特殊", icon: "worththewait_ii.png", effect: "ランダムなコスト1のチャンピオンを1体獲得する。", defaultRound: "2-1" },
                 { name: "魔法のダイス", genre: "金策", icon: "loaded_dice.png", effect: "3個のダイスを振り、合計値に応じた報酬を獲得。" },
                 { name: "乱れる思考", genre: "特殊", icon: "dizzy-ii.png", effect: "今すぐランダムなコスト1のチャンピオンを4体獲得する。対人戦ラウンド終了時にベンチが満員の場合、3 XPの経験値を獲得する。", defaultRound: "2-1" },
@@ -598,8 +364,8 @@
                 { name: "いつでも一緒", genre: "アイテム", icon: "westicktogether_iii.png", effect: "ランダムな紋章アイテムを1個と、「完成アイテムの金床」を1個獲得する。その紋章と同じ特性を持っている味方の攻撃速度が30%増加する。", defaultRound: "2-1" },
                 { name: "埋もれた宝物", genre: "アイテム", icon: "buried-treasures-iii.png", effect: "即座にランダムな素材アイテムを1個獲得し、次の5ラウンドに渡って、ラウンド開始時にランダムな素材アイテムを1個ずつ獲得する。", defaultRound: "2-1" },
                 { name: "黄金の博打", genre: "金策", icon: "goldengamble_iii.png", effect: "1ゴールドを獲得してコインを投げる。表が出た場合、「レディアント 幸運のアイテムチェスト」を1個獲得する。裏が出た場合、「完成アイテムの金床」を2個獲得する。", defaultRound: "2-1" },
-                { name: "黄金の博打+", genre: "金策", icon: "goldengamble_iii.png", effect: "2G獲得しコイントス。表なら「レディアントチェスト」、裏なら「完成品金床」2個。" },
-                { name: "黄金の博打++", genre: "金策", icon: "goldengamble_iii.png", effect: "6G獲得しコイントス。表なら「レディアントチェスト」、裏なら「完成品金床」2個。" },
+                { name: "黄金の博打+", genre: "金策", icon: "golden_gamble.png", effect: "2G獲得しコイントス。表なら「レディアントチェスト」、裏なら「完成品金床」2個。" },
+                { name: "黄金の博打++", genre: "金策", icon: "golden_gamble.png", effect: "6G獲得しコイントス。表なら「レディアントチェスト」、裏なら「完成品金床」2個。" },
                 { name: "思惑買い", genre: "金策", icon: "going-long-iii.png", effect: "利子を獲得しなくなる。13ゴールドを即座に獲得する。ラウンド開始時: 4 XPの経験値を獲得する。", defaultRound: "2-1" },
                 { name: "カースドのクラウン", genre: "特殊", icon: "cursedcrown-iii.png", effect: "チームサイズの上限が2増加し、味方チームの耐久力が4%増加するを開き、対人戦に敗北した際に受けるダメージが上昇する。", defaultRound: "2-1" },
                 { name: "買い物三昧", genre: "特殊", icon: "shopping_spree.png", effect: "レベルアップ時、自身のレベル+1と同じ数の無料リロール。2G獲得。" },
@@ -620,7 +386,7 @@
                 { name: "ジュエル ロータス II", genre: "戦闘", icon: "jeweled_lotus.png", effect: "チームのクリティカル率+25%、クリティカルダメージ+10%、「正確無比」を付与。" },
                 { name: "生涯ブロンズ II", genre: "戦闘", icon: "bronze_for_life.png", effect: "ブロンズ特性1つごとに、ダメージ増加+2%および物理・魔法防御+4を獲得。" },
                 { name: "上方移動", genre: "特殊", icon: "upwardmobility_iii.png", effect: "経験値の購入コストが1減少する。レベルアップするたびに、体力2と無料リロールを2獲得する。。", defaultRound: "2-1" },
-                { name: "新兵", genre: "特殊", icon: "new-recruit.png", effect: "最大チームサイズが1増加し、コスト4のチャンピオンを1体獲得する。" },
+                { name: "新兵", genre: "特殊", icon: "new_recruit.png", effect: "最大チームサイズが1増加し、コスト4のチャンピオンを1体獲得する。" },
                 { name: "新兵+", genre: "特殊", icon: "new_recruit.png", effect: "最大チームサイズが1増加し、コスト4のチャンピオンを2体獲得する。" },
                 { name: "崇高の冒険", genre: "特殊", icon: "exaltedadventure_iii.png", effect: "コスト2のチャンピオンを3体獲得する。そのうち2体を★3にすると、戦利品が詰まったオーブを1個獲得する。次の2ステージ開始時に、「小型チャンピオン複製器」を1個獲得する。", defaultRound: "2-1" },
                 { name: "スワーム ハート", genre: "特殊", icon: "heartoftheswarm_iii.png", effect: "すべての★3チャンピオンがスワームリングのパワーとしてカウントされる。レベル9で、異なる★3チャンピオンを6体配置している場合、「プライモーディアン」がエイペックス・プライモーディアンを召喚する。「プライモーディアン」のチャンピオン3体と「小型チャンピオン複製器」を2個獲得する。", defaultRound: "2-1" },
@@ -641,7 +407,7 @@
                 { name: "盗賊団 II+", genre: "アイテム", icon: "thieves_glove_plus.png", effect: "「盗賊のグローブ」2個を獲得。対人戦を6回行ったあとに、もう1個獲得する。" },
                 { name: "盗賊団 II++", genre: "アイテム", icon: "thieves_glove_plus.png", effect: "「盗賊のグローブ」2個を獲得。対人戦を3回行ったあとに、もう1個獲得する。" },
                 { name: "特性の木", genre: "アイテム", icon: "thetraittree_iii.png", effect: "ランダムな紋章アイテム3個、「再合成装置」1個と2ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "特性の木+", genre: "アイテム", icon: "thetraittree_iii.png", effect: "ランダムな紋章アイテム3個、「再合成装置」1個と4ゴールドを獲得。" },
+                { name: "特性の木+", genre: "アイテム", icon: "tree_of_traits.png", effect: "ランダムな紋章アイテム3個、「再合成装置」1個と4ゴールドを獲得。" },
                 { name: "トライフェクタ II", genre: "特殊", icon: "trifecta.png", effect: "コスト3を3体。味方速度+5%。開始時ランダム3体のコスト3の体力・速度大幅強化。" },
                 { name: "仲間を作ろう", genre: "特殊", icon: "constructacompanion_iii.png", effect: "ランダムな★3のコスト1チャンピオンを1体獲得する。8ゴールドを獲得する。", defaultRound: "2-1" },
                 { name: "バースデープレゼント", genre: "特殊", icon: "golden-gifts-iii.png", effect: "プレイヤーがレベルアップするたびに、★★のチャンピオン1体と1ゴールドを獲得する。プレイヤーのレベルから4を引いた値が、獲得できるチャンピオンのコストティアになる(上限: コスト5)。", defaultRound: "2-1" },
@@ -658,156 +424,191 @@
                 { name: "もっと怖いキャップ", genre: "アイテム", icon: "hat_overflow.png", effect: "「ラバドン デスキャップ」を1個獲得する。装備者がキルまたはアシストを獲得するたび、「ラバドン デスキャップ」の魔力が恒久的に1%増加する。", defaultRound: "2-1" },
                 { name: "もっと小さな巨人", genre: "金策", icon: "smaller_giant.png", effect: "毎ラウンド終了時プレイヤー体力+2、2G、タクティシャン速度UP。即座に10G。" },
                 { name: "ラッキーグローブ", genre: "アイテム", icon: "lucky-gloves-iii.png", effect: "「盗賊のグローブ」が毎回、そのチャンピオンにとって理想的なアイテムを付与するようになる。「スパーリング グローブ」を2個獲得する。", defaultRound: "2-1" },
-                { name: "ラッキーグローブ+", genre: "アイテム", icon: "lucky-gloves-iii.png", effect: "「盗賊のグローブ」が常に推奨アイテムを付与。即座に2個、4回対人戦後もう1個。" },
+                { name: "ラッキーグローブ+", genre: "アイテム", icon: "lucky_gloves.png", effect: "「盗賊のグローブ」が常に推奨アイテムを付与。即座に2個、4回対人戦後もう1個。" },
                 { name: "レベルアップ！", genre: "特殊", icon: "levelup3.png", effect: "経験値を購入する際、追加で経験値を2 XP獲得する。即座に経験値を8 XP獲得する。", defaultRound: "2-1" },
                 { name: "ワンド オーバーフロー", genre: "アイテム", icon: "wand_overflow.png", effect: "「ムダニ デカイ ロッド」を4個獲得。ロッドが攻撃速度5%を付与するようになる。" }
             ]
         };
 
         const imageBaseUrl = "https://cdn.metatft.com/cdn-cgi/image/width=46,height=46,fit=cover,format=auto/https://cdn.metatft.com/file/metatft/augments/";
+        const TIERS = ["silver","gold","prism"];
+        const GENRE_CLASS = {"金策":"genre-money","戦闘":"genre-battle","アイテム":"genre-item","特殊":"genre-special"};
+        const ROUNDS = ["2-1","3-2","4-2"];
+        const PRIO_CLASS = {soku:"p-soku", tori:"p-tori", da:"p-da", batsu:"p-batsu"};
+        const PRIO_CARD  = {soku:"is-soku", tori:"is-tori", da:"is-da", batsu:"is-batsu"};
 
-        function init() {
-            // タブ切り替え設定
-            const tabs = document.querySelectorAll('.tab-button');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.tab-button').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    tab.classList.add('active');
-                    // prismタブは内部IDをsilver/goldに合わせてprismとして扱う
-                    const targetId = tab.dataset.tab === 'prism' ? 'prism' : tab.dataset.tab;
-                    document.getElementById(targetId).classList.add('active');
+        let activeTier = "silver";
+        const cards = {}; // rowId -> {el, name, effect, genre}
+
+        function genreArr(g){
+            if(Array.isArray(g)) return g.filter(Boolean);
+            if(typeof g === "string" && g) return g.split(",").map(s=>s.trim()).filter(Boolean);
+            return [];
+        }
+        function esc(s){ return String(s==null?"":s)
+            .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+        function init(){
+            // タブ切り替え
+            document.querySelectorAll(".tab").forEach(tab=>{
+                tab.addEventListener("click", ()=>{
+                    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+                    document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));
+                    tab.classList.add("active");
+                    activeTier = tab.dataset.tier;
+                    document.getElementById("pane-"+activeTier).classList.add("active");
+                    applyFilters();
                 });
             });
 
-            // テーブル構築
-            ['silver', 'gold', 'prism'].forEach(tier => {
-                // データオブジェクト側のキー名調整
-                const dataKey = tier === 'prism' ? 'prism' : tier;
-                const tbody = document.getElementById(`${tier}-tbody`);
-                
-                augmentsData[dataKey].forEach((aug, index) => {
-                    const rowId = `${tier}-${index}`;
-                    
-                    let genreClass = '';
-                    if(aug.genre === '金策') genreClass = 'genre-money';
-                    if(aug.genre === '戦闘') genreClass = 'genre-battle';
-                    if(aug.genre === 'アイテム') genreClass = 'genre-item';
-                    if(aug.genre === '特殊') genreClass = 'genre-special';
-
-                    const savedPriority = localStorage.getItem(`prio-${rowId}`) || '';
-                    const savedMemo = localStorage.getItem(`memo-${rowId}`) || '';
-                    
-                    // ストレージに既存データが無ければ、オーグメントデータのdefaultRound（2-1か空）を初期表示に使う
-                    const defaultVal = aug.defaultRound || '';
-                    const savedRound = localStorage.getItem(`round-${rowId}`) !== null ? localStorage.getItem(`round-${rowId}`) : defaultVal;
-
-                    const tr = document.createElement('tr');
-                    tr.id = `row-${rowId}`;
-                    tr.setAttribute('data-name', aug.name);
-                    tr.setAttribute('data-effect', aug.effect);
-                    tr.setAttribute('data-genre', aug.genre);
-
-                    // パス結合
-                    const fullIconUrl = aug.icon.startsWith('http') ? aug.icon : (imageBaseUrl + aug.icon);
-
-                    tr.innerHTML = `
-                        <td class="col-priority">
-                            <select class="priority-select" id="prio-select-${rowId}" onchange="saveData('${rowId}', '${tier}')">
-                                <option value="" ${savedPriority === '' ? 'selected' : ''}>-</option>
-                                <option value="soku" class="p-soku" ${savedPriority === 'soku' ? 'selected' : ''}>即</option>
-                                <option value="tori" class="p-tori" ${savedPriority === 'tori' ? 'selected' : ''}>取</option>
-                                <option value="da" class="p-da" ${savedPriority === 'da' ? 'selected' : ''}>妥</option>
-                                <option value="batsu" class="p-batsu" ${savedPriority === 'batsu' ? 'selected' : ''}>×</option>
-                            </select>
-                        </td>
-                        <td class="col-name">
-                            <div class="name-wrapper">
-                                <img src="${fullIconUrl}" class="aug-icon" alt="" onerror="this.style.opacity='0.3';">
-                                <span>${aug.name}</span>
-                            </div>
-                        </td>
-                        <td class="col-effect">${aug.effect}</td>
-                        <td class="col-genre"><span class="badge ${genreClass}">${aug.genre}</span></td>
-                        <td class="col-round">
-                            <input type="text" class="round-input" id="round-input-${rowId}" value="${savedRound}" oninput="saveData('${rowId}', '${tier}')" placeholder="例: 2-1, 3-2">
-                        </td>
-                        <td class="col-memo">
-                            <textarea class="memo-textarea" id="memo-area-${rowId}" rows="2" oninput="saveData('${rowId}', '${tier}')" placeholder="メモを入力...">${savedMemo}</textarea>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                    updateSelectColor(rowId);
-                    
-                    // ストレージにまだ無い場合は初期設定値を保存
-                    if (localStorage.getItem(`round-${rowId}`) === null && defaultVal !== '') {
-                        localStorage.setItem(`round-${rowId}`, defaultVal);
-                    }
+            // カード生成
+            TIERS.forEach(tier=>{
+                const grid = document.getElementById("cards-"+tier);
+                (augmentsData[tier]||[]).forEach((aug, index)=>{
+                    const rowId = tier + "-" + index;
+                    grid.appendChild(makeCard(aug, rowId, tier));
                 });
             });
+
+            // フィルタ配線
+            document.getElementById("search").addEventListener("input", applyFilters);
+            document.getElementById("filter-prio").addEventListener("change", applyFilters);
+            document.getElementById("filter-genre").addEventListener("change", applyFilters);
+            document.getElementById("filter-round").addEventListener("change", applyFilters);
+
+            applyFilters();
         }
 
-        function saveData(rowId, tier) {
-            const prioSelect = document.getElementById(`prio-select-${rowId}`);
-            const memoArea = document.getElementById(`memo-area-${rowId}`);
-            const roundInput = document.getElementById(`round-input-${rowId}`);
-            
-            localStorage.setItem(`prio-${rowId}`, prioSelect.value);
-            localStorage.setItem(`memo-${rowId}`, memoArea.value);
-            localStorage.setItem(`round-${rowId}`, roundInput.value);
+        function makeCard(aug, rowId, tier){
+            const gList = genreArr(aug.genre);
 
-            updateSelectColor(rowId);
-            applyFilters(tier);
-        }
-
-        function updateSelectColor(rowId) {
-            const select = document.getElementById(`prio-select-${rowId}`);
-            select.className = 'priority-select';
-            if (select.value === 'soku') select.classList.add('p-soku');
-            if (select.value === 'tori') select.classList.add('p-tori');
-            if (select.value === 'da') select.classList.add('p-da');
-            if (select.value === 'batsu') select.classList.add('p-batsu');
-        }
-
-        function applyFilters(tier) {
-            const prioFilter = document.getElementById(`filter-prio-${tier}`).value;
-            const nameFilter = document.getElementById(`filter-name-${tier}`).value.toLowerCase();
-            const effectFilter = document.getElementById(`filter-effect-${tier}`).value.toLowerCase();
-            const genreFilter = document.getElementById(`filter-genre-${tier}`).value;
-            const roundFilter = document.getElementById(`filter-round-${tier}`).value.toLowerCase();
-            const memoFilter = document.getElementById(`filter-memo-${tier}`).value.toLowerCase();
-
-            const tbody = document.getElementById(`${tier}-tbody`);
-            const rows = tbody.getElementsByTagName('tr');
-
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                const rowId = row.id.replace('row-', '');
-                
-                const currentPrio = localStorage.getItem(`prio-${rowId}`) || '';
-                const currentMemo = (localStorage.getItem(`memo-${rowId}`) || '').toLowerCase();
-                const currentRound = (localStorage.getItem(`round-${rowId}`) || '').toLowerCase();
-                const currentName = row.getAttribute('data-name').toLowerCase();
-                const currentEffect = row.getAttribute('data-effect').toLowerCase();
-                const currentGenre = row.getAttribute('data-genre');
-
-                const matchPrio = !prioFilter || currentPrio === prioFilter;
-                const matchName = !nameFilter || currentName.includes(nameFilter);
-                const matchEffect = !effectFilter || currentEffect.includes(effectFilter);
-                const matchGenre = !genreFilter || currentGenre === genreFilter;
-                const matchRound = !roundFilter || currentRound.includes(roundFilter);
-                const matchMemo = !memoFilter || currentMemo.includes(memoFilter);
-
-                if (matchPrio && matchName && matchEffect && matchGenre && matchRound && matchMemo) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+            // 保存値
+            const savedPrio = localStorage.getItem("prio-"+rowId) || "";
+            const savedMemo = localStorage.getItem("memo-"+rowId) || "";
+            const defaultRound = aug.defaultRound || "";
+            const savedRound = localStorage.getItem("round-"+rowId) !== null
+                ? localStorage.getItem("round-"+rowId) : defaultRound;
+            // 旧版と同じ初期シード保存
+            if(localStorage.getItem("round-"+rowId) === null && defaultRound !== ""){
+                localStorage.setItem("round-"+rowId, defaultRound);
             }
+            const roundTokens = (savedRound||"").split(",").map(s=>s.trim()).filter(Boolean);
+
+            const card = document.createElement("div");
+            card.className = "card";
+            card.id = "card-" + rowId;
+
+            const iconUrl = aug.icon && aug.icon.startsWith("http") ? aug.icon : (imageBaseUrl + (aug.icon||""));
+
+            const badges = gList.map(g=>
+                '<span class="badge '+(GENRE_CLASS[g]||"")+'">'+esc(g)+'</span>').join("");
+
+            const prioOpts = [["","-"],["soku","即"],["tori","取"],["da","妥"],["batsu","×"]]
+                .map(([v,l])=>'<option value="'+v+'"'+(savedPrio===v?" selected":"")+'>'+l+'</option>').join("");
+
+            card.innerHTML =
+              '<div class="c-head">'+
+                '<img class="c-icon" src="'+iconUrl+'" alt="" onerror="this.style.opacity=0.3">'+
+                '<div class="c-title">'+esc(aug.name)+'</div>'+
+                '<select class="prio" id="prio-'+rowId+'">'+prioOpts+'</select>'+
+              '</div>'+
+              (badges ? '<div class="genres">'+badges+'</div>' : '')+
+              '<div class="effect">'+esc(aug.effect)+'</div>'+
+              '<div class="c-foot">'+
+                '<div class="field-row">'+
+                  '<span class="field-lbl">出現ラウンド</span>'+
+                  '<div class="rchips" id="rchips-'+rowId+'">'+
+                    ROUNDS.map(r=>'<label class="rchip'+(roundTokens.includes(r)?" on":"")+'">'+
+                      '<input type="checkbox" value="'+r+'"'+(roundTokens.includes(r)?" checked":"")+'><span>'+r+'</span></label>').join("")+
+                  '</div>'+
+                '</div>'+
+                '<div class="field-row" style="align-items:flex-start">'+
+                  '<span class="field-lbl" style="margin-top:6px">メモ</span>'+
+                  '<textarea class="memo" id="memo-'+rowId+'" rows="2" placeholder="メモを入力…">'+esc(savedMemo)+'</textarea>'+
+                '</div>'+
+              '</div>';
+
+            // 優先度
+            const prioSel = card.querySelector("#prio-"+CSS.escape(rowId));
+            function paintPrio(){
+                card.classList.remove("is-soku","is-tori","is-da","is-batsu");
+                prioSel.className = "prio";
+                const v = prioSel.value;
+                if(PRIO_CLASS[v]){ prioSel.classList.add(PRIO_CLASS[v]); card.classList.add(PRIO_CARD[v]); }
+            }
+            paintPrio();
+            prioSel.addEventListener("change", ()=>{
+                localStorage.setItem("prio-"+rowId, prioSel.value);
+                paintPrio(); applyFilters();
+            });
+
+            // ラウンド（チップ・複数選択）
+            const rwrap = card.querySelector("#rchips-"+CSS.escape(rowId));
+            rwrap.querySelectorAll("input").forEach(cb=>{
+                cb.addEventListener("change", ()=>{
+                    cb.closest(".rchip").classList.toggle("on", cb.checked);
+                    const vals = Array.from(rwrap.querySelectorAll("input:checked")).map(x=>x.value);
+                    localStorage.setItem("round-"+rowId, vals.join(", "));
+                    applyFilters();
+                });
+            });
+
+            // メモ
+            const memo = card.querySelector("#memo-"+CSS.escape(rowId));
+            memo.addEventListener("input", ()=> localStorage.setItem("memo-"+rowId, memo.value));
+
+            cards[rowId] = {
+                el: card,
+                name: (aug.name||"").toLowerCase(),
+                effect: (aug.effect||"").toLowerCase(),
+                genre: gList.join(",")
+            };
+            return card;
+        }
+
+        function applyFilters(){
+            const q       = document.getElementById("search").value.trim().toLowerCase();
+            const prioF   = document.getElementById("filter-prio").value;
+            const genreF  = document.getElementById("filter-genre").value;
+            const roundF  = document.getElementById("filter-round").value;
+
+            const grid = document.getElementById("cards-"+activeTier);
+            const list = (augmentsData[activeTier]||[]);
+            let shown = 0;
+
+            list.forEach((aug, index)=>{
+                const rowId = activeTier + "-" + index;
+                const c = cards[rowId]; if(!c) return;
+
+                const prio  = localStorage.getItem("prio-"+rowId) || "";
+                const memo  = (localStorage.getItem("memo-"+rowId) || "").toLowerCase();
+                const round = (localStorage.getItem("round-"+rowId) || "").toLowerCase();
+
+                const mText  = !q || c.name.includes(q) || c.effect.includes(q) || memo.includes(q);
+                const mPrio  = !prioF || prio === prioF;
+                const mGenre = !genreF || c.genre.split(",").includes(genreF);
+                const mRound = !roundF || round.includes(roundF.toLowerCase());
+
+                const vis = mText && mPrio && mGenre && mRound;
+                c.el.style.display = vis ? "" : "none";
+                if(vis) shown++;
+            });
+
+            // 空表示
+            let emptyEl = grid.querySelector(".empty");
+            if(shown === 0){
+                if(!emptyEl){
+                    emptyEl = document.createElement("div");
+                    emptyEl.className = "empty"; emptyEl.textContent = "該当なし";
+                    grid.appendChild(emptyEl);
+                }
+            } else if(emptyEl){ emptyEl.remove(); }
+
+            document.getElementById("count").textContent = "表示 " + shown + " / 全 " + list.length + " 件";
         }
 
         window.onload = init;
-    </script>
+
+</script>
 </body>
 </html>
