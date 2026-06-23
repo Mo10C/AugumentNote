@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TFT オーグメント評価ノート</title>
+    <title>TFT オーグメント翻訳ノート</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='2.2'%20y='2.2'%20width='27.6'%20height='27.6'%20rx='7'%20fill='%23ffde6a'%20stroke='%23333'%20stroke-width='2.4'/%3E%3Cpath%20d='M16%207.3%20L23%2011.3%20V19.3%20L16%2023.3%20L9%2019.3%20V11.3%20Z'%20fill='%23fff'%20stroke='%23333'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='16'%20cy='15.3'%20r='2.6'%20fill='%23ffde6a'%20stroke='%23333'%20stroke-width='1.6'/%3E%3C/svg%3E">
     <style>
         :root {
@@ -82,7 +82,7 @@
         .c-title { flex:1 1 auto; min-width:0; font-weight:bold; font-size:15px; line-height:1.3; }
         /* 優先度バッジ（表示専用） */
         .prio {
-            flex:0 0 auto; min-width:40px; padding:7px 11px; font-size:15px; font-weight:bold; text-align:center;
+            display:block; min-width:40px; padding:7px 11px; font-size:15px; font-weight:bold; text-align:center;
             border:2px solid #333; border-radius:10px; background:#fff; line-height:1;
         }
         .prio.p-soku  { color:var(--soku);  background:var(--soku-bg); }
@@ -123,7 +123,7 @@
 </head>
 <body>
 <div class="wrap">
-    <h1>TFT オーグメント評価ノート 📝</h1>
+    <h1>TFT オーグメント翻訳ノート 📝</h1>
 
     <div class="bar">
         <div class="tabs">
@@ -505,11 +505,27 @@
             const rchips = ROUNDS.map(r=>
                 '<span class="rchip'+(roundTokens.includes(r) ? " on" : "")+'">'+r+'</span>').join("");
 
+            // 優先度選択のオプション（透明なselectタグ用）
+            const prioOptions = `
+                <option value="" ${savedPrio === "" ? "selected" : ""}>- (未設定)</option>
+                <option value="soku" ${savedPrio === "soku" ? "selected" : ""}>即 (即ピック)</option>
+                <option value="tori" ${savedPrio === "tori" ? "selected" : ""}>取 (取る)</option>
+                <option value="da" ${savedPrio === "da" ? "selected" : ""}>妥 (妥協)</option>
+                <option value="batsu" ${savedPrio === "batsu" ? "selected" : ""}>× (取らない)</option>
+            `;
+
             card.innerHTML =
               '<div class="c-head">'+
                 '<img class="c-icon" src="'+iconUrl+'" alt="" onerror="this.style.opacity=0.3">'+
                 '<div class="c-title">'+esc(aug.name)+'</div>'+
-                '<span class="prio '+prioCls+'">'+prioTxt+'</span>'+
+                // ▼ ここを修正：バッジの上に透明なselectを被せる ▼
+                '<div style="position:relative; flex:0 0 auto;">'+
+                    '<span class="prio '+prioCls+'" id="prio-badge-'+rowId+'">'+prioTxt+'</span>'+
+                    '<select id="prio-sel-'+rowId+'" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; appearance:none;">'+
+                        prioOptions +
+                    '</select>'+
+                '</div>'+
+                // ▲ 修正ここまで ▲
               '</div>'+
               (badges ? '<div class="genres">'+badges+'</div>' : '')+
               '<div class="effect">'+esc(aug.effect)+'</div>'+
@@ -526,6 +542,28 @@
 
             const memo = card.querySelector("#memo-"+CSS.escape(rowId));
             memo.addEventListener("input", ()=> localStorage.setItem("memo-"+rowId, memo.value));
+
+            // ▼ 追加：selectの変更イベントを拾って見た目とデータを更新 ▼
+            const prioSel = card.querySelector("#prio-sel-"+CSS.escape(rowId));
+            const prioBadge = card.querySelector("#prio-badge-"+CSS.escape(rowId));
+            
+            prioSel.addEventListener("change", (e) => {
+                const nextPrio = e.target.value;
+
+                // データの保存
+                localStorage.setItem("prio-"+rowId, nextPrio);
+
+                // バッジのテキストと色の更新
+                prioBadge.className = "prio " + (PRIO_CLASS[nextPrio] || "none");
+                prioBadge.textContent = PRIO_LABEL[nextPrio] || "-";
+
+                // カード全体の枠色の更新
+                card.classList.remove("is-soku", "is-tori", "is-da", "is-batsu");
+                if (PRIO_CARD[nextPrio]) {
+                    card.classList.add(PRIO_CARD[nextPrio]);
+                }
+            });
+            // ▲ 追加ここまで ▲
 
             cards[rowId] = {
                 el: card,
