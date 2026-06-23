@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TFT オーグメント評価ノート</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='2.2'%20y='2.2'%20width='27.6'%20height='27.6'%20rx='7'%20fill='%23ffde6a'%20stroke='%23333'%20stroke-width='2.4'/%3E%3Cpath%20d='M16%207.3%20L23%2011.3%20V19.3%20L16%2023.3%20L9%2019.3%20V11.3%20Z'%20fill='%23fff'%20stroke='%23333'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='16'%20cy='15.3'%20r='2.6'%20fill='%23ffde6a'%20stroke='%23333'%20stroke-width='1.6'/%3E%3C/svg%3E">
     <style>
         :root {
             --bg:#f7f9fc; --panel:#ffffff; --ink:#333; --sub:#64748b;
@@ -79,15 +80,16 @@
             background:#222; object-fit:contain;
         }
         .c-title { flex:1 1 auto; min-width:0; font-weight:bold; font-size:15px; line-height:1.3; }
+        /* 優先度バッジ（表示専用） */
         .prio {
-            flex:0 0 auto; width:62px; padding:7px 4px; font-size:14px; font-weight:bold; text-align:center;
-            border:2px solid #333; border-radius:10px; cursor:pointer; font-family:inherit; background:#fff;
-            text-align-last:center;
+            flex:0 0 auto; min-width:40px; padding:7px 11px; font-size:15px; font-weight:bold; text-align:center;
+            border:2px solid #333; border-radius:10px; background:#fff; line-height:1;
         }
         .prio.p-soku  { color:var(--soku);  background:var(--soku-bg); }
         .prio.p-tori  { color:var(--tori);  background:var(--tori-bg); }
         .prio.p-da    { color:var(--da);    background:var(--da-bg); }
         .prio.p-batsu { color:var(--batsu); background:var(--batsu-bg); }
+        .prio.none    { color:#cbd5e1; background:#f8fafc; border-color:#cbd5e1; }
 
         .genres { display:flex; flex-wrap:wrap; gap:5px; }
         .badge {
@@ -106,10 +108,9 @@
         .field-lbl { flex:0 0 auto; font-size:11px; font-weight:bold; color:var(--sub); width:70px; }
         .rchips { display:flex; gap:5px; flex-wrap:wrap; }
         .rchip {
-            font-size:12px; font-weight:bold; border:1.5px solid #cbd5e1; border-radius:13px;
-            padding:3px 11px; cursor:pointer; background:#f8fafc; color:#94a3b8; user-select:none;
+            font-size:12px; font-weight:bold; border:1.5px solid #e2e8f0; border-radius:13px;
+            padding:3px 11px; background:#f8fafc; color:#cbd5e1; user-select:none;
         }
-        .rchip input { position:absolute; opacity:0; width:0; height:0; }
         .rchip.on { background:var(--accent); color:#333; border-color:#333; }
         .memo {
             width:100%; border:1.5px solid #cbd5e1; border-radius:8px; padding:7px; font-family:inherit;
@@ -433,6 +434,7 @@
         const TIERS = ["silver","gold","prism"];
         const GENRE_CLASS = {"金策":"genre-money","戦闘":"genre-battle","アイテム":"genre-item","特殊":"genre-special"};
         const ROUNDS = ["2-1","3-2","4-2"];
+        const PRIO_LABEL = {soku:"即", tori:"取", da:"妥", batsu:"×"};
         const PRIO_CLASS = {soku:"p-soku", tori:"p-tori", da:"p-da", batsu:"p-batsu"};
         const PRIO_CARD  = {soku:"is-soku", tori:"is-tori", da:"is-da", batsu:"is-batsu"};
 
@@ -448,7 +450,6 @@
             .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
         function init(){
-            // タブ切り替え
             document.querySelectorAll(".tab").forEach(tab=>{
                 tab.addEventListener("click", ()=>{
                     document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
@@ -460,7 +461,6 @@
                 });
             });
 
-            // カード生成
             TIERS.forEach(tier=>{
                 const grid = document.getElementById("cards-"+tier);
                 (augmentsData[tier]||[]).forEach((aug, index)=>{
@@ -469,7 +469,6 @@
                 });
             });
 
-            // フィルタ配線
             document.getElementById("search").addEventListener("input", applyFilters);
             document.getElementById("filter-prio").addEventListener("change", applyFilters);
             document.getElementById("filter-genre").addEventListener("change", applyFilters);
@@ -481,45 +480,43 @@
         function makeCard(aug, rowId, tier){
             const gList = genreArr(aug.genre);
 
-            // 保存値
+            // 保存値（編集できるのは備考[メモ]のみ。優先度・ラウンドは表示専用）
             const savedPrio = localStorage.getItem("prio-"+rowId) || "";
             const savedMemo = localStorage.getItem("memo-"+rowId) || "";
             const defaultRound = aug.defaultRound || "";
             const savedRound = localStorage.getItem("round-"+rowId) !== null
                 ? localStorage.getItem("round-"+rowId) : defaultRound;
-            // 旧版と同じ初期シード保存
             if(localStorage.getItem("round-"+rowId) === null && defaultRound !== ""){
                 localStorage.setItem("round-"+rowId, defaultRound);
             }
             const roundTokens = (savedRound||"").split(",").map(s=>s.trim()).filter(Boolean);
 
             const card = document.createElement("div");
-            card.className = "card";
+            card.className = "card" + (PRIO_CARD[savedPrio] ? " " + PRIO_CARD[savedPrio] : "");
             card.id = "card-" + rowId;
 
             const iconUrl = aug.icon && aug.icon.startsWith("http") ? aug.icon : (imageBaseUrl + (aug.icon||""));
-
             const badges = gList.map(g=>
                 '<span class="badge '+(GENRE_CLASS[g]||"")+'">'+esc(g)+'</span>').join("");
 
-            const prioOpts = [["","-"],["soku","即"],["tori","取"],["da","妥"],["batsu","×"]]
-                .map(([v,l])=>'<option value="'+v+'"'+(savedPrio===v?" selected":"")+'>'+l+'</option>').join("");
+            const prioCls = PRIO_CLASS[savedPrio] || "none";
+            const prioTxt = PRIO_LABEL[savedPrio] || "-";
+
+            const rchips = ROUNDS.map(r=>
+                '<span class="rchip'+(roundTokens.includes(r) ? " on" : "")+'">'+r+'</span>').join("");
 
             card.innerHTML =
               '<div class="c-head">'+
                 '<img class="c-icon" src="'+iconUrl+'" alt="" onerror="this.style.opacity=0.3">'+
                 '<div class="c-title">'+esc(aug.name)+'</div>'+
-                '<select class="prio" id="prio-'+rowId+'">'+prioOpts+'</select>'+
+                '<span class="prio '+prioCls+'">'+prioTxt+'</span>'+
               '</div>'+
               (badges ? '<div class="genres">'+badges+'</div>' : '')+
               '<div class="effect">'+esc(aug.effect)+'</div>'+
               '<div class="c-foot">'+
                 '<div class="field-row">'+
                   '<span class="field-lbl">出現ラウンド</span>'+
-                  '<div class="rchips" id="rchips-'+rowId+'">'+
-                    ROUNDS.map(r=>'<label class="rchip'+(roundTokens.includes(r)?" on":"")+'">'+
-                      '<input type="checkbox" value="'+r+'"'+(roundTokens.includes(r)?" checked":"")+'><span>'+r+'</span></label>').join("")+
-                  '</div>'+
+                  '<div class="rchips">'+rchips+'</div>'+
                 '</div>'+
                 '<div class="field-row" style="align-items:flex-start">'+
                   '<span class="field-lbl" style="margin-top:6px">メモ</span>'+
@@ -527,32 +524,6 @@
                 '</div>'+
               '</div>';
 
-            // 優先度
-            const prioSel = card.querySelector("#prio-"+CSS.escape(rowId));
-            function paintPrio(){
-                card.classList.remove("is-soku","is-tori","is-da","is-batsu");
-                prioSel.className = "prio";
-                const v = prioSel.value;
-                if(PRIO_CLASS[v]){ prioSel.classList.add(PRIO_CLASS[v]); card.classList.add(PRIO_CARD[v]); }
-            }
-            paintPrio();
-            prioSel.addEventListener("change", ()=>{
-                localStorage.setItem("prio-"+rowId, prioSel.value);
-                paintPrio(); applyFilters();
-            });
-
-            // ラウンド（チップ・複数選択）
-            const rwrap = card.querySelector("#rchips-"+CSS.escape(rowId));
-            rwrap.querySelectorAll("input").forEach(cb=>{
-                cb.addEventListener("change", ()=>{
-                    cb.closest(".rchip").classList.toggle("on", cb.checked);
-                    const vals = Array.from(rwrap.querySelectorAll("input:checked")).map(x=>x.value);
-                    localStorage.setItem("round-"+rowId, vals.join(", "));
-                    applyFilters();
-                });
-            });
-
-            // メモ
             const memo = card.querySelector("#memo-"+CSS.escape(rowId));
             memo.addEventListener("input", ()=> localStorage.setItem("memo-"+rowId, memo.value));
 
@@ -593,7 +564,6 @@
                 if(vis) shown++;
             });
 
-            // 空表示
             let emptyEl = grid.querySelector(".empty");
             if(shown === 0){
                 if(!emptyEl){
