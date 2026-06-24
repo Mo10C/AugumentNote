@@ -119,6 +119,26 @@
         .memo:focus { outline:none; border-color:#333; background:#fffdf2; }
 
         .empty { grid-column:1/-1; text-align:center; color:#94a3b8; font-weight:bold; padding:30px; }
+
+        /* 操作ボタン（保存・書き出し・読み込み） */
+        .actions { display:flex; gap:7px; flex-wrap:wrap; }
+        .abtn {
+            flex:1 1 0; min-width:90px; padding:8px 10px; font-size:13px; font-weight:bold; font-family:inherit;
+            border:2px solid #333; border-radius:10px; background:#fff; box-shadow:2px 2px 0 #333;
+            cursor:pointer; white-space:nowrap; transition:transform .1s, box-shadow .1s;
+        }
+        .abtn:active { transform:translate(2px,2px); box-shadow:0 0 0 #333; }
+        .abtn.save { background:var(--accent); }
+
+        /* 保存トースト */
+        .toast {
+            position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
+            background:#333; color:#fff; font-weight:bold; font-size:14px; padding:11px 22px;
+            border-radius:12px; box-shadow:0 4px 0 rgba(0,0,0,.25); z-index:100;
+            opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;
+        }
+        .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+        .toast.err { background:var(--soku); }
     </style>
 </head>
 <body>
@@ -155,12 +175,20 @@
             </select>
             <span class="count" id="count"></span>
         </div>
+        <div class="actions">
+            <button class="abtn save" id="btn-save">💾 保存</button>
+            <button class="abtn" id="btn-export">📤 書き出し</button>
+            <button class="abtn" id="btn-import">📥 読み込み</button>
+            <input type="file" id="import-file" accept="application/json,.json" hidden>
+        </div>
     </div>
 
     <div id="pane-silver" class="pane active"><div class="cards" id="cards-silver"></div></div>
     <div id="pane-gold"   class="pane"><div class="cards" id="cards-gold"></div></div>
     <div id="pane-prism"  class="pane"><div class="cards" id="cards-prism"></div></div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
         const augmentsData = {
@@ -474,6 +502,11 @@
             document.getElementById("filter-genre").addEventListener("change", applyFilters);
             document.getElementById("filter-round").addEventListener("change", applyFilters);
 
+            document.getElementById("btn-save").addEventListener("click", saveAll);
+            document.getElementById("btn-export").addEventListener("click", exportData);
+            document.getElementById("btn-import").addEventListener("click", ()=> document.getElementById("import-file").click());
+            document.getElementById("import-file").addEventListener("change", importData);
+
             applyFilters();
         }
 
@@ -612,6 +645,73 @@
             } else if(emptyEl){ emptyEl.remove(); }
 
             document.getElementById("count").textContent = "表示 " + shown + " / 全 " + list.length + " 件";
+        }
+
+        // ===== 保存・バックアップ機能 =====
+        function showToast(msg, isErr){
+            const t = document.getElementById("toast");
+            t.textContent = msg;
+            t.className = "toast show" + (isErr ? " err" : "");
+            clearTimeout(showToast._t);
+            showToast._t = setTimeout(()=>{ t.className = "toast"; }, 1900);
+        }
+
+        // 手動保存：DOM上の最新メモ・優先度をlocalStorageへ確定保存（自動保存の取りこぼし対策）
+        function saveAll(){
+            let n = 0;
+            Object.keys(cards).forEach(rowId=>{
+                const memoEl = document.getElementById("memo-"+rowId);
+                if(memoEl){ localStorage.setItem("memo-"+rowId, memoEl.value); }
+                const selEl = document.getElementById("prio-sel-"+rowId);
+                if(selEl){ localStorage.setItem("prio-"+rowId, selEl.value); }
+                n++;
+            });
+            showToast("保存しました ✓（" + n + "件）");
+        }
+
+        // 書き出し：全データをJSONファイルとしてダウンロード
+        function exportData(){
+            const data = {};
+            for(let i=0; i<localStorage.length; i++){
+                const k = localStorage.key(i);
+                if(/^(prio|memo|round)-/.test(k)){ data[k] = localStorage.getItem(k); }
+            }
+            const payload = { app:"tft-augment-note", savedAt:new Date().toISOString(), data };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+            const url = URL.createObjectURL(blob);
+            const d = new Date(), pad = x=>String(x).padStart(2,"0");
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "augment-note-" + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate())
+                       + "-" + pad(d.getHours()) + pad(d.getMinutes()) + ".json";
+            document.body.appendChild(a); a.click(); a.remove();
+            URL.revokeObjectURL(url);
+            showToast("書き出しました ✓");
+        }
+
+        // 読み込み：JSONバックアップを取り込んでlocalStorageへ反映
+        function importData(e){
+            const file = e.target.files && e.target.files[0];
+            e.target.value = ""; // 同じファイルを連続で選べるようにリセット
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = ()=>{
+                try {
+                    const parsed = JSON.parse(reader.result);
+                    const data = parsed && parsed.data ? parsed.data : parsed;
+                    if(!data || typeof data !== "object") throw new Error("形式が不正です");
+                    const keys = Object.keys(data).filter(k=> /^(prio|memo|round)-/.test(k));
+                    if(keys.length === 0) throw new Error("対象データがありません");
+                    if(!confirm("バックアップを読み込み、現在のメモ・優先度を上書きします。よろしいですか？")) return;
+                    keys.forEach(k=> localStorage.setItem(k, data[k]));
+                    showToast("読み込みました ✓（" + keys.length + "件）再描画中…");
+                    setTimeout(()=> location.reload(), 750);
+                } catch(err){
+                    showToast("読み込み失敗: " + err.message, true);
+                }
+            };
+            reader.onerror = ()=> showToast("ファイル読み込みエラー", true);
+            reader.readAsText(file);
         }
 
         window.onload = init;
