@@ -473,6 +473,13 @@
             .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
         function init(){
+            // 旧バージョンで保存された出現ラウンドのキャッシュを一度だけ掃除する
+            // （出現ラウンドは常にデータ側のdefaultRoundを表示する仕様に変更したため）
+            for(let i = localStorage.length - 1; i >= 0; i--){
+                const k = localStorage.key(i);
+                if(k && k.startsWith("round-")) localStorage.removeItem(k);
+            }
+
             document.querySelectorAll(".tab").forEach(tab=>{
                 tab.addEventListener("click", ()=>{
                     document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
@@ -511,13 +518,10 @@
             // 保存値（編集できるのは備考[メモ]のみ。優先度・ラウンドは表示専用）
             const savedPrio = localStorage.getItem("prio-"+rowId) || "";
             const savedMemo = localStorage.getItem("memo-"+rowId) || "";
+            // 出現ラウンドはデータ（defaultRound）由来の表示専用項目。
+            // localStorageにはキャッシュせず、常にエディタで設定した最新の値を表示する。
             const defaultRound = aug.defaultRound || "";
-            const savedRound = localStorage.getItem("round-"+rowId) !== null
-                ? localStorage.getItem("round-"+rowId) : defaultRound;
-            if(localStorage.getItem("round-"+rowId) === null && defaultRound !== ""){
-                localStorage.setItem("round-"+rowId, defaultRound);
-            }
-            const roundTokens = (savedRound||"").split(",").map(s=>s.trim()).filter(Boolean);
+            const roundTokens = defaultRound.split(",").map(s=>s.trim()).filter(Boolean);
 
             const card = document.createElement("div");
             card.className = "card" + (PRIO_CARD[savedPrio] ? " " + PRIO_CARD[savedPrio] : "");
@@ -618,7 +622,7 @@
 
                 const prio  = localStorage.getItem("prio-"+rowId) || "";
                 const memo  = (localStorage.getItem("memo-"+rowId) || "").toLowerCase();
-                const round = (localStorage.getItem("round-"+rowId) || "").toLowerCase();
+                const round = (aug.defaultRound || "").toLowerCase();
 
                 const mText  = !q || c.name.includes(q) || c.effect.includes(q) || memo.includes(q);
                 const mPrio  = !prioF || prio === prioF;
@@ -669,7 +673,7 @@
             const data = {};
             for(let i=0; i<localStorage.length; i++){
                 const k = localStorage.key(i);
-                if(/^(prio|memo|round)-/.test(k)){ data[k] = localStorage.getItem(k); }
+                if(/^(prio|memo)-/.test(k)){ data[k] = localStorage.getItem(k); }
             }
             const payload = { app:"tft-augment-note", savedAt:new Date().toISOString(), data };
             const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
@@ -695,7 +699,7 @@
                     const parsed = JSON.parse(reader.result);
                     const data = parsed && parsed.data ? parsed.data : parsed;
                     if(!data || typeof data !== "object") throw new Error("形式が不正です");
-                    const keys = Object.keys(data).filter(k=> /^(prio|memo|round)-/.test(k));
+                    const keys = Object.keys(data).filter(k=> /^(prio|memo)-/.test(k));
                     if(keys.length === 0) throw new Error("対象データがありません");
                     if(!confirm("バックアップを読み込み、現在のメモ・優先度を上書きします。よろしいですか？")) return;
                     keys.forEach(k=> localStorage.setItem(k, data[k]));
