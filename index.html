@@ -2,193 +2,540 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>TFT オーグメント翻訳ノート</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='2.2'%20y='2.2'%20width='27.6'%20height='27.6'%20rx='7'%20fill='%23ffde6a'%20stroke='%23333'%20stroke-width='2.4'/%3E%3Cpath%20d='M16%207.3%20L23%2011.3%20V19.3%20L16%2023.3%20L9%2019.3%20V11.3%20Z'%20fill='%23fff'%20stroke='%23333'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='16'%20cy='15.3'%20r='2.6'%20fill='%23ffde6a'%20stroke='%23333'%20stroke-width='1.6'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg:#f7f9fc; --panel:#ffffff; --ink:#333; --sub:#64748b;
-            --accent:#ffde6a; --line:#e2e8f0;
-            --soku:#dc2626; --soku-bg:#fee2e2;
-            --tori:#d97706; --tori-bg:#fef9c3;
-            --da:#2563eb;   --da-bg:#dbeafe;
-            --batsu:#475569; --batsu-bg:#e2e8f0;
+            --bg:#F2F5FA; --panel:#FFFFFF; --soft:#F7F9FC; --ink:#2A2A35; --sub:#6B7385; --line:#DCE2EC;
+            --accent:#FFDE6A; --accent-soft:#FFF6CF;
+            --silver:#AEB9C8; --silver-bg:#EAEFF5;
+            --gold:#E3B12A;   --gold-bg:#FFF1C2;
+            --prism-a:#FF9AD5; --prism-b:#9AB8FF; --prism-c:#7FE8C4; --prism-bg:#F4EDFF;
+            --soku:#E5484D;  --soku-bg:#FFE3E4;
+            --tori:#D9820A;  --tori-bg:#FFEFD1;
+            --da:#2F6FEB;    --da-bg:#E1EBFF;
+            --batsu:#6B7385; --batsu-bg:#E7EAF0;
+            --money:#BBF7D0; --battle:#FECACA; --item:#BFDBFE; --special:#E9D5FF;
+            --r-lg:16px; --r-md:12px; --r-sm:8px;
+            --shadow:3px 3px 0 var(--ink);
         }
         * { box-sizing:border-box; }
+        html { -webkit-text-size-adjust:100%; }
         body {
-            font-family:'Helvetica Neue',Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans',Meiryo,sans-serif;
-            background:var(--bg); color:var(--ink); margin:0; padding:10px;
+            margin:0; padding:14px 14px 32px; background:var(--bg); color:var(--ink);
+            font-family:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Hiragino Sans',Meiryo,sans-serif;
+            font-weight:500; line-height:1.5;
         }
-        h1 {
-            color:#4a5568; font-size:19px; margin:6px 0 12px; text-align:center;
-            text-shadow:1px 1px 0 #fff, 2px 2px 0 var(--accent);
-        }
-        .wrap { max-width:1280px; margin:0 auto; }
+        button, input, select, textarea { font:inherit; color:inherit; }
+        button { cursor:pointer; }
+        :focus-visible { outline:3px solid var(--da); outline-offset:2px; }
+        .wrap { max-width:1240px; margin:0 auto; }
+        [hidden] { display:none !important; }
 
-        /* スティッキー操作バー（タブ＋フィルタ） */
-        .bar {
-            position:sticky; top:0; z-index:30; background:var(--panel);
-            border:2px solid #333; border-radius:14px; box-shadow:0 4px 0 #333;
-            padding:10px; margin-bottom:14px; display:flex; flex-direction:column; gap:9px;
-        }
-        .tabs { display:flex; gap:6px; }
-        .tab {
-            flex:1 1 0; padding:9px 6px; font-size:14px; font-weight:bold; text-align:center;
-            border:2px solid #333; border-radius:10px; background:#fff; box-shadow:2px 2px 0 #333;
-            cursor:pointer; white-space:nowrap; transition:transform .1s, box-shadow .1s;
-        }
-        .tab:active { transform:translate(1px,1px); box-shadow:0 0 0 #333; }
-        .tab[data-tier="silver"].active { background:#cbd5e1; }
-        .tab[data-tier="gold"].active   { background:#fef08a; }
-        .tab[data-tier="prism"].active  { background:#fbcfe8; }
+        /* ===== ヘッダー ===== */
+        .top { display:flex; flex-wrap:wrap; align-items:center; gap:12px 18px; margin:2px 0 14px; }
+        .brand { display:flex; align-items:center; gap:10px; margin-right:auto; min-width:0; }
+        .brand svg { width:40px; height:40px; flex:0 0 auto; }
+        .brand h1 { margin:0; font-size:21px; font-weight:800; line-height:1.2; letter-spacing:.01em; }
+        .brand p { margin:2px 0 0; font-size:12px; color:var(--sub); }
+        .data-actions { display:flex; gap:6px; flex:0 0 auto; }
+        .foot { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px 16px; margin-top:28px; padding-top:14px; border-top:1.5px dashed #C9D1DD; }
+        .foot p { margin:0; flex:1 1 280px; font-size:12px; color:var(--sub); }
 
-        .filters { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+        /* ===== 共通パーツ ===== */
+        .btn {
+            display:inline-flex; align-items:center; justify-content:center; gap:4px;
+            padding:7px 12px; font-size:13px; font-weight:800; white-space:nowrap;
+            border:2px solid var(--ink); border-radius:10px; background:#fff; box-shadow:2px 2px 0 var(--ink);
+        }
+        .btn:active { transform:translate(2px,2px); box-shadow:0 0 0 var(--ink); }
+        .btn.primary { background:var(--accent); }
+        .linkbtn { border:0; background:none; padding:6px 4px; font-size:13px; font-weight:800; color:var(--da); text-decoration:underline; text-underline-offset:3px; }
+
+        .seg { display:inline-flex; gap:3px; padding:3px; background:#fff; border:2px solid var(--ink); border-radius:12px; }
+        .seg button {
+            border:0; background:transparent; border-radius:8px; padding:6px 12px;
+            font-size:14px; font-weight:800; color:var(--sub); white-space:nowrap;
+        }
+        .seg button:hover { color:var(--ink); background:var(--soft); }
+        .seg button[aria-pressed="true"] { background:var(--accent); color:var(--ink); box-shadow:inset 0 0 0 2px var(--ink); }
+        .seg button[data-tier="silver"][aria-pressed="true"] { background:var(--silver-bg); }
+        .seg button[data-tier="gold"][aria-pressed="true"]   { background:var(--gold-bg); }
+        .seg button[data-tier="prism"][aria-pressed="true"]  { background:linear-gradient(120deg,#FFE3F3,#E3EBFF 55%,#DDFBEF); }
+
+        .chip {
+            border:1.5px solid var(--line); background:#fff; border-radius:999px; padding:4px 12px;
+            font-size:13px; font-weight:800; color:var(--sub);
+        }
+        .chip:hover { border-color:var(--ink); color:var(--ink); }
+        .chip[aria-pressed="true"] { border-color:var(--ink); color:var(--ink); background:var(--accent); }
+        .chip.g-money[aria-pressed="true"]   { background:var(--money); }
+        .chip.g-battle[aria-pressed="true"]  { background:var(--battle); }
+        .chip.g-item[aria-pressed="true"]    { background:var(--item); }
+        .chip.g-special[aria-pressed="true"] { background:var(--special); }
+        .chip.p-soku[aria-pressed="true"]  { background:var(--soku-bg);  color:var(--soku); }
+        .chip.p-tori[aria-pressed="true"]  { background:var(--tori-bg);  color:var(--tori); }
+        .chip.p-da[aria-pressed="true"]    { background:var(--da-bg);    color:var(--da); }
+        .chip.p-batsu[aria-pressed="true"] { background:var(--batsu-bg); color:var(--batsu); }
+
         .search {
-            flex:1 1 100%; min-width:0; padding:8px 11px; font-size:14px; font-family:inherit;
-            border:2px solid #333; border-radius:10px;
+            min-width:0; padding:8px 12px; font-size:14px; border:2px solid var(--ink); border-radius:10px; background:#fff;
         }
-        .search:focus { outline:none; }
-        .fsel {
-            flex:1 1 0; min-width:96px; padding:7px 8px; font-size:13px; font-weight:bold; font-family:inherit;
-            border:2px solid #333; border-radius:10px; background:#fff; cursor:pointer;
-        }
-        .count { flex:0 0 auto; font-size:12px; font-weight:bold; color:var(--sub); margin-left:auto; padding:4px 2px; }
-        @media (min-width:640px){
-            .search { flex:1 1 200px; }
+        .search::placeholder { color:#A3ABBA; }
+        .search:focus { outline:none; background:#FFFDF3; }
+        select.sel {
+            padding:6px 30px 6px 10px; font-size:13px; font-weight:800; border:1.5px solid var(--ink); border-radius:10px;
+            background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232A2A35' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 10px center;
+            appearance:none; -webkit-appearance:none;
         }
 
-        /* カードグリッド：モバイル1列 → タブレット2列 → PC3列 */
-        .cards { display:grid; grid-template-columns:1fr; gap:12px; }
-        @media (min-width:680px){  .cards { grid-template-columns:repeat(2,1fr); } }
-        @media (min-width:1040px){ .cards { grid-template-columns:repeat(3,1fr); } }
-        .pane { display:none; }
-        .pane.active { display:block; }
-
-        /* 1オーグメント＝1カード */
-        .card {
-            display:flex; flex-direction:column; gap:9px; background:var(--panel);
-            border:2px solid #333; border-radius:14px; box-shadow:2px 2px 0 #333; padding:12px;
+        /* アイコン枠：枠の色＝ティア */
+        .ic {
+            flex:0 0 auto; display:inline-block; padding:3px; border:2px solid var(--ink); border-radius:12px;
+            background:var(--silver);
         }
-        .card.is-soku  { border-color:var(--soku);  box-shadow:2px 2px 0 var(--soku); }
-        .card.is-tori  { border-color:var(--tori);  box-shadow:2px 2px 0 var(--tori); }
-        .card.is-da    { border-color:var(--da);    box-shadow:2px 2px 0 var(--da); }
-        .card.is-batsu { opacity:.62; }
+        .ic.t-gold  { background:var(--gold); }
+        .ic.t-prism { background:conic-gradient(from 200deg, var(--prism-a), var(--prism-b), var(--prism-c), var(--prism-a)); }
+        .ic img { -webkit-user-drag:none; display:block; width:100%; height:100%; object-fit:contain; border-radius:8px; background:#22252F; }
+        .ic img.err { opacity:.2; }
+        .ic-sm { width:40px; height:40px; }
+        .ic-md { width:54px; height:54px; }
+        .ic-lg { width:68px; height:68px; }
 
-        .c-head { display:flex; align-items:center; gap:10px; }
-        .c-icon {
-            width:44px; height:44px; flex:0 0 auto; border-radius:10px; border:2px solid #333;
-            background:#222; object-fit:contain;
-        }
-        .c-title { flex:1 1 auto; min-width:0; font-weight:bold; font-size:15px; line-height:1.3; }
-        /* 優先度バッジ（表示専用） */
-        .prio {
-            display:block; min-width:40px; padding:7px 11px; font-size:15px; font-weight:bold; text-align:center;
-            border:2px solid #333; border-radius:10px; background:#fff; line-height:1;
-        }
-        .prio.p-soku  { color:var(--soku);  background:var(--soku-bg); }
-        .prio.p-tori  { color:var(--tori);  background:var(--tori-bg); }
-        .prio.p-da    { color:var(--da);    background:var(--da-bg); }
-        .prio.p-batsu { color:var(--batsu); background:var(--batsu-bg); }
-        .prio.none    { color:#cbd5e1; background:#f8fafc; border-color:#cbd5e1; }
+        .genres { display:flex; flex-wrap:wrap; gap:4px; }
+        .badge { display:inline-block; padding:1px 9px; border:1px solid var(--ink); border-radius:999px; font-size:11px; font-weight:800; }
+        .badge.g-money   { background:var(--money); }
+        .badge.g-battle  { background:var(--battle); }
+        .badge.g-item    { background:var(--item); }
+        .badge.g-special { background:var(--special); }
+        .tier-tag { flex:0 0 auto; align-self:flex-start; padding:1px 8px; border:1.5px solid var(--ink); border-radius:6px; font-size:12px; font-weight:800; }
+        .tier-tag.t-silver { background:var(--silver-bg); }
+        .tier-tag.t-gold   { background:var(--gold-bg); }
+        .tier-tag.t-prism  { background:linear-gradient(120deg,#FFE3F3,#E3EBFF 55%,#DDFBEF); }
 
-        .genres { display:flex; flex-wrap:wrap; gap:5px; }
-        .badge {
-            display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:bold;
-            border:1px solid #333;
+        /* 優先度ボタン（即・取・妥・×） */
+        .pseg { display:inline-flex; border:2px solid var(--ink); border-radius:10px; overflow:hidden; background:#fff; }
+        .pseg button {
+            min-width:40px; height:34px; padding:0 6px; border:0; border-left:2px solid var(--ink);
+            background:#fff; color:#C2C9D5; font-size:16px; font-weight:800;
         }
-        .genre-money   { background:#bbf7d0; }
-        .genre-battle  { background:#fecaca; }
-        .genre-item    { background:#bfdbfe; }
-        .genre-special { background:#e9d5ff; }
+        .pseg button:first-child { border-left:0; }
+        .pseg button:hover { color:var(--ink); }
+        .pseg button[data-prio="soku"][aria-pressed="true"]  { background:var(--soku-bg);  color:var(--soku); }
+        .pseg button[data-prio="tori"][aria-pressed="true"]  { background:var(--tori-bg);  color:var(--tori); }
+        .pseg button[data-prio="da"][aria-pressed="true"]    { background:var(--da-bg);    color:var(--da); }
+        .pseg button[data-prio="batsu"][aria-pressed="true"] { background:var(--batsu-bg); color:var(--batsu); }
 
-        .effect { font-size:13px; line-height:1.55; color:#1f2937; }
+        .rounds { display:flex; gap:4px; }
+        .rchip { padding:1px 8px; border:1.5px solid var(--line); border-radius:999px; font-size:12px; font-weight:800; color:#C2C9D5; background:var(--soft); }
+        .rchip.on { border-color:var(--ink); color:var(--ink); background:var(--accent); }
 
-        .c-foot { border-top:1.5px dashed var(--line); padding-top:9px; display:flex; flex-direction:column; gap:8px; }
-        .field-row { display:flex; align-items:center; gap:8px; }
-        .field-lbl { flex:0 0 auto; font-size:11px; font-weight:bold; color:var(--sub); width:70px; }
-        .rchips { display:flex; gap:5px; flex-wrap:wrap; }
-        .rchip {
-            font-size:12px; font-weight:bold; border:1.5px solid #e2e8f0; border-radius:13px;
-            padding:3px 11px; background:#f8fafc; color:#cbd5e1; user-select:none;
-        }
-        .rchip.on { background:var(--accent); color:#333; border-color:#333; }
         .memo {
-            width:100%; border:1.5px solid #cbd5e1; border-radius:8px; padding:7px; font-family:inherit;
-            font-size:13px; resize:vertical; background:#fff;
+            display:block; width:100%; min-height:38px; padding:8px 10px; font-size:13px; line-height:1.5;
+            border:1.5px solid var(--line); border-radius:10px; background:var(--soft); resize:none; overflow:hidden;
         }
-        .memo:focus { outline:none; border-color:#333; background:#fffdf2; }
+        .memo::placeholder { color:#A3ABBA; }
+        .memo:focus { outline:none; border-color:var(--ink); background:#FFFDF3; }
+        .effect { margin:0; font-size:13px; line-height:1.65; color:#363A48; }
+        .card .effect, .slot .effect { flex:1 1 auto; }
 
-        .empty { grid-column:1/-1; text-align:center; color:#94a3b8; font-weight:bold; padding:30px; }
-
-        /* 操作ボタン（保存・書き出し・読み込み） */
-        .actions { display:flex; gap:7px; flex-wrap:wrap; }
-        .abtn {
-            flex:1 1 0; min-width:90px; padding:8px 10px; font-size:13px; font-weight:bold; font-family:inherit;
-            border:2px solid #333; border-radius:10px; background:#fff; box-shadow:2px 2px 0 #333;
-            cursor:pointer; white-space:nowrap; transition:transform .1s, box-shadow .1s;
+        /* ===== 操作バー（一覧・ティア表） ===== */
+        .toolbar {
+            position:sticky; top:8px; z-index:30; margin-bottom:16px; padding:10px;
+            background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); box-shadow:var(--shadow);
+            display:flex; flex-direction:column; gap:10px;
         }
-        .abtn:active { transform:translate(2px,2px); box-shadow:0 0 0 #333; }
-        .abtn.save { background:var(--accent); }
+        .tb-row { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+        .tb-row .search { flex:1 1 220px; }
+        .filt-toggle .n { display:inline-grid; place-items:center; min-width:18px; height:18px; padding:0 5px; border-radius:999px; background:var(--ink); color:#fff; font-size:11px; }
+        .filt-toggle .n:empty { display:none; }
+        .count { margin-left:auto; font-size:12px; font-weight:800; color:var(--sub); white-space:nowrap; }
+        .tb-filters { display:flex; flex-wrap:wrap; align-items:center; gap:8px 18px; padding-top:10px; border-top:1.5px dashed var(--line); }
+        .fgroup { display:flex; flex-wrap:wrap; align-items:center; gap:5px; }
+        .flbl { font-size:12px; font-weight:800; color:var(--sub); margin-right:2px; }
+        .toolbar.collapsed .tb-filters { display:none; }
 
-        /* 保存トースト */
+        /* ===== 一覧 ===== */
+        .cards { display:grid; grid-template-columns:1fr; gap:14px; }
+        @media (min-width:700px)  { .cards { grid-template-columns:repeat(2, minmax(0,1fr)); } }
+        @media (min-width:1060px) { .cards { grid-template-columns:repeat(3, minmax(0,1fr)); } }
+        .card {
+            position:relative; display:flex; flex-direction:column; gap:10px; padding:14px 14px 14px 18px;
+            background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); box-shadow:var(--shadow);
+        }
+        .card::before { content:""; position:absolute; left:-2px; top:16px; bottom:16px; width:6px; border-radius:0 6px 6px 0; }
+        .card.is-soku::before  { background:var(--soku); }
+        .card.is-tori::before  { background:var(--tori); }
+        .card.is-da::before    { background:var(--da); }
+        .card.is-batsu::before { background:var(--batsu); }
+        .card.is-batsu { opacity:.62; }
+        .card.is-batsu:focus-within { opacity:1; }
+        .c-head { display:flex; align-items:center; gap:11px; }
+        .c-titles { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:4px; }
+        .c-title { margin:0; font-size:16px; font-weight:800; line-height:1.3; }
+        .c-foot { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; }
+        .c-foot .lbl { font-size:11px; font-weight:800; color:var(--sub); margin-right:4px; }
+        .c-foot .rwrap { display:flex; align-items:center; }
+
+        .empty {
+            grid-column:1/-1; display:flex; flex-direction:column; align-items:center; gap:10px; padding:36px 16px;
+            border:2px dashed var(--line); border-radius:var(--r-lg); color:var(--sub); font-weight:800; text-align:center;
+        }
+        .empty p { margin:0; }
+
+        /* ===== ティア表 ===== */
+        .tl-hint { margin:0 0 10px; font-size:13px; color:var(--sub); }
+        .tl { background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); box-shadow:var(--shadow); overflow:hidden; }
+        .tl-row { display:grid; grid-template-columns:72px minmax(0,1fr); min-height:96px; border-top:2px solid var(--ink); transition:background .12s; }
+        .tl-row:first-child { border-top:0; }
+        .tl-row.drop { background:var(--accent-soft); }
+        .tl-label { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; border-right:2px solid var(--ink); font-weight:800; }
+        .tl-label b { font-size:28px; line-height:1; }
+        .tl-label b.long { font-size:14px; }
+        .tl-label small { font-size:11px; opacity:.8; }
+        .tl-label.p-soku  { background:var(--soku-bg);  color:var(--soku); }
+        .tl-label.p-tori  { background:var(--tori-bg);  color:var(--tori); }
+        .tl-label.p-da    { background:var(--da-bg);    color:var(--da); }
+        .tl-label.p-batsu { background:var(--batsu-bg); color:var(--batsu); }
+        .tl-label.p-none  { background:var(--soft); color:var(--sub); }
+        .tl-items { display:flex; flex-wrap:wrap; align-content:flex-start; gap:4px; padding:8px; }
+        .tl-empty { align-self:center; padding:0 8px; font-size:12px; color:#A3ABBA; font-weight:800; }
+        .tl-item {
+            width:76px; display:flex; flex-direction:column; align-items:center; gap:4px; padding:5px 2px;
+            border:0; border-radius:10px; background:none; cursor:grab;
+            touch-action:pan-y; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;
+        }
+        .tl-item:hover { background:var(--soft); }
+        .tl-item.dragging { opacity:.25; }
+        .tl-name, .cand-name {
+            font-size:11px; font-weight:800; line-height:1.25; text-align:center;
+            display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-all;
+        }
+        .ghost { position:fixed; z-index:300; pointer-events:none; transform:translate(-50%,-55%) rotate(-5deg); background:#fff; border-radius:12px; box-shadow:var(--shadow); }
+        body.is-dragging, body.is-dragging * { cursor:grabbing !important; }
+        body.is-dragging .toolbar, body.is-dragging .views { opacity:.25; pointer-events:none; }
+
+        /* ===== ピック補助 ===== */
+        .pick-ctrl {
+            display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; margin-bottom:16px; padding:10px 12px;
+            background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); box-shadow:var(--shadow);
+        }
+        .ctrl { display:flex; align-items:center; gap:8px; }
+        .ctrl-lbl { font-size:12px; font-weight:800; color:var(--sub); }
+        .ctrl-right { display:flex; gap:6px; margin-left:auto; }
+        .btn:disabled { opacity:.4; box-shadow:none; cursor:default; transform:none; }
+
+        .steps { list-style:none; display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:8px; margin:0 0 14px; padding:0; }
+        .step {
+            display:flex; align-items:center; gap:8px; min-width:0; min-height:54px; padding:6px 10px;
+            background:#fff; border:2px solid var(--line); border-radius:var(--r-md); color:var(--sub); font-weight:800;
+        }
+        .step .st-round { flex:0 0 auto; font-size:16px; }
+        .step .st-name { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+        .step.done { border-color:var(--ink); color:var(--ink); }
+        .step.now { border-color:var(--ink); color:var(--ink); background:var(--accent); box-shadow:2px 2px 0 var(--ink); }
+        .stage-title { margin:0 0 14px; font-size:17px; font-weight:800; }
+        .pick-slots { display:grid; grid-template-columns:1fr; gap:14px; margin-bottom:22px; }
+        @media (min-width:860px) { .pick-slots { grid-template-columns:repeat(3, minmax(0,1fr)); } }
+        .slot {
+            position:relative; display:flex; flex-direction:column; gap:10px; padding:16px 14px 14px;
+            background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); box-shadow:var(--shadow);
+        }
+        .slot.best { box-shadow:0 0 0 4px var(--accent), 5px 5px 0 4px var(--ink); }
+        .best-flag {
+            position:absolute; top:-13px; left:14px; padding:1px 12px; background:var(--accent);
+            border:2px solid var(--ink); border-radius:999px; font-size:12px; font-weight:800;
+        }
+        .slot-x {
+            width:30px; height:30px; flex:0 0 auto; display:grid; place-items:center;
+            border:1.5px solid var(--line); border-radius:8px; background:#fff; color:var(--sub); font-size:16px; font-weight:800;
+        }
+        .slot-x:hover { border-color:var(--ink); color:var(--ink); }
+        .slot-head { display:flex; align-items:center; gap:12px; }
+        .slot-head .c-titles { flex:1 1 auto; min-width:0; }
+        .slot-tools { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .slot-actions { display:flex; align-items:center; gap:8px; padding-top:10px; border-top:1.5px dashed var(--line); }
+        .slot-actions .choose { margin-left:auto; padding:8px 20px; font-size:14px; }
+        .slot.pending { border-style:dashed; box-shadow:none; }
+        .reroll-note { margin:-4px 0 0; font-size:12px; font-weight:800; color:var(--sub); }
+        .pending-note { margin:0; padding:8px 10px; border-radius:10px; background:var(--accent-soft); font-size:13px; font-weight:800; }
+        .pending-note .linkbtn { padding:0 4px; }
+        .slot-hint {
+            display:flex; align-items:center; justify-content:center; min-height:64px; padding:12px; text-align:center;
+            border:2px dashed #B5BECC; border-radius:var(--r-lg); color:var(--sub); font-size:14px; font-weight:800;
+        }
+        .slot-hint.full { grid-column:1 / -1; min-height:110px; }
+        @media (min-width:860px) { .slot-hint:not(.full) { min-height:200px; } }
+        .slot-name { margin:0 0 4px; font-size:17px; font-weight:800; line-height:1.3; }
+        .pbig {
+            display:grid; place-items:center; min-width:56px; height:44px; padding:0 10px;
+            border:2px solid var(--ink); border-radius:10px; font-size:26px; font-weight:800;
+        }
+        .pbig.p-soku  { background:var(--soku-bg);  color:var(--soku); }
+        .pbig.p-tori  { background:var(--tori-bg);  color:var(--tori); }
+        .pbig.p-da    { background:var(--da-bg);    color:var(--da); }
+        .pbig.p-batsu { background:var(--batsu-bg); color:var(--batsu); }
+        .pbig.p-none  { background:var(--soft); color:#C2C9D5; border-color:var(--line); }
+
+        .cand-panel { background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); padding:12px; }
+        .cand-head { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin-bottom:10px; }
+        .cand-head h2 { margin:0; font-size:15px; font-weight:800; }
+        .cand-head h2 span { color:var(--sub); font-size:13px; }
+        .cand-head .search { flex:1 1 200px; }
+        .cand-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(84px,1fr)); gap:4px; }
+        .cand {
+            position:relative; display:flex; flex-direction:column; align-items:center; gap:4px; padding:7px 3px 6px;
+            border:2px solid transparent; border-radius:12px; background:none;
+        }
+        .cand:hover { background:var(--soft); }
+        .cand[aria-pressed="true"] { border-color:var(--ink); background:var(--accent-soft); }
+        .cand.is-batsu { opacity:.5; }
+        .cand.is-batsu[aria-pressed="true"] { opacity:1; }
+        .pmark {
+            position:absolute; top:3px; right:5px; min-width:20px; padding:0 4px; border:1.5px solid var(--ink); border-radius:6px;
+            font-size:12px; font-weight:800; line-height:17px; background:#fff;
+        }
+        .pmark.p-soku  { background:var(--soku-bg);  color:var(--soku); }
+        .pmark.p-tori  { background:var(--tori-bg);  color:var(--tori); }
+        .pmark.p-da    { background:var(--da-bg);    color:var(--da); }
+        .pmark.p-batsu { background:var(--batsu-bg); color:var(--batsu); }
+        .cand:disabled { opacity:.35; cursor:default; }
+        .cand:disabled .pmark { font-size:10px; }
+
+        /* 結果・履歴 */
+        .result-head { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:6px 12px; margin-bottom:14px; }
+        .result-head h2 { margin:0; font-size:21px; font-weight:800; }
+        .result-score { margin:0; font-size:14px; font-weight:800; color:var(--sub); }
+        .res-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+        @media (min-width:860px) { .res-grid { grid-template-columns:repeat(3, minmax(0,1fr)); } }
+        .res {
+            display:flex; flex-direction:column; gap:10px; padding:14px;
+            background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); box-shadow:var(--shadow);
+        }
+        .res-top { display:flex; align-items:center; gap:8px; }
+        .res-top .st-round { font-size:19px; font-weight:800; }
+        .res-top .tier-tag { align-self:center; }
+        .verdict { margin:0; padding:7px 10px; border-radius:10px; font-size:13px; font-weight:800; }
+        .verdict.good { background:#DCFCE7; color:#166534; }
+        .verdict.warn { background:var(--tori-bg); color:#8A5200; }
+        .verdict.none { background:var(--soft); color:var(--sub); }
+        .offered { display:flex; flex-direction:column; gap:6px; padding-top:10px; border-top:1.5px dashed var(--line); }
+        .offered .lbl { font-size:11px; font-weight:800; color:var(--sub); }
+        .offer { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; }
+        .offer .pmark { position:static; flex:0 0 auto; }
+        .offer-name { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; line-height:1.3; }
+        .offer .from { font-size:11px; font-weight:700; color:var(--sub); }
+        .offer.chosen .offer-name { font-weight:800; }
+        .chosen-tag { flex:0 0 auto; padding:0 8px; border:1.5px solid var(--ink); border-radius:999px; background:var(--accent); font-size:11px; font-weight:800; }
+        .res-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+        .hist { margin-top:22px; background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); }
+        .hist > summary { padding:12px 14px; font-weight:800; cursor:pointer; }
+        .hist-list { list-style:none; margin:0; padding:0 12px 6px; display:flex; flex-direction:column; gap:8px; }
+        .hist-item > details > summary {
+            display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; padding:8px 10px;
+            border:1.5px solid var(--line); border-radius:10px; cursor:pointer; list-style:none;
+        }
+        .hist-item > details > summary::-webkit-details-marker { display:none; }
+        .hist-item > details[open] > summary { border-color:var(--ink); background:var(--soft); }
+        .hist-date { min-width:84px; font-size:12px; font-weight:800; color:var(--sub); }
+        .hist-pick { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:800; }
+        .hist-pick .pmark { position:static; }
+        .hist-pick .ic-sm { width:32px; height:32px; padding:2px; border-radius:9px; }
+        .hist-body { display:flex; flex-direction:column; gap:10px; padding:12px 2px 6px; }
+        .hist-foot { display:flex; justify-content:flex-end; padding:0 12px 10px; }
+        .step .ic-sm { width:34px; height:34px; padding:2px; border-radius:9px; }
+        /* ===== 詳細ダイアログ ===== */
+        dialog.dlg {
+            width:min(520px, calc(100vw - 28px)); max-height:calc(100vh - 40px); padding:0; color:var(--ink);
+            border:2px solid var(--ink); border-radius:var(--r-lg); box-shadow:5px 5px 0 var(--ink); background:var(--panel);
+        }
+        dialog.dlg::backdrop { background:rgba(42,42,53,.45); }
+        .dlg-body { display:flex; flex-direction:column; gap:12px; padding:18px; }
+        .dlg-close { position:absolute; top:10px; right:10px; }
+        .slot .pseg button { min-width:34px; height:30px; font-size:14px; }
+        .dlg .c-head { padding-right:40px; }
+        .row-between { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; }
+
+        /* ===== 画面切り替え ===== */
+        .views button { padding:7px 14px; }
+        @media (max-width:699px) {
+            body { padding:12px 12px calc(92px + env(safe-area-inset-bottom)); }
+            .brand h1 { font-size:18px; }
+            .views {
+                position:fixed; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); z-index:60;
+                display:flex; box-shadow:var(--shadow);
+            }
+            .views button { flex:1 1 0; padding:10px 4px; font-size:14px; }
+            .data-actions { width:100%; }
+            .data-actions .btn { flex:1 1 0; }
+            .views { order:3; }
+            .toolbar { top:6px; }
+            .tl-row { grid-template-columns:56px minmax(0,1fr); }
+            .tl-item { width:68px; }
+            .tl-item .ic-md { width:48px; height:48px; }
+            .slot .ic-lg, .res .ic-lg { width:56px; height:56px; }
+            .step { flex-direction:column; justify-content:center; gap:2px; padding:6px 4px; min-height:62px; }
+            .step .st-name { display:none; }
+            .step .st-round { font-size:14px; }
+            .ctrl-right { margin-left:0; }
+        }
+        @media (min-width:700px) {
+            .filt-toggle { display:none; }
+            .toolbar.collapsed .tb-filters { display:flex; }
+        }
+
+        /* トースト */
         .toast {
-            position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
-            background:#333; color:#fff; font-weight:bold; font-size:14px; padding:11px 22px;
-            border-radius:12px; box-shadow:0 4px 0 rgba(0,0,0,.25); z-index:100;
-            opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;
+            position:fixed; left:50%; bottom:calc(96px + env(safe-area-inset-bottom)); z-index:400;
+            transform:translateX(-50%) translateY(12px); opacity:0; pointer-events:none;
+            padding:10px 20px; border-radius:12px; background:var(--ink); color:#fff; font-size:14px; font-weight:800;
+            box-shadow:0 4px 0 rgba(0,0,0,.2); transition:opacity .2s, transform .2s;
         }
+        @media (min-width:700px) { .toast { bottom:28px; } }
         .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
         .toast.err { background:var(--soku); }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition:none !important; }
+        }
     </style>
 </head>
 <body>
 <div class="wrap">
-    <h1>TFT オーグメント翻訳ノート 📝</h1>
-
-    <div class="bar">
-        <div class="tabs">
-            <button class="tab active" data-tier="silver">銀 Silver</button>
-            <button class="tab" data-tier="gold">金 Gold</button>
-            <button class="tab" data-tier="prism">虹 Prism</button>
+    <header class="top">
+        <div class="brand">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2.2" y="2.2" width="27.6" height="27.6" rx="7" fill="#ffde6a" stroke="#2A2A35" stroke-width="2.4"/><path d="M16 7.3 L23 11.3 V19.3 L16 23.3 L9 19.3 V11.3 Z" fill="#fff" stroke="#2A2A35" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="15.3" r="2.6" fill="#ffde6a" stroke="#2A2A35" stroke-width="1.6"/></svg>
+            <div>
+                <h1>TFT オーグメント翻訳ノート</h1>
+                <p id="sub"></p>
+            </div>
         </div>
-        <div class="filters">
-            <input type="text" class="search" id="search" placeholder="🔍 名前・効果・メモで検索…">
-            <select class="fsel" id="filter-prio">
-                <option value="">優先度：全</option>
-                <option value="soku">即</option>
-                <option value="tori">取</option>
-                <option value="da">妥</option>
-                <option value="batsu">×</option>
-            </select>
-            <select class="fsel" id="filter-genre">
-                <option value="">ジャンル：全</option>
-                <option value="金策">金策</option>
-                <option value="戦闘">戦闘</option>
-                <option value="アイテム">アイテム</option>
-                <option value="特殊">特殊</option>
-            </select>
-            <select class="fsel" id="filter-round">
-                <option value="">ラウンド：全</option>
-                <option value="2-1">2-1</option>
-                <option value="3-2">3-2</option>
-                <option value="4-2">4-2</option>
-            </select>
+        <nav class="seg views" id="view-seg" aria-label="画面の切り替え">
+            <button data-view="list">一覧</button>
+            <button data-view="tier">ティア表</button>
+            <button data-view="pick">ピック補助</button>
+        </nav>
+    </header>
+
+    <!-- 一覧・ティア表の共通操作バー -->
+    <div class="toolbar" id="toolbar">
+        <div class="tb-row">
+            <div class="seg" id="tier-seg" aria-label="ティア">
+                <button data-tier="all">全</button>
+                <button data-tier="silver">銀</button>
+                <button data-tier="gold">金</button>
+                <button data-tier="prism">虹</button>
+            </div>
+            <input type="search" class="search" id="search" placeholder="名前・効果・メモで検索" autocomplete="off">
+            <button class="btn filt-toggle" id="filt-toggle" aria-expanded="false">絞り込み <span class="n" id="filt-n"></span></button>
             <span class="count" id="count"></span>
         </div>
-        <div class="actions">
-            <button class="abtn save" id="btn-save">💾 保存</button>
-            <button class="abtn" id="btn-export">📤 書き出し</button>
-            <button class="abtn" id="btn-import">📥 読み込み</button>
-            <input type="file" id="import-file" accept="application/json,.json" hidden>
+        <div class="tb-filters" id="tb-filters">
+            <div class="fgroup" data-group="genres">
+                <span class="flbl">ジャンル</span>
+                <button class="chip g-money" data-val="金策">金策</button>
+                <button class="chip g-battle" data-val="戦闘">戦闘</button>
+                <button class="chip g-item" data-val="アイテム">アイテム</button>
+                <button class="chip g-special" data-val="特殊">特殊</button>
+            </div>
+            <div class="fgroup" data-group="rounds">
+                <span class="flbl">出現</span>
+                <button class="chip" data-val="2-1">2-1</button>
+                <button class="chip" data-val="3-2">3-2</button>
+                <button class="chip" data-val="4-2">4-2</button>
+            </div>
+            <div class="fgroup" data-group="prios">
+                <span class="flbl">優先度</span>
+                <button class="chip p-soku" data-val="soku">即</button>
+                <button class="chip p-tori" data-val="tori">取</button>
+                <button class="chip p-da" data-val="da">妥</button>
+                <button class="chip p-batsu" data-val="batsu">×</button>
+                <button class="chip" data-val="none">未設定</button>
+            </div>
+            <div class="fgroup">
+                <span class="flbl">並び順</span>
+                <select class="sel" id="sort" aria-label="並び順">
+                    <option value="data">標準</option>
+                    <option value="prio">優先度順</option>
+                    <option value="name">名前順</option>
+                    <option value="genre">ジャンル順</option>
+                </select>
+            </div>
+            <button class="linkbtn" data-act="clear">条件をクリア</button>
         </div>
     </div>
 
-    <div id="pane-silver" class="pane active"><div class="cards" id="cards-silver"></div></div>
-    <div id="pane-gold"   class="pane"><div class="cards" id="cards-gold"></div></div>
-    <div id="pane-prism"  class="pane"><div class="cards" id="cards-prism"></div></div>
+    <main>
+        <section id="view-list" hidden>
+            <div class="cards" id="cards"></div>
+        </section>
+
+        <section id="view-tier" hidden>
+            <p class="tl-hint">アイコンをドラッグ（スマホは長押ししてから移動）すると段を移せます。タップで詳細とメモを開きます。</p>
+            <div class="tl" id="tl"></div>
+        </section>
+
+        <section id="view-pick" hidden>
+            <ol class="steps" id="pick-steps" aria-label="進み具合"></ol>
+            <div class="pick-ctrl" id="pick-ctrl">
+                <div class="ctrl">
+                    <span class="ctrl-lbl">出し方</span>
+                    <div class="seg" id="pick-mode">
+                        <button data-val="random">ランダム</button>
+                        <button data-val="manual">自分で選ぶ</button>
+                    </div>
+                </div>
+                <div class="ctrl">
+                    <span class="ctrl-lbl">ティア</span>
+                    <div class="seg" id="pick-tier">
+                        <button data-val="silver" data-tier="silver">銀</button>
+                        <button data-val="gold" data-tier="gold">金</button>
+                        <button data-val="prism" data-tier="prism">虹</button>
+                    </div>
+                </div>
+                <button class="btn primary" id="pick-draw">ランダムで3つ出す</button>
+                <div class="ctrl-right">
+                    <button class="btn" id="pick-back">1つ戻る</button>
+                    <button class="btn" id="pick-restart">最初から</button>
+                </div>
+            </div>
+            <div id="pick-stage">
+                <h2 class="stage-title" id="pick-stage-title"></h2>
+                <div class="pick-slots" id="pick-slots"></div>
+                <div class="cand-panel" id="cand-panel">
+                    <div class="cand-head">
+                        <h2>試合で出たものを選ぶ <span id="cand-count"></span></h2>
+                        <input type="search" class="search" id="pick-q" placeholder="名前で絞り込み" autocomplete="off">
+                    </div>
+                    <div class="cand-grid" id="cand-grid"></div>
+                </div>
+            </div>
+            <div id="pick-result" hidden></div>
+            <details class="hist" id="pick-hist" hidden></details>
+        </section>
+    </main>
+
+    <footer class="foot">
+        <p>優先度とメモはこのブラウザに保存されます。別の端末やブラウザに移すときは「書き出し」したファイルを「読み込み」してください。</p>
+        <div class="data-actions">
+            <button class="btn primary" id="btn-save">保存</button>
+            <button class="btn" id="btn-export">書き出し</button>
+            <button class="btn" id="btn-import">読み込み</button>
+            <input type="file" id="import-file" accept="application/json,.json" hidden>
+        </div>
+    </footer>
 </div>
 
-<div class="toast" id="toast"></div>
+<dialog class="dlg" id="detail" aria-label="オーグメントの詳細">
+    <button class="slot-x dlg-close" data-act="close" aria-label="閉じる">×</button>
+    <div class="dlg-body" id="detail-body"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
         const augmentsData = {
@@ -448,24 +795,22 @@
             ]
         };
 
-        const imageBaseUrl = "https://cdn.metatft.com/cdn-cgi/image/width=46,height=46,fit=cover,format=auto/https://cdn.metatft.com/file/metatft/augments/";
+        // ===== 定数 =====
+        const imageBaseUrl = "https://cdn.metatft.com/cdn-cgi/image/width=96,height=96,fit=cover,format=auto/https://cdn.metatft.com/file/metatft/augments/";
         const TIERS = ["silver","gold","prism"];
-        const GENRE_CLASS = {"金策":"genre-money","戦闘":"genre-battle","アイテム":"genre-item","特殊":"genre-special"};
+        const TIER_JP = { silver:"銀", gold:"金", prism:"虹" };
+        const GENRES = ["金策","戦闘","アイテム","特殊"];
+        const GENRE_CLASS = { "金策":"g-money", "戦闘":"g-battle", "アイテム":"g-item", "特殊":"g-special" };
         const ROUNDS = ["2-1","3-2","4-2"];
-        const PRIO_LABEL = {soku:"即", tori:"取", da:"妥", batsu:"×"};
-        const PRIO_CLASS = {soku:"p-soku", tori:"p-tori", da:"p-da", batsu:"p-batsu"};
-        const PRIO_CARD  = {soku:"is-soku", tori:"is-tori", da:"is-da", batsu:"is-batsu"};
-
-        let activeTier = "silver";
-        const cards = {}; // rowId -> {el, name, effect, genre}
-
-        function genreArr(g){
-            if(Array.isArray(g)) return g.filter(Boolean);
-            if(typeof g === "string" && g) return g.split(",").map(s=>s.trim()).filter(Boolean);
-            return [];
-        }
-        function esc(s){ return String(s==null?"":s)
-            .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+        const PRIOS = [
+            { v:"soku",  l:"即", t:"即ピック" },
+            { v:"tori",  l:"取", t:"取る" },
+            { v:"da",    l:"妥", t:"妥協" },
+            { v:"batsu", l:"×",  t:"取らない" }
+        ];
+        const PRIO_LABEL = { soku:"即", tori:"取", da:"妥", batsu:"×" };
+        const PRIO_RANK  = { soku:0, tori:1, da:2, "":3, batsu:4 };
+        const TL_ROWS = [...PRIOS, { v:"", l:"未設定", t:"" }];
 
         // ===== メモ・優先度の保存キー =====
         // 以前は並び順の番号（例: prio-silver-3）で保存していたため、データの並びが変わるとズレていた。
@@ -523,255 +868,776 @@
             } catch(e) { console.warn("メモの移行に失敗", e); }
         }
 
-        function init(){
-            migrateNoteKeys();
+        // ===== 保存まわり（localStorageが使えない環境でも落ちないように） =====
+        function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+        function lsSet(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
 
-            // 旧バージョンで保存された出現ラウンドのキャッシュを一度だけ掃除する
-            // （出現ラウンドは常にデータ側のdefaultRoundを表示する仕様に変更したため）
-            for(let i = localStorage.length - 1; i >= 0; i--){
-                const k = localStorage.key(i);
-                if(k && k.startsWith("round-")) localStorage.removeItem(k);
+        function genreArr(g){
+            if(Array.isArray(g)) return g.filter(Boolean);
+            if(typeof g === "string" && g) return g.split(",").map(s=>s.trim()).filter(Boolean);
+            return [];
+        }
+        function esc(s){
+            return String(s==null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+                .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+        }
+        function iconSrc(icon){
+            const s = String(icon || "").trim();
+            return /^https?:\/\//i.test(s) ? s : imageBaseUrl + encodeURIComponent(s);
+        }
+        const $ = (sel, root=document) => root.querySelector(sel);
+        const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+
+        // ===== データ =====
+        const ITEMS = [];
+        TIERS.forEach(tier=>{
+            (augmentsData[tier] || []).forEach((aug, idx)=>{
+                ITEMS.push({
+                    uid: tier + "-" + idx, tier, idx, key: tier + "|" + (aug.name || ""),
+                    name: aug.name || "",
+                    genres: genreArr(aug.genre),
+                    icon: iconSrc(aug.icon),
+                    effect: aug.effect || "",
+                    rounds: String(aug.defaultRound || "").split(",").map(s=>s.trim()).filter(Boolean),
+                    pk: noteKey("prio", aug),
+                    mk: noteKey("memo", aug)
+                });
+            });
+        });
+        const BY_UID = {}, BY_KEY = {};
+        ITEMS.forEach(it=>{ BY_UID[it.uid] = it; BY_KEY[it.key] = it; });
+
+        const getPrio = it => { const v = lsGet(it.pk) || ""; return PRIO_LABEL[v] ? v : ""; };
+        const setPrio = (it, v) => lsSet(it.pk, v || "");
+        const getMemo = it => lsGet(it.mk) || "";
+        const setMemo = (it, v) => lsSet(it.mk, v);
+        const rankOf  = it => PRIO_RANK[getPrio(it)];
+
+        // ===== 画面の状態（このブラウザだけに記憶） =====
+        const UI_KEY = "noteUI_v1";
+        const ui = Object.assign({
+            view:"list", tier:"silver", q:"", genres:[], rounds:[], prios:[], sort:"data", filtersOpen:false,
+            pickMode:"random", pickQ:""
+        }, (()=>{ try { return JSON.parse(lsGet(UI_KEY) || "{}"); } catch(e){ return {}; } })());
+        ui.q = ""; ui.pickQ = "";
+        if(!["list","tier","pick"].includes(ui.view)) ui.view = "list";
+        if(!["all", ...TIERS].includes(ui.tier)) ui.tier = "silver";
+        if(!["random","manual"].includes(ui.pickMode)) ui.pickMode = "random";
+        delete ui.picks; delete ui.pickRound; delete ui.pickTier;
+        ["genres","rounds","prios"].forEach(k=>{ if(!Array.isArray(ui[k])) ui[k] = []; });
+        function saveUI(){
+            const { q, pickQ, ...rest } = ui;
+            lsSet(UI_KEY, JSON.stringify(rest));
+        }
+
+        // ===== 絞り込み・並び替え =====
+        function matches(it){
+            if(ui.tier !== "all" && it.tier !== ui.tier) return false;
+            if(ui.genres.length && !it.genres.some(g=>ui.genres.includes(g))) return false;
+            if(ui.rounds.length && !it.rounds.some(r=>ui.rounds.includes(r))) return false;
+            if(ui.prios.length && !ui.prios.includes(getPrio(it) || "none")) return false;
+            const q = ui.q.trim().toLowerCase();
+            if(q){
+                const hay = (it.name + " " + it.effect + " " + getMemo(it) + " " + it.genres.join(" ")).toLowerCase();
+                if(!q.split(/\s+/).every(w=>hay.includes(w))) return false;
             }
+            return true;
+        }
+        const collator = new Intl.Collator("ja");
+        const byData = (a,b) => TIERS.indexOf(a.tier) - TIERS.indexOf(b.tier) || a.idx - b.idx;
+        const SORTS = {
+            data:  byData,
+            prio:  (a,b) => rankOf(a) - rankOf(b) || byData(a,b),
+            name:  (a,b) => collator.compare(a.name, b.name),
+            genre: (a,b) => GENRES.indexOf(a.genres[0]) - GENRES.indexOf(b.genres[0]) || collator.compare(a.name, b.name)
+        };
+        const sortItems = list => list.slice().sort(SORTS[ui.sort] || byData);
+        const visibleItems = () => sortItems(ITEMS.filter(matches));
 
-            document.querySelectorAll(".tab").forEach(tab=>{
-                tab.addEventListener("click", ()=>{
-                    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-                    document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));
-                    tab.classList.add("active");
-                    activeTier = tab.dataset.tier;
-                    document.getElementById("pane-"+activeTier).classList.add("active");
-                    applyFilters();
-                });
-            });
-
-            TIERS.forEach(tier=>{
-                const grid = document.getElementById("cards-"+tier);
-                (augmentsData[tier]||[]).forEach((aug, index)=>{
-                    const rowId = tier + "-" + index;
-                    grid.appendChild(makeCard(aug, rowId, tier));
-                });
-            });
-
-            document.getElementById("search").addEventListener("input", applyFilters);
-            document.getElementById("filter-prio").addEventListener("change", applyFilters);
-            document.getElementById("filter-genre").addEventListener("change", applyFilters);
-            document.getElementById("filter-round").addEventListener("change", applyFilters);
-
-            document.getElementById("btn-save").addEventListener("click", saveAll);
-            document.getElementById("btn-export").addEventListener("click", exportData);
-            document.getElementById("btn-import").addEventListener("click", ()=> document.getElementById("import-file").click());
-            document.getElementById("import-file").addEventListener("change", importData);
-
-            applyFilters();
+        // ===== 部品 =====
+        function iconHTML(it, size){
+            return '<span class="ic ic-'+size+' t-'+it.tier+'"><img src="'+esc(it.icon)+'" alt="" loading="lazy" decoding="async" draggable="false" onerror="this.classList.add(\'err\')"></span>';
+        }
+        function genreBadges(it){
+            return it.genres.map(g=>'<span class="badge '+(GENRE_CLASS[g]||"")+'">'+esc(g)+'</span>').join("");
+        }
+        function roundChips(it){
+            return ROUNDS.map(r=>'<span class="rchip'+(it.rounds.includes(r) ? " on" : "")+'">'+r+'</span>').join("");
+        }
+        function prioSeg(p){
+            return '<div class="pseg" role="group" aria-label="優先度">' + PRIOS.map(o=>
+                '<button data-prio="'+o.v+'" aria-pressed="'+(p===o.v)+'" title="'+o.t+'">'+o.l+'</button>').join("") + '</div>';
+        }
+        function tierTag(it){
+            return '<span class="tier-tag t-'+it.tier+'">'+TIER_JP[it.tier]+'</span>';
+        }
+        function autoGrow(ta){
+            if(!ta || !ta.offsetParent) return;
+            ta.style.height = "auto";
+            ta.style.height = (ta.scrollHeight + 3) + "px";
+        }
+        function setCount(shown){
+            const total = ui.tier === "all" ? ITEMS.length : ITEMS.filter(it=>it.tier===ui.tier).length;
+            $("#count").textContent = "表示 " + shown + " / " + total + " 件";
+        }
+        function emptyHTML(){
+            return '<div class="empty"><p>条件に合うオーグメントがありません。</p><button class="btn" data-act="clear">条件をクリア</button></div>';
         }
 
-        function makeCard(aug, rowId, tier){
-            const gList = genreArr(aug.genre);
+        // 優先度を押したとき：同じものをもう一度押すと解除
+        function togglePrio(it, v){
+            const next = getPrio(it) === v ? "" : v;
+            setPrio(it, next);
+            return next;
+        }
+        function paintPrio(root, p){
+            root.classList.remove("is-soku","is-tori","is-da","is-batsu");
+            if(p) root.classList.add("is-"+p);
+            $$(".pseg button", root).forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.prio === p)));
+            const big = $(".pbig", root);
+            if(big){ big.className = "pbig " + (p ? "p-"+p : "p-none"); big.textContent = PRIO_LABEL[p] || "−"; }
+        }
 
-            // 保存値（編集できるのは備考[メモ]のみ。優先度・ラウンドは表示専用）
-            const pk = noteKey("prio", aug), mk = noteKey("memo", aug);
-            const savedPrio = localStorage.getItem(pk) || "";
-            const savedMemo = localStorage.getItem(mk) || "";
-            // 出現ラウンドはデータ（defaultRound）由来の表示専用項目。
-            // localStorageにはキャッシュせず、常にエディタで設定した最新の値を表示する。
-            const defaultRound = aug.defaultRound || "";
-            const roundTokens = defaultRound.split(",").map(s=>s.trim()).filter(Boolean);
-
-            const card = document.createElement("div");
-            card.className = "card" + (PRIO_CARD[savedPrio] ? " " + PRIO_CARD[savedPrio] : "");
-            card.id = "card-" + rowId;
-
-            const iconUrl = aug.icon && aug.icon.startsWith("http") ? aug.icon : (imageBaseUrl + (aug.icon||""));
-            const badges = gList.map(g=>
-                '<span class="badge '+(GENRE_CLASS[g]||"")+'">'+esc(g)+'</span>').join("");
-
-            const prioCls = PRIO_CLASS[savedPrio] || "none";
-            const prioTxt = PRIO_LABEL[savedPrio] || "-";
-
-            const rchips = ROUNDS.map(r=>
-                '<span class="rchip'+(roundTokens.includes(r) ? " on" : "")+'">'+r+'</span>').join("");
-
-            // 優先度選択のオプション（透明なselectタグ用）
-            const prioOptions = `
-                <option value="" ${savedPrio === "" ? "selected" : ""}>- (未設定)</option>
-                <option value="soku" ${savedPrio === "soku" ? "selected" : ""}>即 (即ピック)</option>
-                <option value="tori" ${savedPrio === "tori" ? "selected" : ""}>取 (取る)</option>
-                <option value="da" ${savedPrio === "da" ? "selected" : ""}>妥 (妥協)</option>
-                <option value="batsu" ${savedPrio === "batsu" ? "selected" : ""}>× (取らない)</option>
-            `;
-
-            card.innerHTML =
-              '<div class="c-head">'+
-                '<img class="c-icon" src="'+iconUrl+'" alt="" onerror="this.style.opacity=0.3">'+
-                '<div class="c-title">'+esc(aug.name)+'</div>'+
-                // ▼ ここを修正：バッジの上に透明なselectを被せる ▼
-                '<div style="position:relative; flex:0 0 auto;">'+
-                    '<span class="prio '+prioCls+'" id="prio-badge-'+rowId+'">'+prioTxt+'</span>'+
-                    '<select id="prio-sel-'+rowId+'" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; appearance:none;">'+
-                        prioOptions +
-                    '</select>'+
+        // ===== 一覧 =====
+        function cardHTML(it){
+            const p = getPrio(it);
+            return '<article class="card'+(p ? " is-"+p : "")+'" data-uid="'+it.uid+'">'+
+                '<div class="c-head">'+ iconHTML(it, "md") +
+                    '<div class="c-titles"><h3 class="c-title">'+esc(it.name)+'</h3><div class="genres">'+genreBadges(it)+'</div></div>'+
+                    (ui.tier === "all" ? tierTag(it) : "") +
                 '</div>'+
-                // ▲ 修正ここまで ▲
-              '</div>'+
-              (badges ? '<div class="genres">'+badges+'</div>' : '')+
-              '<div class="effect">'+esc(aug.effect)+'</div>'+
-              '<div class="c-foot">'+
-                '<div class="field-row">'+
-                  '<span class="field-lbl">出現ラウンド</span>'+
-                  '<div class="rchips">'+rchips+'</div>'+
+                '<p class="effect">'+esc(it.effect)+'</p>'+
+                '<div class="c-foot">'+
+                    '<div class="rwrap"><span class="lbl">出現</span><div class="rounds">'+roundChips(it)+'</div></div>'+
+                    prioSeg(p)+
                 '</div>'+
-                '<div class="field-row" style="align-items:flex-start">'+
-                  '<span class="field-lbl" style="margin-top:6px">メモ</span>'+
-                  '<textarea class="memo" id="memo-'+rowId+'" rows="2" placeholder="メモを入力…">'+esc(savedMemo)+'</textarea>'+
-                '</div>'+
-              '</div>';
+                '<textarea class="memo" rows="1" placeholder="メモ" aria-label="'+esc(it.name)+'のメモ">'+esc(getMemo(it))+'</textarea>'+
+            '</article>';
+        }
+        function renderList(){
+            const list = visibleItems();
+            const box = $("#cards");
+            box.innerHTML = list.length ? list.map(cardHTML).join("") : emptyHTML();
+            $$("textarea.memo", box).forEach(autoGrow);
+            setCount(list.length);
+        }
 
-            const memo = card.querySelector("#memo-"+CSS.escape(rowId));
-            memo.addEventListener("input", ()=> localStorage.setItem(mk, memo.value));
+        // ===== ティア表 =====
+        function tlItemHTML(it){
+            return '<button class="tl-item" data-uid="'+it.uid+'" title="'+esc(it.name)+'">'+iconHTML(it,"md")+'<span class="tl-name">'+esc(it.name)+'</span></button>';
+        }
+        function renderTier(){
+            const list = visibleItems();
+            const groups = { soku:[], tori:[], da:[], batsu:[], "":[] };
+            list.forEach(it=>groups[getPrio(it)].push(it));
+            $("#tl").innerHTML = TL_ROWS.map(r=>
+                '<div class="tl-row" data-prio="'+r.v+'">'+
+                    '<div class="tl-label '+(r.v ? "p-"+r.v : "p-none")+'"><b'+(r.l.length > 1 ? ' class="long"' : '')+'>'+r.l+'</b><small>'+groups[r.v].length+'件</small></div>'+
+                    '<div class="tl-items">'+(groups[r.v].map(tlItemHTML).join("") || '<span class="tl-empty">ここにドラッグ</span>')+'</div>'+
+                '</div>').join("");
+            setCount(list.length);
+        }
 
-            // ▼ 追加：selectの変更イベントを拾って見た目とデータを更新 ▼
-            const prioSel = card.querySelector("#prio-sel-"+CSS.escape(rowId));
-            const prioBadge = card.querySelector("#prio-badge-"+CSS.escape(rowId));
-            
-            prioSel.addEventListener("change", (e) => {
-                const nextPrio = e.target.value;
-
-                // データの保存
-                localStorage.setItem(pk, nextPrio);
-
-                // バッジのテキストと色の更新
-                prioBadge.className = "prio " + (PRIO_CLASS[nextPrio] || "none");
-                prioBadge.textContent = PRIO_LABEL[nextPrio] || "-";
-
-                // カード全体の枠色の更新
-                card.classList.remove("is-soku", "is-tori", "is-da", "is-batsu");
-                if (PRIO_CARD[nextPrio]) {
-                    card.classList.add(PRIO_CARD[nextPrio]);
+        // ドラッグ（マウスはそのまま、タッチは長押しで開始）
+        let drag = null, lpTimer = null, suppressClick = false;
+        function startDrag(){
+            drag.started = true;
+            drag.el.classList.add("dragging");
+            const g = drag.el.cloneNode(true);
+            g.classList.remove("dragging"); g.classList.add("ghost");
+            document.body.appendChild(g);
+            drag.ghost = g;
+            document.body.classList.add("is-dragging");
+            moveDrag(drag.x, drag.y);
+            try { if(drag.touch && navigator.vibrate) navigator.vibrate(12); } catch(e){}
+        }
+        function moveDrag(x, y){
+            drag.ghost.style.left = x + "px";
+            drag.ghost.style.top  = y + "px";
+            const under = document.elementFromPoint(x, y);
+            const row = under ? under.closest(".tl-row") : null;
+            if(drag.over !== row){
+                if(drag.over) drag.over.classList.remove("drop");
+                if(row) row.classList.add("drop");
+                drag.over = row;
+            }
+            if(y < 70) window.scrollBy(0, -14);
+            else if(y > window.innerHeight - 70) window.scrollBy(0, 14);
+        }
+        function endDrag(apply){
+            clearTimeout(lpTimer);
+            const d = drag; drag = null;
+            if(!d || !d.started) return;
+            if(d.ghost) d.ghost.remove();
+            d.el.classList.remove("dragging");
+            if(d.over) d.over.classList.remove("drop");
+            document.body.classList.remove("is-dragging");
+            suppressClick = true; setTimeout(()=>{ suppressClick = false; }, 350);
+            if(apply && d.over){
+                const it = BY_UID[d.uid], p = d.over.dataset.prio;
+                if(getPrio(it) !== p){
+                    setPrio(it, p);
+                    toast(it.name + " → " + (PRIO_LABEL[p] || "未設定"));
                 }
-            });
-            // ▲ 追加ここまで ▲
-
-            cards[rowId] = {
-                el: card,
-                name: (aug.name||"").toLowerCase(),
-                effect: (aug.effect||"").toLowerCase(),
-                genre: gList.join(","),
-                pk, mk
-            };
-            return card;
+            }
+            renderTier();
         }
-
-        function applyFilters(){
-            const q       = document.getElementById("search").value.trim().toLowerCase();
-            const prioF   = document.getElementById("filter-prio").value;
-            const genreF  = document.getElementById("filter-genre").value;
-            const roundF  = document.getElementById("filter-round").value;
-
-            const grid = document.getElementById("cards-"+activeTier);
-            const list = (augmentsData[activeTier]||[]);
-            let shown = 0;
-
-            list.forEach((aug, index)=>{
-                const rowId = activeTier + "-" + index;
-                const c = cards[rowId]; if(!c) return;
-
-                const prio  = localStorage.getItem(c.pk) || "";
-                const memo  = (localStorage.getItem(c.mk) || "").toLowerCase();
-                const round = (aug.defaultRound || "").toLowerCase();
-
-                const mText  = !q || c.name.includes(q) || c.effect.includes(q) || memo.includes(q);
-                const mPrio  = !prioF || prio === prioF;
-                const mGenre = !genreF || c.genre.split(",").includes(genreF);
-                const mRound = !roundF || round.includes(roundF.toLowerCase());
-
-                const vis = mText && mPrio && mGenre && mRound;
-                c.el.style.display = vis ? "" : "none";
-                if(vis) shown++;
+        function bindTierDrag(){
+            const tl = $("#tl");
+            tl.addEventListener("pointerdown", e=>{
+                const el = e.target.closest(".tl-item");
+                if(!el || (e.pointerType === "mouse" && e.button !== 0)) return;
+                drag = { el, uid:el.dataset.uid, x0:e.clientX, y0:e.clientY, x:e.clientX, y:e.clientY,
+                         touch:e.pointerType !== "mouse", started:false, ghost:null, over:null };
+                if(drag.touch) lpTimer = setTimeout(()=>{ if(drag && !drag.started) startDrag(); }, 280);
             });
-
-            let emptyEl = grid.querySelector(".empty");
-            if(shown === 0){
-                if(!emptyEl){
-                    emptyEl = document.createElement("div");
-                    emptyEl.className = "empty"; emptyEl.textContent = "該当なし";
-                    grid.appendChild(emptyEl);
+            window.addEventListener("pointermove", e=>{
+                if(!drag) return;
+                drag.x = e.clientX; drag.y = e.clientY;
+                const dist = Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0);
+                if(!drag.started){
+                    if(drag.touch){ if(dist > 8){ clearTimeout(lpTimer); drag = null; } return; }
+                    if(dist < 5) return;
+                    startDrag();
                 }
-            } else if(emptyEl){ emptyEl.remove(); }
-
-            document.getElementById("count").textContent = "表示 " + shown + " / 全 " + list.length + " 件";
+                moveDrag(e.clientX, e.clientY);
+            });
+            window.addEventListener("pointerup", ()=>{ if(drag) endDrag(true); });
+            window.addEventListener("pointercancel", ()=>{ if(drag) endDrag(false); });
+            // ドラッグ中はスクロールさせない
+            window.addEventListener("touchmove", e=>{ if(drag && drag.started) e.preventDefault(); }, { passive:false });
+            tl.addEventListener("contextmenu", e=>{ if(e.target.closest(".tl-item")) e.preventDefault(); });
+            tl.addEventListener("dragstart", e=>e.preventDefault());
+            tl.addEventListener("click", e=>{
+                const el = e.target.closest(".tl-item");
+                if(!el) return;
+                if(suppressClick){ e.preventDefault(); return; }
+                openDetail(el.dataset.uid);
+            });
         }
 
-        // ===== 保存・バックアップ機能 =====
-        function showToast(msg, isErr){
-            const t = document.getElementById("toast");
+        // ===== ピック補助（2-1 → 3-2 → 4-2 の順に進めて、最後に結果を見る） =====
+        const RUN_KEY = "pickRun_v1", HIST_KEY = "pickHistory_v1";
+        function newRun(firstTier){
+            return { startedAt:Date.now(), stage:0, savedAt:null,
+                     stages:ROUNDS.map(r=>({ round:r, tier:firstTier || "silver", slots:[], chosen:null, seen:[] })) };
+        }
+        function loadRun(){
+            try {
+                const r = JSON.parse(lsGet(RUN_KEY) || "null");
+                if(r && Array.isArray(r.stages) && r.stages.length === 3){
+                    r.stages.forEach((s, i)=>{
+                        s.round = ROUNDS[i];
+                        if(!TIERS.includes(s.tier)) s.tier = "silver";
+                        s.slots = (Array.isArray(s.slots) ? s.slots : []).filter(x=>x && BY_KEY[x.key]).slice(0,3);
+                        s.slots.forEach(x=>{ if(x.from && !BY_KEY[x.from]) x.from = null; });
+                        if(s.chosen && !BY_KEY[s.chosen]) s.chosen = null;
+                        if(!Array.isArray(s.seen)) s.seen = [];
+                    });
+                    r.stage = Math.max(0, Math.min(3, r.stage | 0));
+                    return r;
+                }
+            } catch(e){}
+            return newRun();
+        }
+        let run = loadRun();
+        const saveRun = () => lsSet(RUN_KEY, JSON.stringify(run));
+        function loadHist(){ try { const h = JSON.parse(lsGet(HIST_KEY) || "[]"); return Array.isArray(h) ? h : []; } catch(e){ return []; } }
+        const saveHist = h => lsSet(HIST_KEY, JSON.stringify(h.slice(0, 30)));
+
+        const curStage = () => run.stages[Math.min(run.stage, 2)];
+        const takenKeys = () => run.stages.slice(0, Math.min(run.stage, 3)).map(s=>s.chosen).filter(Boolean);
+        // 履歴などでデータから消えたオーグメントも名前だけは出せるように
+        function itemOf(key){
+            if(BY_KEY[key]) return BY_KEY[key];
+            const [tier, ...rest] = String(key || "").split("|");
+            return { uid:"", key, tier:TIERS.includes(tier) ? tier : "silver", name:rest.join("|"), genres:[], icon:"", effect:"", rounds:[], pk:"", mk:"" };
+        }
+        const prioOfKey = key => BY_KEY[key] ? getPrio(BY_KEY[key]) : "";
+        const rankOfKey = key => PRIO_RANK[prioOfKey(key)];
+
+        function stagePool(st){ return ITEMS.filter(it=>it.tier === st.tier && it.rounds.includes(st.round)); }
+        function drawRandom(st, n){
+            // 取得済み・このステージで一度出たもの・今並んでいるものは出さない
+            const block = new Set([...takenKeys(), ...st.seen, ...st.slots.map(s=>s.key)]);
+            const pool = stagePool(st).filter(it=>!block.has(it.key));
+            const out = [];
+            while(out.length < n && pool.length) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+            return out;
+        }
+        function addSlot(st, it){ st.slots.push({ key:it.key, from:null, pending:false }); st.seen.push(it.key); }
+
+        function doDraw(){
+            const st = curStage(), need = 3 - st.slots.length;
+            if(need <= 0) return;
+            const got = drawRandom(st, need);
+            if(!got.length){ toast("このラウンドとティアで出せる候補がありません", true); return; }
+            got.forEach(it=>addSlot(st, it));
+            if(got.length < need) toast("候補が足りないため " + got.length + "つだけ出しました", true);
+            saveRun(); renderPick();
+        }
+        function doReroll(i){
+            const st = curStage(), sl = st.slots[i];
+            if(!sl || sl.from) return;
+            if(ui.pickMode === "random"){
+                const got = drawRandom(st, 1);
+                if(!got.length){ toast("リロールで出せる候補が残っていません", true); return; }
+                sl.from = sl.key; sl.key = got[0].key; st.seen.push(sl.key);
+                toast(itemOf(sl.from).name + " → " + got[0].name);
+            } else {
+                st.slots.forEach(s=>{ s.pending = false; });
+                sl.pending = true;
+                toast("リロールで出たものを下の一覧から選んでください");
+            }
+            saveRun(); renderPick();
+        }
+        function pickFromGrid(it){
+            const st = curStage();
+            const pend = st.slots.find(s=>s.pending);
+            if(pend){
+                if(st.slots.some(s=>s.key === it.key)){ toast("すでに並んでいるオーグメントです", true); return; }
+                pend.from = pend.key; pend.key = it.key; pend.pending = false; st.seen.push(it.key);
+            } else {
+                const idx = st.slots.findIndex(s=>s.key === it.key);
+                if(idx >= 0) st.slots.splice(idx, 1);
+                else if(st.slots.length >= 3){ toast("3つ並んでいます。入れ替えるときは枠の×で外してください", true); return; }
+                else addSlot(st, it);
+            }
+            saveRun(); renderPick();
+            if(st.slots.length === 3 && !st.slots.some(s=>s.pending) && window.innerWidth < 860){
+                $("#pick-stage-title").scrollIntoView({ behavior:"smooth", block:"start" });
+            }
+        }
+        function snapshot(r){
+            return { at:Date.now(), stages:r.stages.map(s=>({ round:s.round, tier:s.tier, chosen:s.chosen,
+                     slots:s.slots.map(x=>({ key:x.key, from:x.from })) })) };
+        }
+        function doChoose(i){
+            const st = curStage(), sl = st.slots[i];
+            if(!sl || sl.pending) return;
+            st.chosen = sl.key;
+            if(run.stage < 2){
+                run.stage++;
+                const nx = curStage();
+                if(!nx.slots.length) nx.tier = st.tier;
+            } else {
+                run.stage = 3;
+                const h = loadHist(), snap = snapshot(run);
+                h.unshift(snap); saveHist(h); run.savedAt = snap.at;
+            }
+            saveRun(); renderPick();
+            window.scrollTo({ top:0, behavior:"smooth" });
+        }
+        function doBack(){
+            if(run.stage === 0) return;
+            if(run.stage === 3 && run.savedAt){
+                // 結果から戻ったときは、保存した履歴を取り消す（選び直したら保存し直す）
+                saveHist(loadHist().filter(x=>x.at !== run.savedAt));
+                run.savedAt = null;
+            }
+            run.stage--;
+            curStage().chosen = null;
+            saveRun(); renderPick();
+        }
+        function doRestart(){
+            const inProgress = run.stage < 3 && run.stages.some(s=>s.slots.length);
+            if(inProgress && !confirm("途中の内容を消して、2-1からやり直します。よろしいですか？")) return;
+            run = newRun(run.stages[0].tier);
+            ui.pickQ = ""; $("#pick-q").value = "";
+            saveRun(); renderPick();
+            window.scrollTo({ top:0, behavior:"smooth" });
+        }
+
+        // --- 表示 ---
+        function renderSteps(){
+            $("#pick-steps").innerHTML = run.stages.map((s, i)=>{
+                const state = i < run.stage ? "done" : (i === run.stage ? "now" : "todo");
+                const ch = s.chosen ? itemOf(s.chosen) : null;
+                return '<li class="step '+state+'"><span class="st-round">'+s.round+'</span>'+
+                    (ch && state === "done" ? iconHTML(ch, "sm") + '<span class="st-name">'+esc(ch.name)+'</span>'
+                        : '<span class="st-name">'+(state === "now" ? TIER_JP[s.tier] + "から選択中" : "まだ")+'</span>')+'</li>';
+            }).join("") + '<li class="step '+(run.stage === 3 ? "now" : "todo")+'"><span class="st-round">結果</span></li>';
+        }
+        function slotHTML(sl, i, best){
+            const it = itemOf(sl.key), p = prioOfKey(sl.key), from = sl.from ? itemOf(sl.from) : null;
+            return '<article class="slot'+(p ? " is-"+p : "")+(best ? " best" : "")+(sl.pending ? " pending" : "")+'" data-i="'+i+'" data-uid="'+it.uid+'">'+
+                (best ? '<span class="best-flag">いちばん優先度が高い</span>' : '')+
+                '<div class="slot-head">'+iconHTML(it,"lg")+
+                    '<div class="c-titles"><h3 class="slot-name">'+esc(it.name)+'</h3><div class="genres">'+genreBadges(it)+'</div></div>'+
+                    '<span class="pbig '+(p ? "p-"+p : "p-none")+'" title="優先度">'+(PRIO_LABEL[p] || "−")+'</span>'+
+                '</div>'+
+                (from ? '<p class="reroll-note">リロール前：'+esc(from.name)+'</p>' : '')+
+                (sl.pending ? '<p class="pending-note">リロールで出たものを下の一覧から選んでください。<button class="linkbtn" data-act="cancel-reroll">やめる</button></p>' : '')+
+                '<p class="effect">'+esc(it.effect)+'</p>'+
+                '<textarea class="memo" rows="1" placeholder="メモ" aria-label="'+esc(it.name)+'のメモ">'+esc(getMemo(it))+'</textarea>'+
+                '<div class="slot-tools">'+prioSeg(p)+
+                    (ui.pickMode === "manual" ? '<button class="slot-x" data-act="unpick" aria-label="'+esc(it.name)+'を外す" title="外す">×</button>' : '')+
+                '</div>'+
+                '<div class="slot-actions">'+
+                    '<button class="btn" data-act="reroll"'+(sl.from || sl.pending ? ' disabled' : '')+'>'+(sl.from ? "リロール済み" : "リロール")+'</button>'+
+                    '<button class="btn primary choose" data-act="choose"'+(sl.pending ? ' disabled' : '')+'>これにする</button>'+
+                '</div>'+
+            '</article>';
+        }
+        function renderPickSlots(st){
+            const ranks = st.slots.map(s=>rankOfKey(s.key));
+            const min = Math.min(...ranks);
+            const best = (st.slots.length >= 2 && min < 3 && ranks.filter(r=>r === min).length === 1) ? ranks.indexOf(min) : -1;
+            let html = st.slots.map((sl, i)=>slotHTML(sl, i, i === best)).join("");
+            if(st.slots.length < 3){
+                const msg = st.slots.length
+                    ? "あと" + (3 - st.slots.length) + "つ" + (ui.pickMode === "random" ? "出せます" : "選べます")
+                    : (ui.pickMode === "random" ? "「ランダムで3つ出す」を押すと候補が3つ並びます" : "試合で出た3つを下の一覧から選ぶと、ここに並べて比べられます");
+                html += '<div class="slot-hint'+(st.slots.length ? "" : " full")+'">'+msg+'</div>';
+            }
+            $("#pick-slots").innerHTML = html;
+            $$("#pick-slots textarea.memo").forEach(autoGrow);
+        }
+        function renderCandidates(st){
+            const q = ui.pickQ.trim().toLowerCase();
+            const taken = new Set(takenKeys());
+            const inSlots = new Set(st.slots.map(s=>s.key));
+            const list = stagePool(st).filter(it=>!q || (it.name + " " + it.effect).toLowerCase().includes(q))
+                .sort((a,b)=>collator.compare(a.name, b.name));
+            $("#cand-count").textContent = "（" + TIER_JP[st.tier] + "・" + st.round + "：" + list.length + "件）";
+            $("#cand-grid").innerHTML = list.length ? list.map(it=>{
+                const p = getPrio(it), sel = inSlots.has(it.key), got = taken.has(it.key);
+                return '<button class="cand'+(p === "batsu" ? " is-batsu" : "")+'" data-key="'+esc(it.key)+'" aria-pressed="'+sel+'"'+(got ? ' disabled' : '')+' title="'+esc(it.name)+'">'+
+                    iconHTML(it,"md")+'<span class="cand-name">'+esc(it.name)+'</span>'+
+                    (got ? '<span class="pmark">取得済み</span>' : (p ? '<span class="pmark p-'+p+'">'+PRIO_LABEL[p]+'</span>' : ''))+'</button>';
+            }).join("") : '<div class="empty"><p>'+(q ? "「"+esc(ui.pickQ)+"」に合う候補がありません。" : "このラウンドとティアで出るオーグメントが登録されていません。")+'</p></div>';
+        }
+
+        // 選んだものが、その時の候補の中で優先度どおりだったか
+        function verdictOf(st){
+            if(!st.chosen) return { cls:"none", text:"" };
+            const keys = st.slots.map(s=>s.key);
+            const mine = rankOfKey(st.chosen), best = Math.min(...keys.map(rankOfKey));
+            if(!keys.some(k=>rankOfKey(k) < 3)){
+                return mine === 4 ? { cls:"warn", text:"×（取らない）にしているものを選びました" }
+                                  : { cls:"none", text:"候補に優先度が付いていません" };
+            }
+            if(mine <= best) return { cls:"good", text:"いちばん優先度が高いものを選びました" };
+            const better = keys.filter(k=>rankOfKey(k) < mine).sort((a,b)=>rankOfKey(a) - rankOfKey(b))[0];
+            return { cls:"warn", text:"もっと優先度が高い「"+itemOf(better).name+"」（"+PRIO_LABEL[prioOfKey(better)]+"）がありました" };
+        }
+        function resultCardsHTML(stages){
+            return '<div class="res-grid">' + stages.map(st=>{
+                const ch = itemOf(st.chosen), p = prioOfKey(st.chosen), v = verdictOf(st);
+                return '<article class="res">'+
+                    '<div class="res-top"><span class="st-round">'+st.round+'</span>'+tierTag(ch)+'</div>'+
+                    '<div class="slot-head">'+iconHTML(ch,"lg")+
+                        '<div class="c-titles"><h3 class="slot-name">'+esc(ch.name)+'</h3><div class="genres">'+genreBadges(ch)+'</div></div>'+
+                        '<span class="pbig '+(p ? "p-"+p : "p-none")+'">'+(PRIO_LABEL[p] || "−")+'</span>'+
+                    '</div>'+
+                    (v.text ? '<p class="verdict '+v.cls+'">'+esc(v.text)+'</p>' : '')+
+                    '<div class="offered"><span class="lbl">出ていた候補</span>'+ st.slots.map(s=>{
+                        const it = itemOf(s.key), pp = prioOfKey(s.key);
+                        return '<div class="offer'+(s.key === st.chosen ? " chosen" : "")+'">'+iconHTML(it,"sm")+
+                            '<span class="offer-name">'+esc(it.name)+(s.from ? '<span class="from">リロール前：'+esc(itemOf(s.from).name)+'</span>' : '')+'</span>'+
+                            (pp ? '<span class="pmark p-'+pp+'">'+PRIO_LABEL[pp]+'</span>' : '')+
+                            (s.key === st.chosen ? '<span class="chosen-tag">選択</span>' : '')+
+                        '</div>';
+                    }).join("") +'</div>'+
+                '</article>';
+            }).join("") + '</div>';
+        }
+        function scoreText(stages){
+            const vs = stages.map(verdictOf);
+            const judged = vs.filter(v=>v.cls !== "none").length, good = vs.filter(v=>v.cls === "good").length;
+            const rerolls = stages.reduce((n, s)=>n + s.slots.filter(x=>x.from).length, 0);
+            return (judged ? "優先度どおりに選べたのは " + good + " / " + judged + " ステージ" : "優先度が付いていないため判定できません") +
+                   "（リロール " + rerolls + "回）";
+        }
+        function renderResult(){
+            $("#pick-result").innerHTML =
+                '<div class="result-head"><h2>今回の結果</h2><span class="result-score">'+esc(scoreText(run.stages))+'</span></div>'+
+                resultCardsHTML(run.stages)+
+                '<div class="res-actions"><button class="btn primary" data-act="again">もう一度やる</button><button class="btn" data-act="back">4-2に戻って選び直す</button></div>';
+        }
+        function fmtDate(t){
+            const d = new Date(t), pad = x=>String(x).padStart(2,"0");
+            return (d.getMonth()+1) + "/" + d.getDate() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+        }
+        function renderHistory(){
+            const h = loadHist(), box = $("#pick-hist");
+            box.hidden = !h.length;
+            if(!h.length){ box.innerHTML = ""; return; }
+            box.innerHTML = '<summary>これまでの結果（'+h.length+'件）</summary>'+
+                '<ul class="hist-list">' + h.map(r=>
+                    '<li class="hist-item"><details><summary>'+
+                        '<span class="hist-date">'+fmtDate(r.at)+'</span>'+
+                        r.stages.map(s=>{ const it = itemOf(s.chosen), p = prioOfKey(s.chosen);
+                            return '<span class="hist-pick">'+iconHTML(it,"sm")+'<span>'+esc(it.name)+'</span>'+(p ? '<span class="pmark p-'+p+'">'+PRIO_LABEL[p]+'</span>' : '')+'</span>'; }).join("")+
+                    '</summary><div class="hist-body"><p class="result-score">'+esc(scoreText(r.stages))+'</p>'+resultCardsHTML(r.stages)+'</div></details></li>'
+                ).join("") + '</ul>'+
+                '<div class="hist-foot"><button class="linkbtn" data-act="clear-hist">履歴を消す</button></div>';
+        }
+        function renderPick(){
+            const done = run.stage === 3;
+            renderSteps();
+            $$("#pick-mode button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.val === ui.pickMode)));
+            $("#pick-ctrl").hidden = done;
+            $("#pick-stage").hidden = done;
+            $("#pick-result").hidden = !done;
+            if(done){ renderResult(); }
+            else {
+                const st = curStage();
+                $$("#pick-tier button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.val === st.tier)));
+                const draw = $("#pick-draw");
+                draw.hidden = ui.pickMode !== "random" || st.slots.length >= 3;
+                draw.textContent = st.slots.length ? "残りをランダムで出す" : "ランダムで3つ出す";
+                $("#pick-back").disabled = run.stage === 0;
+                $("#pick-stage-title").textContent = st.round + " のオーグメント（" + TIER_JP[st.tier] + "）";
+                renderPickSlots(st);
+                $("#cand-panel").hidden = ui.pickMode !== "manual";
+                if(ui.pickMode === "manual") renderCandidates(st);
+            }
+            renderHistory();
+        }
+        function bindPick(){
+            $("#pick-mode").addEventListener("click", e=>{
+                const b = e.target.closest("button"); if(!b || b.dataset.val === ui.pickMode) return;
+                ui.pickMode = b.dataset.val;
+                run.stages.forEach(s=>s.slots.forEach(x=>{ x.pending = false; }));
+                saveUI(); saveRun(); renderPick();
+            });
+            $("#pick-tier").addEventListener("click", e=>{
+                const b = e.target.closest("button"), st = curStage();
+                if(!b || b.dataset.val === st.tier) return;
+                if(st.slots.length && !confirm("ティアを変えると、並んでいる候補は消えます。よろしいですか？")) return;
+                st.tier = b.dataset.val; st.slots = []; st.seen = [];
+                saveRun(); renderPick();
+            });
+            $("#pick-draw").addEventListener("click", doDraw);
+            $("#pick-back").addEventListener("click", doBack);
+            $("#pick-restart").addEventListener("click", doRestart);
+            $("#pick-q").addEventListener("input", e=>{ ui.pickQ = e.target.value; renderCandidates(curStage()); });
+            $("#cand-grid").addEventListener("click", e=>{
+                const b = e.target.closest(".cand"); if(!b || b.disabled) return;
+                const it = BY_KEY[b.dataset.key]; if(it) pickFromGrid(it);
+            });
+            const slots = $("#pick-slots");
+            slots.addEventListener("click", e=>{
+                const slot = e.target.closest(".slot[data-i]"); if(!slot) return;
+                const i = +slot.dataset.i, st = curStage(), sl = st.slots[i]; if(!sl) return;
+                const act = e.target.closest("[data-act]");
+                if(act){
+                    const a = act.dataset.act;
+                    if(a === "choose") doChoose(i);
+                    else if(a === "reroll") doReroll(i);
+                    else if(a === "cancel-reroll"){ sl.pending = false; saveRun(); renderPick(); }
+                    else if(a === "unpick"){ st.slots.splice(i, 1); saveRun(); renderPick(); }
+                    return;
+                }
+                const pb = e.target.closest(".pseg button");
+                if(pb && BY_KEY[sl.key]){ togglePrio(BY_KEY[sl.key], pb.dataset.prio); renderPick(); }
+            });
+            slots.addEventListener("input", e=>{
+                if(!e.target.matches("textarea.memo")) return;
+                const sl = curStage().slots[+e.target.closest(".slot").dataset.i];
+                if(sl && BY_KEY[sl.key]) setMemo(BY_KEY[sl.key], e.target.value);
+                autoGrow(e.target);
+            });
+            $("#pick-result").addEventListener("click", e=>{
+                const a = e.target.closest("[data-act]"); if(!a) return;
+                if(a.dataset.act === "again") doRestart();
+                else if(a.dataset.act === "back") doBack();
+            });
+            $("#pick-hist").addEventListener("click", e=>{
+                if(!e.target.closest('[data-act="clear-hist"]')) return;
+                if(!confirm("これまでの結果をすべて消します。よろしいですか？")) return;
+                saveHist([]); run.savedAt = null; saveRun(); renderHistory();
+            });
+        }
+
+        // ===== 詳細ダイアログ =====
+        function openDetail(uid){
+            const it = BY_UID[uid]; if(!it) return;
+            const p = getPrio(it), dlg = $("#detail");
+            dlg.dataset.uid = uid;
+            $("#detail-body").innerHTML =
+                '<div class="c-head">'+iconHTML(it,"lg")+'<div class="c-titles"><h3 class="c-title">'+esc(it.name)+'</h3><div class="genres">'+tierTag(it)+genreBadges(it)+'</div></div></div>'+
+                '<p class="effect">'+esc(it.effect)+'</p>'+
+                '<div class="row-between"><div class="rwrap c-foot"><span class="lbl">出現</span><div class="rounds">'+roundChips(it)+'</div></div>'+prioSeg(p)+'</div>'+
+                '<textarea class="memo" rows="2" placeholder="メモ" aria-label="'+esc(it.name)+'のメモ">'+esc(getMemo(it))+'</textarea>';
+            dlg.showModal();
+            autoGrow($("textarea.memo", dlg));
+        }
+        function bindDetail(){
+            const dlg = $("#detail");
+            dlg.addEventListener("click", e=>{
+                if(e.target === dlg || e.target.closest('[data-act="close"]')){ dlg.close(); return; }
+                const pb = e.target.closest(".pseg button");
+                if(pb){ const it = BY_UID[dlg.dataset.uid]; paintPrio(dlg, togglePrio(it, pb.dataset.prio)); }
+            });
+            dlg.addEventListener("input", e=>{
+                if(!e.target.matches("textarea.memo")) return;
+                setMemo(BY_UID[dlg.dataset.uid], e.target.value); autoGrow(e.target);
+            });
+            dlg.addEventListener("close", ()=>render());
+        }
+
+        // ===== 操作バー =====
+        function syncToolbar(){
+            $$("#tier-seg button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.tier === ui.tier)));
+            $$(".tb-filters .fgroup[data-group]").forEach(g=>{
+                const arr = ui[g.dataset.group];
+                $$(".chip", g).forEach(c=>c.setAttribute("aria-pressed", String(arr.includes(c.dataset.val))));
+            });
+            $("#sort").value = ui.sort;
+            const n = ui.genres.length + ui.rounds.length + ui.prios.length;
+            $("#filt-n").textContent = n ? String(n) : "";
+            $("#toolbar").classList.toggle("collapsed", !ui.filtersOpen);
+            $("#filt-toggle").setAttribute("aria-expanded", String(!!ui.filtersOpen));
+        }
+        function clearFilters(){
+            ui.genres = []; ui.rounds = []; ui.prios = []; ui.q = "";
+            $("#search").value = "";
+            saveUI(); syncToolbar(); render();
+        }
+        function bindToolbar(){
+            $("#tier-seg").addEventListener("click", e=>{
+                const b = e.target.closest("button"); if(!b) return;
+                ui.tier = b.dataset.tier; saveUI(); syncToolbar(); render();
+            });
+            $("#search").addEventListener("input", e=>{ ui.q = e.target.value; render(); });
+            $(".tb-filters").addEventListener("click", e=>{
+                if(e.target.closest('[data-act="clear"]')){ clearFilters(); return; }
+                const c = e.target.closest(".chip"); if(!c) return;
+                const key = c.closest(".fgroup").dataset.group, v = c.dataset.val;
+                ui[key] = ui[key].includes(v) ? ui[key].filter(x=>x!==v) : [...ui[key], v];
+                saveUI(); syncToolbar(); render();
+            });
+            $("#sort").addEventListener("change", e=>{ ui.sort = e.target.value; saveUI(); render(); });
+            $("#filt-toggle").addEventListener("click", ()=>{ ui.filtersOpen = !ui.filtersOpen; saveUI(); syncToolbar(); });
+            document.addEventListener("click", e=>{
+                if(e.target.closest('main [data-act="clear"]')) clearFilters();
+            });
+        }
+
+        // ===== 一覧の操作 =====
+        function bindList(){
+            const box = $("#cards");
+            box.addEventListener("click", e=>{
+                const pb = e.target.closest(".pseg button"); if(!pb) return;
+                const card = pb.closest(".card"), it = BY_UID[card.dataset.uid];
+                const p = togglePrio(it, pb.dataset.prio);
+                // 優先度で絞り込み・並び替え中は並びが変わるので描き直す
+                if(ui.prios.length || ui.sort === "prio") renderList(); else paintPrio(card, p);
+            });
+            box.addEventListener("input", e=>{
+                if(!e.target.matches("textarea.memo")) return;
+                setMemo(BY_UID[e.target.closest(".card").dataset.uid], e.target.value);
+                autoGrow(e.target);
+            });
+        }
+
+        // ===== 画面切り替え =====
+        function render(){
+            if(ui.view === "list") renderList();
+            else if(ui.view === "tier") renderTier();
+            else renderPick();
+        }
+        function showView(){
+            $$("#view-seg button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.view === ui.view)));
+            ["list","tier","pick"].forEach(v=>{ $("#view-"+v).hidden = (v !== ui.view); });
+            $("#toolbar").hidden = (ui.view === "pick");
+            render();
+        }
+
+        // ===== 保存・書き出し・読み込み =====
+        function toast(msg, isErr){
+            const t = $("#toast");
             t.textContent = msg;
             t.className = "toast show" + (isErr ? " err" : "");
-            clearTimeout(showToast._t);
-            showToast._t = setTimeout(()=>{ t.className = "toast"; }, 1900);
+            clearTimeout(toast._t);
+            toast._t = setTimeout(()=>{ t.className = "toast"; }, 2000);
         }
-
-        // 手動保存：DOM上の最新メモ・優先度をlocalStorageへ確定保存（自動保存の取りこぼし対策）
+        // 表示中のメモを念のため確定保存（入力のたびに自動保存はされている）
         function saveAll(){
-            let n = 0;
-            Object.keys(cards).forEach(rowId=>{
-                const memoEl = document.getElementById("memo-"+rowId);
-                if(memoEl){ localStorage.setItem(cards[rowId].mk, memoEl.value); }
-                const selEl = document.getElementById("prio-sel-"+rowId);
-                if(selEl){ localStorage.setItem(cards[rowId].pk, selEl.value); }
-                n++;
+            $$("textarea.memo").forEach(ta=>{
+                const host = ta.closest("[data-uid]");
+                const it = host ? BY_UID[host.dataset.uid] : null;
+                if(it && ta.offsetParent) setMemo(it, ta.value);
             });
-            showToast("保存しました ✓（" + n + "件）");
+            toast("保存しました（優先度とメモはこのブラウザに保存されています）");
         }
-
-        // 書き出し：全データをJSONファイルとしてダウンロード
         function exportData(){
             const data = {};
-            for(let i=0; i<localStorage.length; i++){
-                const k = localStorage.key(i);
-                if(/^(prio|memo)-/.test(k)){ data[k] = localStorage.getItem(k); }
-            }
+            try {
+                for(let i=0; i<localStorage.length; i++){
+                    const k = localStorage.key(i);
+                    if(/^(prio|memo)-/.test(k) || k === HIST_KEY) data[k] = localStorage.getItem(k);
+                }
+            } catch(e){ toast("このブラウザでは保存データを読み出せません", true); return; }
             const payload = { app:"tft-augment-note", savedAt:new Date().toISOString(), data };
-            const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
             const url = URL.createObjectURL(blob);
             const d = new Date(), pad = x=>String(x).padStart(2,"0");
             const a = document.createElement("a");
             a.href = url;
-            a.download = "augment-note-" + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate())
-                       + "-" + pad(d.getHours()) + pad(d.getMinutes()) + ".json";
+            a.download = "augment-note-" + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + "-" + pad(d.getHours()) + pad(d.getMinutes()) + ".json";
             document.body.appendChild(a); a.click(); a.remove();
-            URL.revokeObjectURL(url);
-            showToast("書き出しました ✓");
+            setTimeout(()=>URL.revokeObjectURL(url), 1000);
+            toast("書き出しました");
         }
-
-        // 読み込み：JSONバックアップを取り込んでlocalStorageへ反映
         function importData(e){
             const file = e.target.files && e.target.files[0];
-            e.target.value = ""; // 同じファイルを連続で選べるようにリセット
+            e.target.value = "";
             if(!file) return;
             const reader = new FileReader();
             reader.onload = ()=>{
                 try {
                     const parsed = JSON.parse(reader.result);
                     const data = parsed && parsed.data ? parsed.data : parsed;
-                    if(!data || typeof data !== "object") throw new Error("形式が不正です");
-                    const keys = Object.keys(data).filter(k=> /^(prio|memo)-/.test(k));
-                    if(keys.length === 0) throw new Error("対象データがありません");
-                    if(!confirm("バックアップを読み込み、現在のメモ・優先度を上書きします。よろしいですか？")) return;
-                    keys.forEach(k=> localStorage.setItem(k, data[k]));
+                    if(!data || typeof data !== "object") throw new Error("ファイルの形式が違います");
+                    const keys = Object.keys(data).filter(k=>/^(prio|memo)-/.test(k) || k === HIST_KEY);
+                    if(!keys.length) throw new Error("優先度・メモのデータが入っていません");
+                    if(!confirm("バックアップを読み込み、今の優先度とメモを上書きします。よろしいですか？")) return;
+                    keys.forEach(k=>lsSet(k, data[k]));
                     // 旧方式（番号キー）のバックアップなら、再読込時に名前キーへ移し替える
-                    if(keys.some(k=> LEGACY_KEY_RE.test(k))) localStorage.removeItem(KEY_MIGRATED);
-                    showToast("読み込みました ✓（" + keys.length + "件）再描画中…");
-                    setTimeout(()=> location.reload(), 750);
+                    if(keys.some(k=>LEGACY_KEY_RE.test(k))){ try { localStorage.removeItem(KEY_MIGRATED); } catch(err){} }
+                    toast("読み込みました（" + keys.length + "件）。再表示します");
+                    setTimeout(()=>location.reload(), 800);
                 } catch(err){
-                    showToast("読み込み失敗: " + err.message, true);
+                    toast("読み込めませんでした：" + err.message, true);
                 }
             };
-            reader.onerror = ()=> showToast("ファイル読み込みエラー", true);
+            reader.onerror = ()=>toast("ファイルを開けませんでした", true);
             reader.readAsText(file);
         }
 
-        window.onload = init;
+        // ===== 起動 =====
+        function init(){
+            migrateNoteKeys();
+            // 旧バージョンで保存された出現ラウンドのキャッシュを掃除する
+            try {
+                for(let i = localStorage.length - 1; i >= 0; i--){
+                    const k = localStorage.key(i);
+                    if(k && k.startsWith("round-")) localStorage.removeItem(k);
+                }
+            } catch(e){}
 
+            const counts = TIERS.map(t=>TIER_JP[t] + (augmentsData[t] || []).length).join(" / ");
+            $("#sub").textContent = "全" + ITEMS.length + "件（" + counts + "）";
+
+            $("#view-seg").addEventListener("click", e=>{
+                const b = e.target.closest("button"); if(!b) return;
+                ui.view = b.dataset.view; saveUI(); showView();
+                window.scrollTo({ top:0 });
+            });
+            $("#btn-save").addEventListener("click", saveAll);
+            $("#btn-export").addEventListener("click", exportData);
+            $("#btn-import").addEventListener("click", ()=>$("#import-file").click());
+            $("#import-file").addEventListener("change", importData);
+
+            bindToolbar(); bindList(); bindTierDrag(); bindPick(); bindDetail();
+            syncToolbar();
+            showView();
+            window.addEventListener("resize", ()=>$$("textarea.memo").forEach(autoGrow));
+        }
+        window.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
