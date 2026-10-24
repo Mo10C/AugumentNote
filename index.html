@@ -193,263 +193,258 @@
 <script>
         const augmentsData = {
             silver: [
-                { name: "アイテム福袋", genre: ["アイテム"], icon: "itemgrabbag1.png", effect: "ランダムな完成アイテム1個を獲得する。", defaultRound: "2-1, 3-2, 4-2" },
-                { name: "一 二 三", genre: ["特殊","金策"], icon: "threes-company-i.png", effect: "コスト1のチャンピオンを2体、コスト2のチャンピオンを1体、コスト3のチャンピオンを1体獲得する。", defaultRound: "2-1" },
-                { name: "一致団結(素材)", genre: ["アイテム","金策"], icon: "standunited1.png", effect: "ランダムな素材アイテムを1個とランダムなコスト3のチャンピオンを2体獲得する。", defaultRound: "3-2, 4-2" },
-                { name: "一致団結(特性)", genre: ["戦闘"], icon: "teaming-up-i.png", effect: "チーム内で発動している特性1つにつき(固有特性を除く)、攻撃力が1.5%、魔力が1.5%増加する。", defaultRound: "3-2, 4-2" },
-                { name: "命懸けの戦い", genre: ["金策"], icon: "risky-moves-i.png", effect: "タクティシャンは体力を20失うが、対人戦ラウンドを7回終えると26ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "AFK", genre: ["特殊","金策"], icon: "afk-i.png", effect: "次の3ラウンドの間、アクションを行えなくなる。その後、17ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "エグザイル I", genre: ["戦闘"], icon: "exiles1.png", effect: "戦闘開始時に他の味方のチャンピオンと隣接していない味方チャンピオンは、10秒間最大体力の20%にあたるシールドを獲得する。", defaultRound: "3-2, 4-2" },
-                { name: "エクスペディション", genre: ["アイテム","特殊"], icon: "expedition_i.png", effect: "各ラウンドの開始時、ベンチの一番右にいるチャンピオンを失う。この方法で33ゴールド分のチャンピオンを失うと、強力な報酬を獲得する。即座にコスト3のチャンピオンを1体獲得する。", defaultRound: "2-1" },
-                { name: "援護の弓", genre: ["アイテム"], icon: "recurvewrecker_i.png", effect: "「リカーブ ボウ」を1個獲得する。味方チームが通常攻撃を1000回行うと、さらに2個獲得する。", defaultRound: "2-1" },
-                { name: "オーグメントパワー", genre: ["特殊"], icon: "powerup_i.png", effect: "次のオーグメントのティアが1つ高くなる。", defaultRound: "2-1, 3-2" },
-                { name: "カナとカネ", genre: ["アイテム","金策"], icon: "iron-assets-i.png", effect: "「素材アイテムの金床」を1個と3ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "起死回生", genre: ["戦闘"], icon: "second--wind-i.png", effect: "戦闘開始から10秒後、味方チームが減少体力の40%の体力を回復する。", defaultRound: "3-2, 4-2" },
-                { name: "キックスタート", genre: ["戦闘","特殊","金策"], icon: "kickstart_i.png", effect: "ランダムな★2のコスト2チャンピオンを1体と1ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "吸血の胆力 I", genre: ["戦闘"], icon: "dhampyr_ii.png", effect: "敵のタクティシャンに与えたダメージの12%にあたる体力を回復する。味方チームのオムニヴァンプが10%増加する。", defaultRound: "3-2, 4-2" },
-                { name: "銀の匙", genre: ["戦闘","金策"], icon: "silver-spoon-i.png", effect: "経験値を10XP獲得する。", defaultRound: "2-1" },
-                { name: "グラスキャノン I", genre: ["戦闘"], icon: "glasscannon_i.png", effect: "後列で戦闘を開始した味方が80%の体力で戦闘を開始するが、ダメージ増加効果を16%獲得する。", defaultRound: "3-2, 4-2" },
-                { name: "構成拡大", genre: ["特殊"], icon: "branching-out-i.png", effect: "ランダムな紋章アイテムを1個獲得する。", defaultRound: "2-1" },
-                { name: "構成拡大+", genre: ["特殊"], icon: "branching-out-i.png", effect: "ランダムな紋章アイテムを1個と「再合成装置」を1個獲得する。", defaultRound: "3-2" },
-                { name: "コグニティブ タックス", genre: ["金策"], icon: "cognitivetax_i.png", effect: "8ゴールドと1XPを獲得する。", defaultRound: "2-1, 3-2" },
-                { name: "コグニティブ タックス+", genre: ["金策"], icon: "cognitivetax_i.png", effect: "12ゴールドと3XPを獲得する。" },
-                { name: "ここがセンター", genre: ["戦闘"], icon: "findyourcenter_i.png", effect: "前列の中央で戦闘を開始した味方チャンピオンは、ダメージ増加効果が15%、最大体力が25%増加する。", defaultRound: "3-2, 4-2" },
-                { name: "混乱回復装置", genre: ["特殊"], icon: "recombobulator-i.png", effect: "フィールド上のチャンピオンを、コストティアが1つ上のランダムなチャンピオンに恒久的に変化させる(最大5体)。「磁力式除去装置」を2個獲得する。", defaultRound: "3-2" },
-                { name: "ザ・タワー", genre: ["戦闘"], icon: "thetower_i.png", effect: "巨大な「ダミー」を獲得する。4秒ごとに最も近くにいる敵3体に対して電撃を放ち、最大体力の5%の確定ダメージを与える。", defaultRound: "2-1, 3-2, 4-2" },
-                { name: "サイズが大事", genre: ["アイテム"], icon: "sizematters_i.png", effect: "「ジャイアント ベルト」を1個獲得する。最大体力3600以上の状態でチャンピオンが戦闘を開始すると、「ワーモグ アーマー」を1個獲得する。", defaultRound: "3-2" },
-                { name: "サバイバー", genre: ["特殊"], icon: "survivor_i.png", effect: "4ゴールドを獲得する。3人のプレイヤーが敗退すると、さらに100ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "シールドメイデン", genre: ["特殊"], icon: "leonahero_i.png", effect: "レオナを1体獲得する。最も強いレオナが攻撃力ファイターとなり、物理ダメージとスタンを付与するスキルを得る。", defaultRound: "2-1" },
-                { name: "集中砲火", genre: ["戦闘"], icon: "marksman_i.png", effect: "味方チームの攻撃力が10%増加する。5秒ごとに、さらに5%増加する。", defaultRound: "3-2, 4-2" },
-                { name: "ステラコンボ", genre: ["特殊"], icon: "aatroxhero_i.png", effect: "エイトロックスを1体獲得する。最も強いエイトロックスが、3種類の異なる攻撃を切り替えられる攻撃力ファイターになる。", defaultRound: "2-1" },
-                { name: "絶好調", genre: ["金策"], icon: "onaroll_i.png", effect: "前回の戦闘でスターアップさせるたび、ショップ無料リロールを獲得。6ゴールドを獲得。", defaultRound: "3-2" },
-                { name: "即席アーマー I", genre: ["戦闘"], icon: "makeshift1.png", effect: "アイテムを装備していない味方の物理防御と魔法防御が30増加する。", defaultRound: "2-1, 3-2" },
-                { name: "ターミィプナル ヴェロシティー", genre: ["特殊"], icon: "poppyhero_i.png", effect: "ポッピーを1体獲得。最も強いポッピーが遠隔攻撃力キャスターとなり、対象に高速でミィプを投げつける。", defaultRound: "2-1" },
-                { name: "巧みなクラフト", genre: ["金策"], icon: "craftedcrafting_i.png", effect: "完成アイテムを作成するたびに、リロールを2回獲得する。", defaultRound: "2-1" },
-                { name: "ダミー化", genre: ["戦闘","特殊"], icon: "dummify_i.png", effect: "すべてのユニットを失い、合計体力の60%の体力を持つ「ダミー」を獲得（ステージ毎に体力+1000）。★2の2コストを1体獲得。", defaultRound: "3-2" },
-                { name: "小さな巨人", genre: ["特殊"], icon: "tiny-titans-i.png", effect: "プレイヤーの現在体力と最大体力が20増加する。", defaultRound: "2-1" },
-                { name: "小さな福袋", genre: ["アイテム"], icon: "smallgrabbag_i.png", effect: "ランダムな素材アイテムを2個獲得する。", defaultRound: "3-2, 4-2" },
-                { name: "チーム構築", genre: ["金策"], icon: "building-an-army-i.png", effect: "「小型チャンピオン複製器」を1個獲得。対人戦を5回行うと、さらにもう1個獲得。", defaultRound: "2-1, 3-2" },
-                { name: "チャージトランスファー I", genre: ["戦闘"], icon: "chargetransfer1_i.png", effect: "味方が与えるダメージが7%増加。超過ダメージの50%を、最も近くにいる敵に魔法ダメージとして与える。", defaultRound: "3-2, 4-2" },
-                { name: "昼食代", genre: ["金策"], icon: "bloodbank_i.png", effect: "敵のタクティシャンに8ダメージを与えるたびに、2ゴールドを獲得する。", defaultRound: "3-2" },
-                { name: "ちょっとだけ魔法のダイス", genre: ["アイテム","戦闘","特殊","金策"], icon: "slightlymagicroll_i.png", effect: "ダイスを振る。出た目に応じて報酬を獲得する。", defaultRound: "2-1" },
-                { name: "ツイてる気分", genre: ["金策"], icon: "feelinglucky_i.png", effect: "12ゴールドを獲得しコインを投げる。表が出た場合、4ゴールド多く獲得する。", defaultRound: "3-2" },
-                { name: "ツインガーディアン", genre: ["戦闘"], icon: "twinguardians_i.png", effect: "最前列にちょうど2体の味方が配置されている場合、それらの体力が100、物理・魔法防御が35増加。", defaultRound: "3-2, 4-2" },
-                { name: "盗賊団", genre: ["アイテム"], icon: "bandthieves1.png", effect: "「盗賊のグローブ」1個を獲得する。", defaultRound: "2-1, 3-2" },
-                { name: "友を鍛える", genre: ["特殊"], icon: "constructacompanion_iii.png", effect: "次に購入するコスト1チャンピオンが★3になる。5ゴールドを獲得する。", defaultRound: "4-2" },
-                { name: "流れる涙", genre: ["アイテム"], icon: "griefofthegreatgoddess_i.png", effect: "「女神の涙」を1個獲得。味方が6500マナを使用すると、さらに2個獲得。", defaultRound: "2-1" },
-                { name: "忍耐の美徳", genre: ["特殊","金策"], icon: "patienceisavirtue_i.png", effect: "即座に4回リロール獲得。直前ラウンドで購入していない場合、1回分の無料リロールを獲得。", defaultRound: "2-1" },
-                { name: "はしごを登れ I", genre: ["戦闘"], icon: "climbtheladder_i.png", effect: "味方倒されるたび、特性共有味方の魔力・攻撃力・防・魔防+3.5。", defaultRound: "3-2, 4-2" },
-                { name: "パンドラのアイテム", genre: ["アイテム","特殊"], icon: "pandora1.png", effect: "ラウンド開始時ベンチアイテムランダム変化。素材1個獲得。", defaultRound: "2-1, 3-2, 4-2" },
-                { name: "ヒーリングオーブ I", genre: ["戦闘"], icon: "healing-orbs-i.png", effect: "敵死亡時に最も近い味方の体力が250回復する。", defaultRound: "3-2, 4-2" },
-                { name: "庇護者のお供", genre: ["特殊","金策"], icon: "caretaker_s-chosen-i.png", effect: "ランダムコスト2を1体。レベルアップ毎に同じユニット獲得。", defaultRound: "2-1" },
-                { name: "不完全アセンション", genre: ["戦闘"], icon: "ascension1.png", effect: "戦闘開始から12秒経過すると、ダメージ増加20%。", defaultRound: "3-2, 4-2" },
-                { name: "腐食", genre: ["戦闘"], icon: "corrosion_i.png", effect: "前衛2列の敵の物理防御と魔法防御が2秒ごとに4低下する。", defaultRound: "3-2, 4-2" },
-                { name: "普通の日々", genre: ["特殊","金策"], icon: "slice_of_life_i.png", effect: "ステージ毎2回ランダムチャンピオン獲得。コスト5入手で終了。", defaultRound: "2-1" },
-                { name: "ベストフレンド I", genre: ["戦闘"], icon: "best-friends-i.png", effect: "離れたペアは、攻撃速度が10%、物理防御が13増加。", defaultRound: "3-2, 4-2" },
-                { name: "放電 I", genre: ["戦闘"], icon: "electrocharge-i.png", effect: "4回攻撃を受けるたび、周囲の敵に30-90の魔法ダメージ。", defaultRound: "3-2, 4-2" },
-                { name: "ボカッ！", genre: ["特殊"], icon: "bonk_i.png", effect: "ナサス獲得。キル毎に強化される単体スキル持ちファイター化。", defaultRound: "2-1" },
-                { name: "ボクシングのレッスン", genre: ["戦闘"], icon: "boxinglessons_i.png", effect: "最前列で戦闘を開始した味方1体ごとに体力+30。", defaultRound: "3-2, 4-2" },
-                { name: "ミスコネクション", genre: ["金策"], icon: "missed-connections-i.png", effect: "すべてのコスト1チャンピオンを1体ずつ獲得する。", defaultRound: "3-2, 4-2" },
-                { name: "道を切り拓け", genre: ["アイテム"], icon: "carveapath_i.png", effect: "BFソード1。味方が65000物理ダメ出すとさらに2個。", defaultRound: "2-1" },
-                { name: "ミッションの再開", genre: ["戦闘","特殊","金策"], icon: "restartmission_i.png", effect: "全味方削除。★2コスト3を2、★2コスト2を3、★2コスト1を1獲得。", defaultRound: "3-2" },
-                { name: "未来の鍛冶場", genre: ["アイテム","特殊"], icon: "long-time-crafting-i.png", effect: "対人戦ラウンドを8回終えると、「アーティファクトの金床」を1個獲得。", defaultRound: "2-1" },
-                { name: "みんなでハグ I", genre: ["戦闘"], icon: "grouphug1_i.png", effect: "戦闘開始: 味方は隣接する味方に6の物理・魔法防御を付与。", defaultRound: "3-2, 4-2" },
-                { name: "有効活用 I", genre: ["特殊","金策"], icon: "good-for-something-i.png", effect: "ノーアイテムのチャンピオンがデス時に40%で1Gドロップ。", defaultRound: "2-1" },
-                { name: "ラインナップ", genre: ["戦闘"], icon: "lineup-i.png", effect: "前衛2列で開始した味方1体ごとに物理・魔法防御が2増加。", defaultRound: "3-2, 4-2" },
-                { name: "レイトゲーム スペシャリスト", genre: ["特殊"], icon: "late-game-specialist-i.png", effect: "レベル9に到達すると、30ゴールドを獲得する。", defaultRound: "3-2" },
-                { name: "連続魔法", genre: ["アイテム"], icon: "hyperbolicrodextender_i.png", effect: "ロッド1。味方が42000魔法ダメ出すとさらに2個。", defaultRound: "2-1" },
-                { name: "ローリングデイズ I", genre: ["金策"], icon: "rolling-for-days-i.png", effect: "ショップの無料リロールを10回獲得する。", defaultRound: "3-2, 4-2" },
-                { name: "ワン、ツー、ファイブ！", genre: ["アイテム","金策"], icon: "one-two-five-i.png", effect: "ランダム素材1、2G、ランダムコスト5チャンピオン1を獲得。", defaultRound: "4-2" },
+                { name: "アイテム福袋 I", genre: ["アイテム"], icon: "t_augmenticon_itemgrabbag_gold_big.png", effect: "ランダムな完成アイテム1個を獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "イカサマダイス", genre: ["金策"], icon: "t_augmenticon_loaded_dice.png", effect: "ダイスを振ると、出た目の数と同じ量のゴールドを獲得する。その後コインを投げ、表が出ると1ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "一致団結", genre: ["戦闘"], icon: "t_augmenticon_standunited_gold_big.png", effect: "チーム内で発動している特性1つにつき(固有特性を除く)、味方ユニットの攻撃力が1.5%、魔力が1.5%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "ウィスプ リベート+", genre: ["金策"], icon: "t_augmenticon_wisprebate.png", effect: "ウィスプを1体購入するたびに2ゴールドを獲得する。即座に4ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ウィスプ リベート++", genre: ["金策"], icon: "t_augmenticon_wisprebate.png", effect: "ウィスプを1体購入するたびに2ゴールドを獲得する。即座に8ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "エクスペディション", genre: ["アイテム","特殊"], icon: "t_augmenticon_expedition.png", effect: "各ラウンドの開始時、ベンチの一番右にいるチャンピオンを失う。この方法で33ゴールド分のチャンピオンを失うと、強力な報酬を獲得する。即座にコスト3のチャンピオンを1体獲得する。", defaultRound: "2-1" },
+                { name: "援護の弓", genre: ["アイテム"], icon: "t_augmenticon_backupbows.png", effect: "「リカーブ ボウ」を1個獲得する。味方チャンピオンが通常攻撃を1000回行うと、さらに2個獲得する。", defaultRound: "2-1" },
+                { name: "王殺し", genre: ["金策"], icon: "t_augmenticon_kingslayer_silver.png", effect: "対人戦に勝利すると、1ゴールドを獲得する。相手プレイヤーの体力が自身よりも多かった場合は、代わりに6ゴールドを獲得する。1ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "オーグメントパワー", genre: ["特殊"], icon: "t_augmenticon_augmentedpower.png", effect: "次のオーグメントのティアが1つ高くなる。", defaultRound: "2-1, 3-2" },
+                { name: "カナとカネ", genre: ["アイテム","金策"], icon: "t_augmenticon_ironassets_silver_big.png", effect: "「素材アイテムの金床」を1個と3ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "キックスタート", genre: ["戦闘","特殊","金策"], icon: "t_augmenticon_kickstart.png", effect: "ランダムな★2のコスト2チャンピオンを1体と、1ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "キャピタルゲイン I", genre: ["金策"], icon: "t_augmenticon_capitalgains.png", effect: "獲得した利子に等しいゴールドを蓄える。3-3で、獲得した利子の100%に等しいゴールドを蓄える。即座に1ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "銀の匙", genre: ["戦闘","金策"], icon: "t_augmenticon_silverspoon_gold_big.png", effect: "経験値を10XP獲得する。", defaultRound: "2-1" },
+                { name: "クイックストリーク", genre: ["金策"], icon: "t_augmenticon_rapidstreaker.png", effect: "連勝および連敗のカウントが2倍になる。2ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "グラスキャノン I", genre: ["戦闘"], icon: "t_augmenticon_glasscannon.png", effect: "後列で戦闘を開始した味方が80%の体力で戦闘を開始するが、ダメージ増加効果を16%獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "構成拡大", genre: ["特殊"], icon: "t_augmenticon_branchingout.png", effect: "ランダムな紋章を1個獲得する。", defaultRound: "2-1" },
+                { name: "構成拡大+", genre: ["特殊"], icon: "t_augmenticon_branchingout.png", effect: "ランダムな紋章アイテムを1個と「再合成装置」を1個獲得する。", defaultRound: "3-2" },
+                { name: "コールショット", genre: ["金策"], icon: "t_augmenticon_calledshot.png", effect: "連勝数を+4に設定する。4ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "コグニティブ タックス", genre: ["金策"], icon: "t_augmenticon_cognitive-tax_tft_set17.png", effect: "8ゴールドと1XPを獲得する。", defaultRound: "2-1, 3-2" },
+                { name: "コグニティブ タックス+", genre: ["金策"], icon: "t_augmenticon_cognitive-tax_tft_set17.png", effect: "12ゴールドと3XPを獲得する。" },
+                { name: "ここがセンター", genre: ["戦闘"], icon: "t_augmenticon_findyourcenter_silver.png", effect: "前列の中央で戦闘を開始した味方チャンピオンは、ダメージ増加効果が15%、最大体力が25%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "混乱回復装置", genre: ["特殊"], icon: "t_augmenticon_recombobulator.png", effect: "フィールド上のチャンピオンを、コストティアが1つ上のランダムなチャンピオンに恒久的に変化させる(最大コストティア5)。「磁力式除去装置」を2個と3回分の無料リロールを獲得する。", defaultRound: "3-2" },
+                { name: "ザ・タワー", genre: ["戦闘"], icon: "t_augmenticon_thetower.png", effect: "巨大な「ダミー」を獲得する。4秒ごとに、最も近くにいる敵3体に対して電撃を放ち、それぞれに最大体力の5%にあたる確定ダメージを与える。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "集中砲火", genre: ["戦闘"], icon: "t_augmenticon_focusedfire.png", effect: "味方チームの攻撃力が10%増加する。5秒ごとにさらに5%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "自由奔放", genre: ["特殊","金策"], icon: "t_augmenticon_youngandwildandfree.png", effect: "ドラフトラウンドで常に自由に移動できる。5ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "シルバーの運命", genre: ["特殊","金策"], icon: "t_augmenticon_destiny.png", effect: "ランダムなシルバーオーグメントを1個と2ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "シルバーの運命+", genre: ["特殊","金策"], icon: "t_augmenticon_destiny.png", effect: "ランダムなシルバーオーグメントを1個と4ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "シルバーの運命++", genre: ["特殊","金策"], icon: "t_augmenticon_destiny.png", effect: "ランダムなシルバーオーグメントを1個と7ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "垂直性 I", genre: ["戦闘"], icon: "t_augmenticon_verticality.png", effect: "チャンピオンは、同じ特性を共有する味方1体ごとに攻撃力が1.5%、魔力が1.5%、物理防御が1.5、魔法防御が1.5増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "即席アーマー I", genre: ["戦闘"], icon: "t_augmenticon_makeshiftarmor.png", effect: "アイテムを装備していないチャンピオンの物理防御と魔法防御が30増加する。", defaultRound: "2-1, 3-2" },
+                { name: "太陽の加護と共に", genre: ["特殊"], icon: "t_augmenticon_solaraugment.png", effect: "レオナ、ケイル、セジュアニを1体ずつ獲得する。レオナが毎ラウンド70の最大体力を恒久的に獲得する。この効果は配置した種類の異なる★3のチャンピオン1体につき10増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "宅配チャンピオン", genre: ["特殊","金策"], icon: "t_augmenticon_champdelivery.png", effect: "コスト2のチャンピオンを3体獲得する。6ラウンド後、さらに3体獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "宅配チャンピオン+", genre: ["特殊","金策"], icon: "t_augmenticon_champdelivery.png", effect: "コスト3のチャンピオンを3体獲得する。6ラウンド後、さらに3個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "宅配チャンピオン++", genre: ["特殊","金策"], icon: "t_augmenticon_champdelivery.png", effect: "コスト4チャンピオンを3体獲得する。6ラウンド後、さらに3体獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "巧みなクラフト", genre: ["金策"], icon: "t_augmenticon_craftedcrafting.png", effect: "完成アイテムを作成するたびに、リロールを2回獲得する。", defaultRound: "2-1" },
+                { name: "ダミー化", genre: ["戦闘","特殊"], icon: "t_augmenticon_dummify.png", effect: "ボードとベンチにいるすべてのチャンピオンを失う。それらのユニットの合計体力の60%の体力を持つ「ダミー」を1体獲得する。ステージごとにダミーの体力が1150増加する。タンク以外のランダムな★2のコスト2チャンピオンを1体獲得する。", defaultRound: "3-2" },
+                { name: "小さな福袋", genre: ["アイテム"], icon: "t_augmenticon_smallgrabbag.png", effect: "ランダムな素材アイテムを2個獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "チーム構築", genre: ["金策"], icon: "t_augmenticon_teambuilding_silver.png", effect: "「小型チャンピオン複製器」を1個獲得する。対人戦を5回行うと、さらにもう1個獲得する。（このアイテムを使うとコスト3以下のチャンピオンを1体獲得できる）", defaultRound: "2-1, 3-2" },
+                { name: "ちょっとだけ魔法のダイス", genre: ["アイテム","戦闘","特殊","金策"], icon: "t_augmenticon_slightlymagicroll_silver.png", effect: "ダイスを振る。出た目に応じて報酬を獲得する。", defaultRound: "2-1" },
+                { name: "追加のバックル", genre: ["アイテム"], icon: "t_augmenticon_extrabuckles_silver.png", effect: "「ジャイアント ベルト」を1個獲得する。味方チャンピオンが75000ダメージを受けると、さらに2個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ツイてる気分", genre: ["金策"], icon: "t_augmenticon_feelinglucky.png", effect: "12ゴールドを獲得し、コインを投げる。表が出た場合、4ゴールド多く獲得する。", defaultRound: "3-2" },
+                { name: "ツインガーディアン", genre: ["戦闘"], icon: "t_augmenticon_twinguardians.png", effect: "最前列にちょうど2体の味方が配置されている場合、それらの味方の体力が100、物理防御が35、魔法防御が35増加する。", defaultRound: "3-2, 4-2" },
+                { name: "天の祝福 I", genre: ["戦闘"], icon: "t_augmenticon_celestial-blessings-i_tft_set16.png", effect: "味方チームが12%のオムニヴァンプを獲得する。余剰の回復量は最大200までシールドに変換される。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "盗賊団", genre: ["アイテム"], icon: "t_augmenticon_bandofthieves.png", effect: "「盗賊のグローブ」1個を獲得する。", defaultRound: "2-1, 3-2" },
+                { name: "友を鍛える", genre: ["特殊"], icon: "t_augmenticon_constructacompanion.png", effect: "次に購入するコスト1チャンピオンが★3になる。5ゴールドを獲得する。", defaultRound: "4-2" },
+                { name: "流れる涙", genre: ["アイテム"], icon: "t_augmenticon_flowingtears_i.png", effect: "「女神の涙」を1個獲得する。味方チャンピオンが7000マナを使用すると、さらに2個獲得する。", defaultRound: "2-1" },
+                { name: "忍耐の美徳", genre: ["特殊","金策"], icon: "t_augmenticon_patienceisavirtue.png", effect: "即座に5回分のリロールを獲得する。直前のラウンドでチャンピオンを購入していない場合、毎ラウンド1回分のリロールを無料で獲得する。", defaultRound: "2-1" },
+                { name: "パンドラのアイテム I", genre: ["アイテム","特殊"], icon: "t_augmenticon_pandorasitems.png", effect: "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを1個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "パンドラのベンチ", genre: ["特殊"], icon: "t_augmenticon_pandorasbench.png", effect: "各ラウンドの開始時に、ベンチの右側3スロットにいるチャンピオンが、同じコストのランダムなチャンピオンに変化する。1ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ヒーリングオーブ I", genre: ["戦闘"], icon: "t_augmenticon_healingorbs_gold_big.png", effect: "敵が倒されると、近くにいる味方1体の体力が250回復する。", defaultRound: "3-2, 4-2" },
+                { name: "庇護者のお供", genre: ["特殊","金策"], icon: "t_augmenticon_caretakersally.png", effect: "今すぐランダムなコスト2のチャンピオンを1体獲得する。レベルアップするごとに同じユニットをもう1体獲得する。", defaultRound: "2-1" },
+                { name: "不完全アセンション", genre: ["戦闘"], icon: "t_augmenticon_ascension.png", effect: "戦闘開始から12秒経過すると、味方ユニットのダメージ増加効果が20%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "腐食", genre: ["戦闘"], icon: "t_augmenticon_corrosion.png", effect: "前衛2列の敵の物理防御と魔法防御が2秒ごとに4低下する。", defaultRound: "3-2, 4-2" },
+                { name: "普通の日々", genre: ["特殊","金策"], icon: "t_augmenticon_sliceoflife.png", effect: "ステージごとに2回、ランダムなチャンピオンを1体獲得する。そのコストはステージごとに増加する。この効果はコスト5のチャンピオンを1体入手すると終了する。", defaultRound: "2-1" },
+                { name: "放電 I", genre: ["戦闘"], icon: "t_augmenticon_electrocharge-i.png", effect: "味方が4回攻撃を受けるたびに、周囲の敵に25-80(現在のステージに応じて)の魔法ダメージを与える(クールダウン1秒)。", defaultRound: "3-2, 4-2" },
+                { name: "ボクシングのレッスン", genre: ["戦闘"], icon: "t_augmenticon_boxinglessons.png", effect: "最前列で戦闘を開始したチャンピオン1体ごとに、味方チームの体力が30増加する。", defaultRound: "3-2, 4-2" },
+                { name: "魔法の残滓", genre: ["戦闘"], icon: "t_augmenticon_residual_magic.png", effect: "味方チームの体力が60増加する。ウィスプを購入するたびに、この効果が10増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "魔法の残滓+", genre: ["戦闘"], icon: "t_augmenticon_residual_magic.png", effect: "味方チームの体力が75増加する。ウィスプを購入するたびに、この効果が10増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "魔法の残滓++", genre: ["戦闘"], icon: "t_augmenticon_residual_magic.png", effect: "味方チームの体力が90増加する。ウィスプを購入するたびに、この効果が10増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ミスコネクション", genre: ["金策"], icon: "t_augmenticon_missedconnections_gold_big.png", effect: "すべてのコスト1チャンピオンを1体ずつ獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "道を切り拓け", genre: ["アイテム"], icon: "t_augmenticon_carve-a-path.png", effect: "「B.F.ソード」を1個獲得する。味方チャンピオンが65000の物理ダメージを与えると、さらに2個獲得する。", defaultRound: "2-1" },
+                { name: "未来に集中", genre: ["特殊","金策"], icon: "t_augmenticon_futurefocused.png", effect: "タクティシャンは体力を20失うが、対人戦を5回行うと、コスト4のチャンピオン3体と5ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "未来の鍛冶場", genre: ["アイテム","特殊"], icon: "t_augmenticon_latentforge_gold_big.png", effect: "対人戦を8回終えると、「アーティファクトの金床」を1個獲得する。", defaultRound: "2-1" },
+                { name: "みんなでハグ I", genre: ["戦闘"], icon: "t_augmenticon_group-hug-1_tft_set17.png", effect: "戦闘開始時: チャンピオンは隣接するチャンピオン(自身を除く)に7の物理防御と魔法防御を付与する。この効果はスタックする。", defaultRound: "3-2, 4-2" },
+                { name: "有効活用 I", genre: ["特殊","金策"], icon: "t_augmenticon_goodforsomething.png", effect: "アイテムを装備していないチャンピオンは、倒された時に40%の確率で1ゴールドをドロップする。", defaultRound: "2-1" },
+                { name: "レイトゲーム スペシャリスト", genre: ["特殊"], icon: "t_augmenticon_lategamespecialist.png", effect: "レベル9に到達すると、27ゴールドを獲得する。", defaultRound: "3-2" },
+                { name: "ローリングデイズ", genre: ["金策"], icon: "t_augmenticon_rollingfordays_gold_big.png", effect: "10回分のショップ無料リロールを獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "ワン、ツー、ファイブ！", genre: ["アイテム","金策"], icon: "t_augmenticon_onetwofive.png", effect: "ランダムな素材アイテム1個、2ゴールド、ランダムなコスト5のチャンピオン1体を獲得する。", defaultRound: "4-2" },
+                { name: "ワンワン、ツー、スリー", genre: ["特殊","金策"], icon: "t_augmenticon_onetwosthree.png", effect: "コスト1のチャンピオンを2体、コスト2のチャンピオンを1体、コスト3のチャンピオンを1体獲得する。", defaultRound: "2-1" },
             ],
             gold: [
-                { name: "Arcane ビクタリー", genre: ["戦闘"], icon: "arcaneviktory_ii.png", effect: "戦闘開始から8秒後、敵チームを1.5秒スタン。18秒後にこれを繰り返す。", defaultRound: "3-2, 4-2" },
-                { name: "アーフの策略", genre: ["特殊"], icon: "urfsgambit_ii.png", effect: "次の対人戦勝利で「へら」、敗北で「フライパン」。素材金床1個と6ゴールド獲得。", defaultRound: "3-2, 4-2" },
-                { name: "アセンション", genre: ["戦闘"], icon: "ascension2.png", effect: "戦闘開始から12秒経過すると、味方ユニットのダメージ増加効果が35%増加する。", defaultRound: "3-2, 4-2" },
-                { name: "アニマ司令官", genre: ["特殊"], icon: "animacommander_ii.png", effect: "ブライアー、ジンクス、イラオイを1体ずつ獲得する。プレイヤーの現在体力と最大体力が10増加する。", defaultRound: "2-1" },
-                { name: "一人前プレート", genre: ["アイテム","戦闘"], icon: "soloplate_ii.png", effect: "「ガーゴイル ストーンプレート」を1個獲得する。戦闘開始時: 「ガーゴイル ストーンプレート」を装備している味方の列に他のユニットがいない場合、最大体力が17%増加する。", defaultRound: "2-1, 3-2" },
-                { name: "インフィニティの守護", genre: ["アイテム","戦闘"], icon: "infinityprotection_ii.png", effect: "即座に3ゴールドを獲得する。ステージ3-7で「インフィニティ フォース」を1個獲得する。「インフィニティ フォース」が同じ列の味方に体力の12%にあたる耐久値を持つシールドを付与する。", defaultRound: "2-1" },
-                { name: "ウォーロードの名誉", genre: ["戦闘"], icon: "unforgotten_ii.png", effect: "毎ラウンド、味方チームの攻撃力と魔力が5%増加する。チャンピオンはこの効果を1スタック持った状態で開始し、最大4回までスタックする。", defaultRound: "2-1, 3-2" },
-                { name: "宇宙の再起", genre: ["特殊"], icon: "cosmicrestart_ii.png", effect: "全ユニットを売却。ランダムな紋章2個と無料リロール8回を獲得。", defaultRound: "3-2" },
-                { name: "英雄のラッキーバッグ", genre: ["特殊","金策"], icon: "heroic-grab-bag-ii.png", effect: "「小型チャンピオン複製器」2個と5ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "英雄のラッキーバッグ+", genre: ["特殊","金策"], icon: "heroic-grab-bag-ii.png", effect: "「小型チャンピオン複製器」2個と8ゴールドを獲得する。", defaultRound: "3-2" },
-                { name: "英雄のラッキーバッグ++", genre: ["特殊","金策"], icon: "heroic-grab-bag-ii.png", effect: "「小型チャンピオン複製器」2個と14ゴールドを獲得する。", defaultRound: "4-2" },
-                { name: "エグザイル II", genre: ["戦闘"], icon: "exiles2.png", effect: "他の味方と隣接していないチャンピオンは、10秒間最大体力の30%のシールドを獲得。", defaultRound: "3-2, 4-2" },
-                { name: "エピックなロールダウン", genre: ["金策"], icon: "epicrolldown_ii.png", effect: "レベル8に到達すると、ショップの無料リロールを20回獲得する。", defaultRound: "3-2" },
-                { name: "エポック", genre: ["金策"], icon: "epoch_ii.png", effect: "このオーグメント獲得時、および各ステージ開始時に4 XPの経験値を獲得する。また、2回分の無料リロールを獲得する。", defaultRound: "2-1" },
-                { name: "エポック+", genre: ["金策"], icon: "epoch_ii.png", effect: "獲得時および各ステージ開始時に8 XPと無料リロール2回を獲得。", defaultRound: "3-2" },
-                { name: "王冠とは重きもの", genre: ["アイテム","特殊"], icon: "heavyisthecrown_ii.png", effect: "「デマーシアの王冠」を獲得する。装備者は大きなボーナスを獲得する。装備者が倒されると、そのラウンドに敗北する。", defaultRound: "2-1, 3-2" },
-                { name: "大きな福袋", genre: ["アイテム"], icon: "grab-bag-ii.png", effect: "ランダムな素材アイテム3個、2ゴールド、「再合成装置」1個を獲得。", defaultRound: "3-2, 4-2" },
-                { name: "オーラ育成中", genre: ["特殊"], icon: "aurafarming_ii.png", effect: "推奨アイテムを装備した★2のコスト5チャンピオンを1体獲得する。これは、ステージ4-3までボードに配置できない。", defaultRound: "2-1" },
-                { name: "俺だけレベルアップ", genre: ["特殊"], icon: "sololeveling_ii.png", effect: "次の5回の対人戦で、味方チームのサイズが1になるが、ボードに配置したチャンピオンはステータスが大幅に増加する。そのチャンピオンがキルを獲得するたびに1 XPの経験値を獲得する。その後、素材アイテムを2個獲得する。", defaultRound: "2-1" },
-                { name: "回収箱", genre: ["アイテム"], icon: "salvage2.png", effect: "即座にランダムな完成アイテムを1個獲得する。また、対人戦を8回終えると、素材アイテムを1個獲得する。チャンピオンを売却すると、完成アイテムが素材に解体される(タクティシャンアイテムと紋章は除く)。", defaultRound: "2-1" },
-                { name: "回収箱+", genre: ["アイテム"], icon: "salvage2.png", effect: "ランダム完成アイテム1個。4ラウンド毎に素材1。売却時、完成アイテムが素材に解体される。", defaultRound: "3-2, 4-2" },
-                { name: "カフナフナ", genre: ["戦闘"], icon: "furiousblows_ii.png", effect: "通常攻撃5回ごとに、基本攻撃力の100%にあたる追加確定ダメージを与える。" },
-                { name: "神の鍛冶場", genre: ["アイテム"], icon: "job_s-done-ii.png", effect: "4個の「神のアーティファクト」から1個を選択する。", defaultRound: "2-1" },
-                { name: "起死回生 II", genre: ["戦闘"], icon: "second--wind-ii.png", effect: "戦闘開始から10秒後、味方チームが減少体力の60%の体力を回復する。", defaultRound: "3-2, 4-2" },
-                { name: "銀河を巡る旅", genre: ["特殊"], icon: "tourofthegalaxy_ii.png", effect: "「ボイジャー」の体力が130、攻撃力が13%、魔力が13%増加する。新たな対戦相手と戦うたびに、効果が10%ずつ増加する。直近で戦っていないプレイヤーと優先的に対戦する。パイクとミィプシーを1体ずつ獲得する。", defaultRound: "2-1" },
-                { name: "金に飢えし者", genre: ["金策"], icon: "moneyhungry1_ii.png", effect: "即座に7ゴールドを獲得し、その後は各ステージの開始時に7ゴールドを獲得する。ゴールドを拾うとタクティシャンが大きくなる。", defaultRound: "2-1" },
-                { name: "金ピカの鋼", genre: ["戦闘"], icon: "gildedsteel_ii.png", effect: "タンク以外のコスト5を2体獲得。コスト5配置時、コスト1〜4のチャンピオンが耐久力8%獲得。", defaultRound: "4-2" },
-                { name: "グラスキャノン II", genre: ["戦闘"], icon: "glasscannon_ii.png", effect: "後列の味方が80%の体力で開始するが、ダメージ増加効果を25%獲得する。", defaultRound: "3-2, 4-2" },
-                { name: "剣鍛冶", genre: ["アイテム"], icon: "swordsmith_ii.png", effect: "「B.F.ソード」から派生したランダムな完成アイテムを2個獲得する。", defaultRound: "4-2" },
-                { name: "研究熱心", genre: ["金策"], icon: "learning-from-experience-ii.png", effect: "対人戦ラウンドに勝利すると経験値を2 XP、敗北すると経験値を3 XP獲得する。", defaultRound: "2-1" },
-                { name: "限定カスタマイズ", genre: ["アイテム","金策"], icon: "exclusivecustomization_ii.png", effect: "「幸運のアイテムチェスト」1個、「磁力式除去装置」1個、7ゴールドを獲得。" },
-                { name: "後衛の設計図", genre: ["特殊"], icon: "backlineblueprint_ii.png", effect: "タンク以外のコスト3チャンピオン1体と、そのチャンピオンの一番最後に記載されている特性の「紋章」を獲得する。", defaultRound: "2-1" },
-                { name: "高速ダブルキル", genre: ["アイテム"], icon: "speedydoublekill_ii.png", effect: "「グインソー レイジブレード」を1個獲得する。2人のプレイヤーが敗退すると、40ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "高電圧", genre: ["アイテム"], icon: "highvoltage_ii.png", effect: "「アイオニック スパーク」を1個獲得する。「アイオニック スパーク」の半径が3マス増加し、ダメージが20%増加する。", defaultRound: "2-1" },
-                { name: "コグニティブ オーバーロード", genre: ["金策"], icon: "cognitiveoverload_ii.png", effect: "7G、★2コスト1、コスト2、コスト3×2、1XP、無料リロール1回を獲得。", defaultRound: "3-2" },
-                { name: "コンパニオン作成", genre: ["特殊"], icon: "constructacompanion_iii.png", effect: "次に購入するコスト1チャンピオンが★3になる。2ゴールドを獲得。", defaultRound: "3-2" },
-                { name: "最強の四配者", genre: ["特殊","金策"], icon: "reinfourcement_ii.png", effect: "次にゴールドで購入するコスト4が即座に★2になる。5ゴールドを獲得。", defaultRound: "4-2" },
-                { name: "サイバネティック アップリンク", genre: ["戦闘"], icon: "cybernetic-uplink-ii.png", effect: "アイテム装備者は体力100とマナ2回復。「女神の涙」を1個獲得。", defaultRound: "3-2, 4-2" },
-                { name: "サイバネティック インプラント", genre: ["戦闘"], icon: "cybernetic2.png", effect: "アイテム装備者は体力100、攻撃力15%増加。「B.F.ソード」を1個獲得。", defaultRound: "3-2, 4-2" },
-                { name: "3の軍団", genre: ["戦闘"], icon: "legionofthrees_ii.png", effect: "ランダムな紋章アイテムを1個獲得する。味方のコスト3チャンピオンと紋章アイテムを装備したすべての味方の体力が150、攻撃速度が12%増加する。", defaultRound: "2-1" },
-                { name: "サンファイア ボード", genre: ["戦闘"], icon: "sunfireboard2.png", effect: "戦闘開始時: すべての敵を焼き、15秒かけて対象の最大体力の15%にあたるダメージを与え、対象が受ける回復効果を33%低下させる。", defaultRound: "3-2, 4-2" },
-                { name: "仕送り", genre: ["金策"], icon: "carepackage_ii.png", effect: "即座に、および次の2ステージ開始時に戦利品と1ゴールドの贈り物を受け取る。", defaultRound: "2-1, 3-2" },
-                { name: "自己破壊", genre: ["特殊"], icon: "selfdestruct_ii.png", effect: "【アイコン違う】グラガスを1体獲得する。最も強いグラガスが魔力ファイターとなり、大爆発を巻き起こすが自身もダメージを受ける。", defaultRound: "2-1" },
-                { name: "邪悪な収益化", genre: ["特殊","金策"], icon: "mirroredmonetization_ii.png", effect: "4G獲得。次の2ラウンドの間、敵チャンピオンが倒された際に2Gをドロップ。", defaultRound: "4-2" },
-                { name: "集中", genre: ["特殊"], icon: "concentration_ii.png", effect: "「コンジット」のスキルは、スキルに応じて効果時間が25% - 50%延長される。ゾーイとモルデカイザーを1体ずつ獲得する。", defaultRound: "2-1" },
-                { name: "ジュエル ロータス I", genre: ["戦闘"], icon: "jeweled-lotus-ii.png", effect: "クリティカル率+10%。「正確無比（スキルがクリティカル化）」を獲得。", defaultRound: "3-2, 4-2" },
-                { name: "主人公補正", genre: ["戦闘"], icon: "plotarmor_ii.png", effect: "物理・魔法防御+8。体力が50%未満になると効果が40に増加。", defaultRound: "3-2, 4-2" },
-                { name: "出陣", genre: ["特殊"], icon: "warpath_ii.png", effect: "ランダムな★★の2コストチャンピオンを獲得する。", defaultRound: "2-1" },
-                { name: "生涯ブロンズ I", genre: ["戦闘"], icon: "bronzeforlife_ii.png", effect: "ブロンズ特性1つごとに、味方チームが2%のダメージ増加効果を獲得。" },
-                { name: "衝突試験用ダミー", genre: ["戦闘"], icon: "crash-test-dummies-ii.png", effect: "「ダミー」を2体獲得。開始時敵に向かって射出され、対象を1秒スタン。", defaultRound: "3-2, 4-2" },
-                { name: "神聖なる修正", genre: ["特殊"], icon: "divineamendment_ii.png", effect: "「アービター」に2つ目の効果を追加。レオナとゾーイを獲得。", defaultRound: "3-2" },
-                { name: "侵略者ゼド", genre: ["特殊"], icon: "invaderzed_ii.png", effect: "「ショウジンの矛」獲得。4-2以降、ショップにゼド（分身を出すコスト5）が出現。", defaultRound: "3-2" },
-                { name: "好きなだけ泣くがいい", genre: ["アイテム"], icon: "crymeariver_ii.png", effect: "「女神の涙」を1個獲得する。味方チームが1のマナ自動回復を獲得する。戦闘開始から12秒後にこの効果は3になる。", defaultRound: "2-1, 3-2" },
-                { name: "ステータスマシマシ", genre: ["戦闘"], icon: "tons-of-stats-ii.png", effect: "体力、攻撃力、魔力、物理・魔法防御、攻撃速度、マナがすべて4(4%)増加。", defaultRound: "3-2, 4-2" },
-                { name: "窃盗", genre: ["特殊","金策"], icon: "pilfer_ii.png", effect: "毎ラウンド、前回の戦闘で最初に倒した敵の★1コピーを獲得。計21G到達で盗賊のグローブ。" },
-                { name: "セラフィムの杖", genre: ["アイテム"], icon: "seraphimsstaff_ii.png", effect: "「アークエンジェル スタッフ」を1個獲得する。装備者の魔力が90%以上だった場合、「アークエンジェル スタッフ」から2のマナ自動回復を追加で獲得する。", defaultRound: "2-1" },
-                { name: "前衛の礎", genre: ["アイテム","特殊"], icon: "frontlinefoundation_ii.png", effect: "★2のコスト1タンクチャンピオン1体と、そのチャンピオンの一番最後に記載されている特性に一致する「紋章」を獲得する。", defaultRound: "2-1" },
-                { name: "先見性", genre: ["特殊","金策"], icon: "forwardthinking_ii.png", effect: "ゴールドをすべて失う。5ラウンド後、元のゴールドを取り戻し追加で70ゴールド獲得。", defaultRound: "3-2" },
-                { name: "戦略的敗北", genre: ["特殊","金策"], icon: "calculatedloss2.png", effect: "戦闘に敗北すると、2ゴールドとショップの無料リロール1回分を獲得する。", defaultRound: "2-1" },
-                { name: "早期教育", genre: ["戦闘"], icon: "earlylearning_ii.png", effect: "味方チームの攻撃力と魔力が8%増加する。この効果は各対人戦終了後に1%増加する。コスト1のチャンピオンは増加量が2倍になる", defaultRound: "2-1" },
-                { name: "即席アーマー II", genre: ["戦闘"], icon: "makeshift2.png", effect: "アイテムを装備していない味方の物理防御と魔法防御が50増加する。", defaultRound: "2-1, 3-2" },
-                { name: "タイムストリーム", genre: ["特殊"], icon: "timestream_ii.png", effect: "「タイムブレーカー」は、リロールするたび(無料のリロールも含む)に体力が7と攻撃速度が0.25%増加する。エズリアルとパンテオンを1体ずつ獲得する。", defaultRound: "2-1" },
-                { name: "宝探し", genre: ["特殊"], icon: "treasurehunt_ii.png", effect: "現時点からステージ6まで、ステージごとにロックされた宝箱を1個獲得する。ショップのリロールで16ゴールドを使用すると、宝箱を1個開封できる。これらの宝箱は開封するまで消えずに残る。", defaultRound: "2-1" },
-                { name: "叩きつけ", genre: ["特殊","金策"], icon: "slammin_ii.png", effect: "3ゴールドを獲得する。対人戦ラウンドが終了するたび、ベンチに消費アイテム以外のアイテムがなければ、2XPの経験値を獲得する", defaultRound: "2-1" },
-                { name: "叩きつけ+", genre: ["特殊","金策"], icon: "slammin_ii.png", effect: "4Gと10XP獲得。ラウンド終了時、ベンチにアイテムがなければ2 XP獲得。", defaultRound: "3-2" },
-                { name: "小さな仲間たち", genre: ["戦闘"], icon: "little-buddies-ii.png", effect: "コスト1・2の数に応じて、コスト4・5の体力+65、攻撃速度+7%。", defaultRound: "3-2, 4-2" },
-                { name: "血の供物", genre: ["アイテム"], icon: "trailofblood_ii.png", effect: "「ブラッドサースター」を1個獲得する。戦闘開始時: 「ブラッドサースター」を装備した味方の体力が20%減少するが、体力の30%にあたる耐久値を持つシールドを獲得し、攻撃力が10%増加する。", defaultRound: "2-1, 3-2" },
-                { name: "チャージトランスファー II", genre: ["戦闘"], icon: "chargetransfer2_ii.png", effect: "ダメージ+10%。超過ダメージの80%を近くの敵に魔法ダメージとして与える。", defaultRound: "3-2, 4-2" },
-                { name: "杖鍛冶", genre: ["アイテム"], icon: "rodsmith_ii.png", effect: "「ムダニ デカイ ロッド」から派生したランダムな完成アイテムを2個獲得する。", defaultRound: "4-2" },
-                { name: "紡がれし魔法", genre: ["アイテム"], icon: "wovenmagic_iii.png", effect: "ランダムな素材アイテムを1個獲得する。味方チームが2200マナを消費するごとに、追加の素材アイテムを獲得する。", defaultRound: "2-1" },
-                { name: "偵察なし、変更なし", genre: ["戦闘","特殊"], icon: "noscoutnopivot_ii.png", effect: "対人戦に参加するチャンピオンはベンチに戻すことも、売却することもできない。対人戦後、味方チームの体力が1%、攻撃力と魔力が1.5%増加する。", defaultRound: "2-1" },
-                { name: "デュオキュー", genre: ["アイテム","金策"], icon: "duoqueue_ii.png", effect: "ランダムコスト5を2体、ランダム素材のコピーを2個ずつ獲得。" },
-                { name: "時計仕掛けの加速装置", genre: ["戦闘"], icon: "clockworkaccelerator_ii.png", effect: "戦闘中3秒ごとに味方チームの攻撃速度が10%増加する。", defaultRound: "3-2, 4-2" },
-                { name: "トライフェクタ I", genre: ["特殊"], icon: "trifecta-ii.png", effect: "コスト3を2体獲得。開始時にランダムなコスト3の3体の体力・攻撃速度強化。" },
-                { name: "トレードセクター", genre: ["金策"], icon: "trade2.png", effect: "毎ラウンド、ショップの無料リロール1回分を獲得する。2ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "21ゴールド獲得", genre: ["金策"], icon: "windfall2.png", effect: "21ゴールドを獲得する。" },
-                { name: "2体のタンク", genre: ["戦闘","特殊"], icon: "two-tanky-ii.png", effect: "フィールド上にまったく同じチャンピオンを2体配置すると、両者の体力が600増加する。そのチャンピオンのいずれかが倒されると、もう一体のチャンピオンは12秒間、最大体力の40%の耐久値のシールドを獲得する。★3にアップグレードすると、★2のコピーを1体獲得する。", defaultRound: "2-1" },
-                { name: "熱死", genre: ["特殊"], icon: "starconqueror_ii.png", effect: "モルデカイザーを1体獲得する。最も強いモルデカイザーが魔力ファイターとなり、徐々に拡大するオーラで継続ダメージを与える。", defaultRound: "2-1" },
-                { name: "バースデー リユニオン", genre: ["特殊"], icon: "birthdayreunion_ii.png", effect: "ランダムな★2のコスト2チャンピオンを1体獲得する。レベル7に到達すると、「盗賊のグローブ」を1個獲得する。レベル9に到達すると、ランダムな★2のコスト5チャンピオンを1体獲得する。", defaultRound: "2-1" },
-                { name: "鋼の心", genre: ["アイテム"], icon: "healthygains_ii.png", effect: "「揺るがぬ心」を1個獲得する。戦闘で装備者が10秒生存するごとに、「揺るがぬ心」が最大体力を恒久的に16追加で獲得する。", defaultRound: "2-1" },
-                { name: "爆発的成長", genre: ["特殊","金策"], icon: "explosivegrowth_ii.png", effect: "即座に、および次の3ラウンド開始時に7 XPの経験値を獲得する。" },
-                { name: "爆発的成長+", genre: ["特殊","金策"], icon: "explosivegrowth_ii.png", effect: "即座に、および次の3ラウンド開始時に10 XPの経験値を獲得する。" },
-                { name: "はしごを登れ II", genre: ["戦闘"], icon: "climbtheladder_ii.png", effect: "味方死亡時、特性を共有する味方の魔力・攻撃力+7%、物理・魔法防御+6。", defaultRound: "3-2, 4-2" },
-                { name: "ハスラー", genre: ["金策"], icon: "hyperroll2.png", effect: "利子を獲得できなくなる代わりに、対人戦ラウンドの開始時に毎回3ゴールドを獲得する。即座に3ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "パンドラのアイテム II", genre: ["アイテム"], icon: "pandora2.png", effect: "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを2個獲得する。。", defaultRound: "2-1" },
-                { name: "ヒーリングオーブ II", genre: ["戦闘"], icon: "healing-orbs-ii.png", effect: "敵ユニットがデスした際に、最も近くにいる味方の体力が575回復する。", defaultRound: "3-2, 4-2" },
-                { name: "ビッグバン", genre: ["特殊"], icon: "meepspace9_ii.png", effect: "ミィプシーを1体獲得する。最も強いミィプシーが魔力ファイターとなり、近くのマスに跳躍して広範囲にダメージを与える。", defaultRound: "2-1" },
-                { name: "広がる根", genre: ["特殊"], icon: "spreadingroots_ii.png", effect: "ランダムな紋章アイテム2個と1ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "広がる根+", genre: ["特殊"], icon: "spreadingroots_ii.png", effect: "ランダムな紋章アイテム2個、「再合成装置」1個と2ゴールドを獲得する。" },
-                { name: "ブースターパック", genre: ["金策"], icon: "boosterpack1_ii.png", effect: "ランダムなチャンピオンを合計12ゴールド分獲得する(コスト3が1体以上確定！)。", defaultRound: "2-1" },
-                { name: "ブースターパック+", genre: ["金策"], icon: "boosterpack1_ii.png", effect: "合計18G分のランダムなチャンピオン獲得（コスト4が1体以上確定）。" },
-                { name: "ブースターパック++", genre: ["金策"], icon: "boosterpack1_ii.png", effect: "合計26G分のランダムなチャンピオン獲得（コスト5が1体以上確定）。" },
-                { name: "フォーが共にあらんことを", genre: ["特殊"], icon: "maythefoursbewithyou_ii.png", effect: "コスト4とジンが体力+144、攻撃速度+14%を獲得。ジンを1体獲得。", defaultRound: "4-2" },
-                { name: "副作用", genre: ["戦闘"], icon: "sideeffects_ii.png", effect: "回復を受けるとその50%の魔法ダメージを対象に。5秒ごとに最大体力の4%回復。", defaultRound: "3-2, 4-2" },
-                { name: "複製", genre: ["アイテム"], icon: "replication-ii.png", effect: "3つの素材アイテムから1つを選ぶ。次の2ラウンドの間、その素材アイテムのコピーを1個獲得する。", defaultRound: "2-1, 3-2" },
-                { name: "普通預金口座", genre: ["金策"], icon: "savingsaccount_ii.png", effect: "利子で50ゴールドを獲得後、30ゴールドを獲得する。最大利子が7に増加する。即座に4ゴールドを獲得する", defaultRound: "2-1" },
-                { name: "不適合者", genre: ["特殊"], icon: "misfits_ii.png", effect: "発動中の固有特性（オレンジ）1つにつき体力+55。ラーストとMFを獲得。", defaultRound: "3-2, 4-2" },
-                { name: "プロの殺し屋", genre: ["特殊"], icon: "contractkiller_ii.png", effect: "パイクを1体獲得する。最も強いパイクが攻撃力ファイターになり、チームがキルまたはアシストを獲得するとゴールドを生成し、キル時にリセットされるスキルを獲得する。", defaultRound: "2-1" },
-                { name: "プロボクサー", genre: ["アイテム"], icon: "prizefighter_ii.png", effect: "素材アイテムを2個獲得する。5勝するたびに、素材アイテムを1個獲得する。", defaultRound: "2-1" },
-                { name: "ベストフレンド II", genre: ["戦闘"], icon: "best-friends-ii.png", effect: "離れた位置にいる味方のペアは、攻撃速度が15%、物理防御が22増加。" },
-                { name: "放電 II", genre: ["戦闘"], icon: "electrocharge-ii.png", effect: "味方が4回攻撃を受けるたびに、周囲の敵に50-140(現在のステージに応じて)の魔法ダメージを与える(クールダウン1秒)。", defaultRound: "2-1" },
-                { name: "ポータブル フォージ", genre: ["アイテム"], icon: "portableforge2.png", effect: "4個のアーティファクトから1個を選択する。アーティファクトは独自の効果を持つ強力なアイテム。", defaultRound: "2-1" },
-                { name: "星を目指して", genre: ["特殊"], icon: "reachforthestars_ii.png", effect: "ジャックスを1体獲得する。最も強いジャックスが魔力ファイターになり、通常攻撃で追加魔法ダメージを与え、スキル発動時に攻撃速度が増加するスタックを獲得する。", defaultRound: "2-1" },
-                { name: "ボディーガードの訓練", genre: ["戦闘"], icon: "bodyguardstraining_ii.png", effect: "味方の物理防御と魔法防御が10増加し、プレイヤーレベル1ごとに3ずつ増加する。", defaultRound: "2-1" },
-                { name: "炎を強めて", genre: ["アイテム"], icon: "feedtheflames_ii.png", effect: "「サンファイア ケープ」を1個獲得する。燃焼を付与された敵を攻撃るとき、味方チームのオムニヴァンプが12%増加する。", defaultRound: "2-1" },
-                { name: "前借り", genre: ["金策"], icon: "advancedloan_ii.png", effect: "20ゴールドを獲得する。次のオーグメントのティアが1つ低くなる。", defaultRound: "2-1" },
-                { name: "前借り+", genre: ["金策"], icon: "advancedloan_ii.png", effect: "33ゴールドを獲得。次のオーグメントのティアが1つ低くなる。" },
-                { name: "待つ価値あり", genre: ["特殊","金策"], icon: "worththewait_ii.png", effect: "ランダムなコスト1のチャンピオンを1体獲得する。", defaultRound: "2-1" },
-                { name: "魔法のダイス", genre: ["アイテム","戦闘","特殊","金策"], icon: "a-magical-roll-ii.png", effect: "3個のダイスを振り、合計値に応じた報酬を獲得。", defaultRound: "3-2" },
-                { name: "乱れる思考", genre: ["特殊","金策"], icon: "dizzy-ii.png", effect: "今すぐランダムなコスト1のチャンピオンを4体獲得する。対人戦ラウンド終了時にベンチが満員の場合、3 XPの経験値を獲得する。", defaultRound: "2-1" },
-                { name: "みんなでハグ II", genre: ["戦闘"], icon: "grouphug2_ii.png", effect: "戦闘開始: 隣接する味方に物理・魔法防御を9付与（スタック可）。", defaultRound: "3-2, 4-2" },
-                { name: "無差別殺人者", genre: ["アイテム"], icon: "indiscriminateslayer_ii.png", effect: "「ジャイアント スレイヤー」1個。すべての敵に対してダメージ増加効果適用。", defaultRound: "3-2, 4-2" },
-                { name: "明鏡止水", genre: ["特殊","金策"], icon: "clearmind2.png", effect: "対人戦ラウンド終了時、ベンチにチャンピオンがいない場合は経験値を3XP獲得する。", defaultRound: "2-1" },
-                { name: "メイスの決意", genre: ["アイテム"], icon: "will-of-the-flail-ii.png", effect: "【画像違う】「スパーリング グローブ」1個獲得。味方チームのクリティカル率が25%増加。", defaultRound: "3-2, 4-2" },
-                { name: "U.R.F.", genre: ["アイテム"], icon: "ultrarapidfire_ii.png", effect: "「へら」を1個獲得する。「へら」または「フライパン」アイテムを装備しているチャンピオンの攻撃速度が15%、マナ自動回復が2増加する。", defaultRound: "2-1, 3-2" },
-                { name: "弓の誓い", genre: ["アイテム"], icon: "you-have-my-bow-ii.png", effect: "「リカーブ ボウ」1個獲得。味方チームの攻撃速度が12%増加。", defaultRound: "2-1, 3-2" },
-                { name: "リデンプションの魂", genre: ["アイテム"], icon: "spiritofredemption_ii.png", effect: "「スピリット ビサージュ」を1個獲得する。5秒ごとに、「スピリット ビサージュ」が1マス以内の味方を、減少体力の7.5%回復する。", defaultRound: "2-1, 3-2" },
-                { name: "ルート・シンギュラリティ", genre: ["特殊"], icon: "whitehole_ii.png", effect: "ブラックホールが敵を飲み込むと、敵が「スペースマター」に変わる。十分な量を集めると、ブラックホールがそれを戦利品に変換する！チョ＝ガスとリサンドラを1体ずつ獲得する。", defaultRound: "2-1" },
-                { name: "レイトゲーム スケーリング", genre: ["特殊"], icon: "lategamescaling_ii.png", effect: "プレイヤーの戦闘ラウンド開始時に、2 XPの経験値を獲得する。味方のコスト5チャンピオンの体力が12%、攻撃速度が12%増加する。", defaultRound: "2-1" },
+                { name: "Arcane ビクタリー", genre: ["戦闘"], icon: "t_augmenticon_arcaneviktory_augmentmasks.png", effect: "戦闘開始から8秒後、敵チームを1.5秒間スタンさせる。戦闘開始から18秒後にこれを繰り返す。", defaultRound: "3-2, 4-2" },
+                { name: "アイテム抽出", genre: ["アイテム","特殊"], icon: "t_augmenticon_eldritchaugment.png", effect: "「ブラックソーン」のマスでチャンピオンを生贄にしたとき、最初の3回まではそのチャンピオンが装備している素材アイテムのコピーをランダムで1つ獲得する。アジールとレク＝サイを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "アセンション", genre: ["戦闘"], icon: "t_augmenticon_ascension.png", effect: "戦闘開始から12秒経過すると、味方ユニットのダメージ増加効果が35%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "一人前プレート", genre: ["アイテム","戦闘"], icon: "t_augmenticon_soloplate.png", effect: "「ガーゴイル ストーンプレート」を1個獲得する。戦闘開始時に「ガーゴイル ストーンプレート」を装備している味方の列に他のユニットがいない場合、最大体力が17%増加する。", defaultRound: "2-1, 3-2" },
+                { name: "イッツミー ベイビー", genre: ["戦闘","金策"], icon: "t_augmenticon_itsmebaby.png", effect: "右下の角にチャンピオンシップマスを1つ獲得する。スポットライト内にいるチャンピオンは15%のダメージ増加効果と15%の攻撃速度を獲得する。また、キルまたはアシストを5回獲得するごとに1ゴールドをドロップする。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ウォーパス", genre: ["特殊","金策"], icon: "t_augmenticon_warpath.png", effect: "★2のコスト2チャンピオンを1体獲得する。プレイヤーに80ダメージを与えると、高コストのチャンピオンとアイテムが入ったチェストを1個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "内なる獣(ニダリー)", genre: ["特殊"], icon: "t_augmenticon_primalaugment.png", effect: "「プライマル」がもう1つ「祝福」を付与する。今すぐヴァイを1体獲得し、3ラウンド後にニダリーを1体獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "内なる獣(シヴィア)", genre: ["特殊"], icon: "t_augmenticon_primalaugment.png", effect: "「プライマル」がもう1つ「祝福」を付与する。今すぐヴァイを1体獲得し、3ラウンド後にシヴィアを1体獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "内なる獣+(ニダリー)", genre: ["特殊"], icon: "t_augmenticon_primalaugment.png", effect: "「プライマル」がもう1つ「祝福」を付与する。ヴァイとニダリーを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "内なる獣+(シヴィア)", genre: ["特殊"], icon: "t_augmenticon_primalaugment.png", effect: "「プライマル」がもう1つ「祝福」を付与する。ヴァイとシヴィアを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "英雄のラッキーバッグ", genre: ["特殊","金策"], icon: "t_augmenticon_heroicgrabbag.png", effect: "「小型チャンピオン複製器」を2個獲得する。6ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "英雄のラッキーバッグ+", genre: ["特殊","金策"], icon: "t_augmenticon_heroicgrabbag.png", effect: "「小型チャンピオン複製器」を2個獲得する。8ゴールドを獲得する。", defaultRound: "3-2" },
+                { name: "英雄のラッキーバッグ++", genre: ["特殊","金策"], icon: "t_augmenticon_heroicgrabbag.png", effect: "「小型チャンピオン複製器」を2個獲得する。14ゴールドを獲得する。", defaultRound: "4-2" },
+                { name: "エピックなロールダウン", genre: ["金策"], icon: "t_augmenticon_epicrolldown.png", effect: "レベル8に到達すると、ショップのリロールを20獲得する。", defaultRound: "3-2" },
+                { name: "エポック", genre: ["金策"], icon: "t_augmenticon_epoch.png", effect: "このオーグメント獲得時、および各ステージ開始時に4XPの経験値を獲得する。また、2回分の無料リロールを獲得する。", defaultRound: "2-1" },
+                { name: "エポック+", genre: ["金策"], icon: "t_augmenticon_epoch.png", effect: "このオーグメント獲得時、および各ステージ開始時に8 XPの経験値を獲得する。また、2回分の無料リロールを獲得する。", defaultRound: "3-2" },
+                { name: "黄金の龍", genre: ["アイテム","戦闘"], icon: "t_augmenticon_thegoldendragon_ii.png", effect: "「モーグル メイル」を1個獲得する。「モーグル メイル」を装備しているチャンピオンはチームスロットを1つ多く使用するが、体力が600、耐久力が15%増加する。（「モーグル メイル」はゴールドと戦闘力を付与する）", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "大きな福袋", genre: ["アイテム"], icon: "t_augmenticon_biggrabbag_gold_big.png", effect: "ランダムな素材アイテム3個、2ゴールド、「再合成装置」を1個獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "オメガ リフトビースト", genre: ["特殊"], icon: "t_augmenticon_riftbeastaugment.png", effect: "2体目の「アルファ リフトビースト」を選択できるようになる。「アルファ リフトビースト」が8%の最大体力と8%の攻撃速度を獲得する。スカトルクラブ、シンダーリング、小石を1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "俺だけレベルアップ", genre: ["特殊"], icon: "t_augmenticon_sololeveling.png", effect: "次の5回の対人戦で、味方チームのサイズが1になるが、ボードに配置したチャンピオンはステータスが大幅に増加する。そのチャンピオンがキルを獲得するたびに1 XPの経験値を獲得する。その後、素材アイテムを2個獲得する。", defaultRound: "2-1" },
+                { name: "回収箱", genre: ["アイテム"], icon: "t_augmenticon_salvage1.png", effect: "即座にランダムな完成アイテムを1個獲得する。また、対人戦を8回行うと、素材アイテムを1個獲得する。チャンピオンを売却すると、完成アイテムが素材に解体される(タクティシャンアイテムと紋章は除く)。", defaultRound: "2-1" },
+                { name: "回収箱+", genre: ["アイテム"], icon: "t_augmenticon_salvage1.png", effect: "即座にランダムな完成アイテムを1個獲得する。また、対人戦を4回行うと、素材アイテムを1個獲得する。チャンピオンを売却すると、完成アイテムが素材に解体される(タクティシャンアイテムと紋章は除く)。", defaultRound: "3-2, 4-2" },
+                { name: "確約された守護", genre: ["アイテム","戦闘"], icon: "t_augmenticon_promisedprotection_ii.png", effect: "「プロテクターの誓い」を1個獲得する。「プロテクターの誓い」の装備者は、あらゆるソースから獲得するマナが20%、最大体力が175増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "キャピタルゲイン II", genre: ["金策"], icon: "t_augmenticon_capitalgains.png", effect: "獲得した利子に等しいゴールドを蓄える。3-3で、獲得した利子の125%に等しいゴールドを蓄える。即座に3ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "強制四配", genre: ["戦闘","特殊"], icon: "t_augmenticon_fourcing.png", effect: "ランダムなコスト4のチャンピオンを1体獲得する。そのチャンピオンが装備しているアイテム1個につき、味方チームの体力が100増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "極大化", genre: ["特殊"], icon: "t_augmenticon_faeaugment2.png", effect: "「フェイ」の妖精が大きくなり、付与する攻撃力と魔力が50%増加する。「フェイ」チャンピオンの攻撃力と魔力が即座に18%増加する。ザヤとラカンを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "金に飢えし者", genre: ["金策"], icon: "t_augmenticon_money-hungry-1.png", effect: "即座に7ゴールドを獲得し、その後は各ステージ開始時に7ゴールドを獲得する。ゴールドを拾うとタクティシャンが大きくなる。", defaultRound: "2-1" },
+                { name: "金に飢えし者+", genre: ["金策"], icon: "t_augmenticon_money-hungry-2.png", effect: "即座に13ゴールドを獲得し、その後は各ステージ開始時に7ゴールドを獲得する。ゴールドを拾うとタクティシャンが大きくなる。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "金ピカの鋼", genre: ["戦闘"], icon: "t_augmenticon_gildedsteel.png", effect: "コスト5のチャンピオンを2体獲得する。コスト5のチャンピオンを1体以上配置すると、コスト1～4のチャンピオンが8%の耐久力を獲得する。", defaultRound: "4-2" },
+                { name: "グラスキャノン II", genre: ["戦闘"], icon: "t_augmenticon_glasscannon.png", effect: "後列で戦闘を開始した味方が80%の体力で戦闘を開始するが、ダメージ増加効果を25%獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "剣鍛冶", genre: ["アイテム"], icon: "t_augmenticon_swordsmith.png", effect: "「B.F.ソード」から派生したランダムな完成アイテムを2個獲得する。", defaultRound: "4-2" },
+                { name: "研究熱心", genre: ["金策"], icon: "t_augmenticon_patientstudy_gold_big.png", effect: "対人戦ラウンドに勝利すると経験値を2XP、敗北すると経験値を3XP獲得する。", defaultRound: "2-1" },
+                { name: "限定カスタマイズ", genre: ["アイテム","金策"], icon: "t_augmenticon_exclusivecustomization.png", effect: "「幸運のアイテムチェスト」を1個、「磁力式除去装置」を1個、7ゴールドを獲得する。" },
+                { name: "後衛の設計図", genre: ["特殊"], icon: "t_augmenticon_backlineblueprint.png", effect: "タンク以外のコスト3チャンピオン1体と、そのチャンピオンのクラスに対応する「紋章」を1個獲得する。", defaultRound: "2-1" },
+                { name: "高速ダブルキル", genre: ["アイテム"], icon: "t_augmenticon_speedydoublekill_ii.png", effect: "「グインソー レイジブレード」を1個獲得する。2人のプレイヤーが敗退すると、40ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "ゴールドの運命", genre: ["特殊","金策"], icon: "t_augmenticon_destiny.png", effect: "ランダムなゴールドオーグメントを1個と3ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ゴールドの運命+", genre: ["特殊","金策"], icon: "t_augmenticon_destiny.png", effect: "ランダムなゴールドオーグメントを1個と5ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "コグニティブ オーバーロード", genre: ["金策"], icon: "t_augmenticon_cognitiveoverload.png", effect: "7ゴールド、★2のコスト1チャンピオンを1体、コスト2のチャンピオンを1体、コスト3のチャンピオンを2体、1XP、無料リロール1回を獲得する。", defaultRound: "3-2" },
+                { name: "コンパニオン作成", genre: ["特殊"], icon: "t_augmenticon_constructacompanion.png", effect: "次に購入するコスト1チャンピオンが★3になる。2ゴールドを獲得する。", defaultRound: "3-2" },
+                { name: "サイバネティック アップリンク", genre: ["戦闘"], icon: "t_augmenticon_cyberneticuplink.png", effect: "アイテムを装備した味方チャンピオンの体力が100、マナ自動回復が2増加する。「女神の涙」を1個獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "サイバネティック インプラント", genre: ["戦闘"], icon: "t_augmenticon_cybernetic_gold_big.png", effect: "アイテムを装備した味方チャンピオンの体力が100、攻撃力が15%増加する。「B.F.ソード」を1個獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "3の軍団", genre: ["戦闘"], icon: "t_augmenticon_legionofthrees.png", effect: "ランダムな紋章を1個獲得する。味方のコスト3チャンピオンと紋章アイテムを装備したすべての味方の体力が150、攻撃速度が12%増加する。", defaultRound: "2-1" },
+                { name: "時間スキップ", genre: ["特殊","金策"], icon: "t_augmenticon_timeskip.png", effect: "次の3ラウンドの間、自分のショップが無効になる。その後、32XPを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "邪悪な収益化", genre: ["特殊","金策"], icon: "t_augmenticon_maliciousmonetization.png", effect: "6ゴールドを獲得する。次の2ラウンドの間、敵チャンピオンが倒された際に2ゴールドをドロップする。", defaultRound: "4-2" },
+                { name: "ジュエル ロータス I", genre: ["戦闘"], icon: "t_augmenticon_jeweledlotus.png", effect: "味方チームのクリティカル率が15%増加し、「正確無比」を獲得する。（正確無比: スキルはクリティカル判定を持つ。「正確無比」を追加で獲得すると、クリティカルダメージが10%増加する）", defaultRound: "3-2, 4-2" },
+                { name: "主人公補正", genre: ["戦闘"], icon: "t_augmenticon_plotarmor.png", effect: "味方チームの物理防御と魔法防御が8増加する。自身の体力が50%未満になると、戦闘終了までこの値が40に増加する。", defaultRound: "3-2, 4-2" },
+                { name: "生涯ブロンズ I", genre: ["戦闘"], icon: "t_augmenticon_bronzeforlife.png", effect: "ブロンズティアの特性1つごとに、味方チームが2.5%のダメージ増加効果を獲得する。" },
+                { name: "垂直性 II", genre: ["戦闘"], icon: "t_augmenticon_verticality.png", effect: "チャンピオンは、同じ特性を共有する味方1体ごとに攻撃力が2.5%、魔力が2.5%、物理防御が2、魔法防御が2増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "好きなだけ泣くがいい", genre: ["アイテム"], icon: "t_augmenticon_crymeariver.png", effect: "「女神の涙」を1個獲得する。味方チームが1のマナ自動回復を獲得する。戦闘開始から12秒後にこの効果は3になる。", defaultRound: "2-1, 3-2" },
+                { name: "ステータスマシマシ", genre: ["戦闘"], icon: "t_augmenticon_tonsofstats.png", effect: "味方チームの体力が44、攻撃力が4%、魔力が4%、物理防御が4、魔法防御が4、攻撃速度が4%、マナが4増加する。", defaultRound: "3-2, 4-2" },
+                { name: "窃盗", genre: ["特殊","金策"], icon: "t_augmenticon_pilfer.png", effect: "毎ラウンド、前回の戦闘で最初に倒したチャンピオンの★1コピーを獲得する。この方法で獲得したチャンピオンの総価値が最初に21ゴールドに到達した際に、「盗賊のグローブ」1個を獲得する。" },
+                { name: "セラフィムの杖", genre: ["アイテム"], icon: "t_augmenticon_seraphimsstaff.png", effect: "「アークエンジェル スタッフ」を1個獲得する。装備者の魔力が110%以上だった場合、「アークエンジェル スタッフ」から2のマナ自動回復を追加で獲得する。", defaultRound: "2-1" },
+                { name: "前衛の礎", genre: ["アイテム","特殊"], icon: "t_augmenticon_frontlinefoundation.png", effect: "★2のコスト1タンクチャンピオン1体と、そのチャンピオンのクラスに対応する「紋章」を1個獲得する。", defaultRound: "2-1" },
+                { name: "戦略的敗北", genre: ["特殊","金策"], icon: "t_augmenticon_calculatedloss_gold_big.png", effect: "戦闘に敗北すると、2ゴールドとショップの無料リロール1回分を獲得する。", defaultRound: "2-1" },
+                { name: "早期教育", genre: ["戦闘"], icon: "t_augmenticon_earlylearning.png", effect: "味方チームの攻撃力と魔力が3%増加する。この効果は各対人戦終了後に1%増加する。コスト1のチャンピオンは2倍の効果を得る。", defaultRound: "2-1" },
+                { name: "即席アーマー II", genre: ["戦闘"], icon: "t_augmenticon_makeshiftarmor.png", effect: "アイテムを装備していないチャンピオンの物理防御と魔法防御が50増加する。", defaultRound: "2-1, 3-2" },
+                { name: "太陽と月", genre: ["特殊"], icon: "t_augmenticon_lunaraugment.png", effect: "配置した種類の異なる「ソーラー」のチャンピオン1体ごとに、「ルナー」のチャンピオンの体力が100増加し、8%のダメージ増加効果を獲得する。レオナ、ケイル、ダイアナを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "太陽と月+", genre: ["特殊"], icon: "t_augmenticon_lunaraugment2.png", effect: "配置した種類の異なる「ソーラー」のチャンピオン1体ごとに、「ルナー」のチャンピオンの体力が100増加し、8%のダメージ増加効果を獲得する。レオナ、ケイル、アフェリオスを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "叩きつけ", genre: ["特殊","金策"], icon: "t_augmenticon_slammin.png", effect: "3ゴールドを獲得する。対人戦ラウンドが終了するたび、ベンチに消費アイテム以外のアイテムがなければ、2XPの経験値を獲得する。", defaultRound: "2-1" },
+                { name: "叩きつけ+", genre: ["特殊","金策"], icon: "t_augmenticon_slammin.png", effect: "即座に4ゴールドと10XPを獲得する。対人戦ラウンドが終了するたび、ベンチに消費アイテム以外のアイテムがなければ、2XPの経験値を獲得する。", defaultRound: "3-2" },
+                { name: "小さなモフモフのお友達", genre: ["特殊"], icon: "t_augmenticon_sprykinaugment.png", effect: "「スプライキン」が発動中は、45%の強さを持つ2体目の「大きなモフモフのお友達」を召喚する。ティーモ、ベイガー、コブコを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "挑戦者の気品", genre: ["戦闘"], icon: "t_augmenticon_challengersgrace.png", effect: "戦闘開始時、味方の攻撃速度が4秒間30%増加する。キルまたはアシスト獲得時に、味方チャンピオンが次の対象に向かってダッシュし、この追加効果を再度獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "杖鍛冶", genre: ["アイテム"], icon: "t_augmenticon_staffsmith.png", effect: "「ムダニ デカイ ロッド」から派生したランダムな完成アイテムを2個獲得する。", defaultRound: "4-2" },
+                { name: "紡がれし魔法", genre: ["アイテム"], icon: "t_augmenticon_wovenmagic.png", effect: "ランダムな素材アイテムを1個獲得する。味方チャンピオンが2200マナを消費するごとに、追加の素材アイテムを獲得する。", defaultRound: "2-1" },
+                { name: "偵察なし、変更なし", genre: ["戦闘","特殊"], icon: "t_augmenticon_noscoutnopivot_ii_tft_set13.png", effect: "対人戦に参加するチャンピオンはベンチに戻すことも、売却することもできない。対人戦後、味方チームの体力が1%、攻撃力と魔力が1%増加する。", defaultRound: "2-1" },
+                { name: "デュオキュー", genre: ["アイテム","金策"], icon: "t_augmenticon_duoqueue.png", effect: "ランダムなコスト5チャンピオンを2体、ランダムな素材アイテムのコピーを2個獲得する。" },
+                { name: "天然シェルター", genre: ["特殊"], icon: "t_augmenticon_elderwoodaugment.png", effect: "戦闘開始時に「エルダーウッド」の植物に隣接しているチャンピオンは、攻撃速度が15%増加し、2秒ごとに自身の最大体力の2%を回復する。アリスター、オーン、ザヤを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "天の祝福 II", genre: ["戦闘"], icon: "t_augmenticon_celestial-blessings-i_tft_set16.png", effect: "味方チームが18%のオムニヴァンプを獲得する。余剰の回復量は最大400までシールドに変換される。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "投資戦略 I", genre: ["戦闘","金策"], icon: "t_augmenticon_investmentstrategy.png", effect: "獲得した利子1ゴールドにつき、味方チャンピオンの最大体力が9恒久的に増加する。即座に3ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "時計仕掛けの加速装置", genre: ["戦闘"], icon: "t_augmenticon_clockworkaccelerator.png", effect: "戦闘中3秒ごとに味方チームの攻撃速度が10%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "トレードセクター", genre: ["金策"], icon: "t_augmenticon_tradesector_big.png", effect: "毎ラウンド、ショップのリロール1回分を獲得する。2ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "トレードセクター+", genre: ["金策"], icon: "t_augmenticon_tradesector_big.png", effect: "毎ラウンド、ショップのリロール1回分を獲得する。8ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "21ゴールド獲得", genre: ["金策"], icon: "t_augmenticon_gaingold.png", effect: "21ゴールドを獲得する。" },
+                { name: "値切り上手", genre: ["金策"], icon: "t_augmenticon_hardbargain.png", effect: "ドラフトの報酬を選択できなくなる。ドラフトラウンドごとに、プレイヤー体力が6増加し、8ゴールドを獲得する。（ドラフト報酬を選択しなかった場合、ピックされなかったチャンピオンとそれが所有するアイテムを獲得する）", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "バースデー リユニオン", genre: ["特殊"], icon: "t_augmenticon_birthdayreunion.png", effect: "ランダムな★2のコスト2チャンピオンを1体獲得する。レベル6でランダムな素材アイテムを1個獲得する。レベル9に到達すると、ランダムな★2のコスト5チャンピオンを1体獲得する。", defaultRound: "2-1" },
+                { name: "爆発的成長", genre: ["特殊","金策"], icon: "t_augmenticon_explosive-growth.png", effect: "即座に、および次の3ラウンドに渡って、ラウンド開始時に7XPの経験値を獲得する。" },
+                { name: "爆発的成長+", genre: ["特殊","金策"], icon: "t_augmenticon_explosive-growth.png", effect: "即座に、および次の3ラウンドに渡って、ラウンド開始時に9XPの経験値を獲得する。" },
+                { name: "ハスラー", genre: ["金策"], icon: "t_augmenticon_hustler.png", effect: "利子を獲得できなくなる代わりに、対人戦ラウンドの開始時に毎回3ゴールドを獲得する。即座に3ゴールドを獲得する。（利子とは10ゴールド残しておくごとに獲得できる追加のゴールドのこと）", defaultRound: "2-1" },
+                { name: "花の呼び声", genre: ["特殊"], icon: "t_augmenticon_blossomaugment2.png", effect: "ウィスプを購入すると、そのコストに応じたランダムな「ブロッサム」のチャンピオンを1体獲得する。ユナラ、ヨリック、カルマを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "パンドラのアイテム II", genre: ["アイテム"], icon: "t_augmenticon_pandorasitems.png", effect: "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを2個と、1ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "パンドラのアイテム II+", genre: ["アイテム"], icon: "t_augmenticon_pandorasitems.png", effect: "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを2個と、4ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "パンドラのアイテム II++", genre: ["アイテム"], icon: "t_augmenticon_pandorasitems.png", effect: "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを2個と、6ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ヒーリングオーブ II", genre: ["戦闘"], icon: "t_augmenticon_healingorbs_gold_big.png", effect: "敵が倒されると、近くにいる味方1体の体力が575回復する。", defaultRound: "3-2, 4-2" },
+                { name: "庇護者の祝福", genre: ["アイテム"], icon: "t_augmenticon_caretakersally.png", effect: "レベル5、6、7、8に到達した際に「素材アイテムの金床」を1個獲得する。（「素材アイテムの金床」を使うと4つのアイテムから1つ選ぶことができる）", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "比類なき存在", genre: ["特殊"], icon: "t_augmenticon_rivalstofriends.png", effect: "レンガーとカ＝ジックスを一緒にボードに出してもペナルティを受けない。さらにお互いのスキル発動時にボーナスを獲得する。レンガーとカ＝ジックスを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "広がる根", genre: ["特殊"], icon: "t_augmenticon_spreadingroots.png", effect: "ランダムな紋章を1個獲得する。戦闘を3回行ったあとに、もう1個獲得する。", defaultRound: "2-1" },
+                { name: "広がる根+", genre: ["特殊"], icon: "t_augmenticon_spreadingroots.png", effect: "ランダムな紋章2個と2ゴールドを獲得する。" },
+                { name: "ブースターパック", genre: ["金策"], icon: "t_augmenticon_boosterpack1.png", effect: "ランダムなチャンピオンを合計12ゴールド分獲得する(コスト3が1体以上確定！)。", defaultRound: "2-1" },
+                { name: "ブースターパック+", genre: ["金策"], icon: "t_augmenticon_boosterpack3.png", effect: "ランダムなチャンピオンを合計18ゴールド分獲得する(コスト4が1体以上確定！)。" },
+                { name: "ブースターパック++", genre: ["金策"], icon: "t_augmenticon_boosterpack2.png", effect: "ランダムなチャンピオンを合計26ゴールド分獲得する(コスト5が1体以上確定！)。" },
+                { name: "複製", genre: ["アイテム"], icon: "t_augmenticon_replication.png", effect: "3つの素材アイテムから1つを選択。次の2ラウンドの間、その素材アイテムのコピーを1個獲得する。", defaultRound: "2-1, 3-2" },
+                { name: "放電 II", genre: ["戦闘"], icon: "t_augmenticon_electrocharge-i.png", effect: "味方が4回攻撃を受けるたびに、周囲の敵に50-140(現在のステージに応じて)の魔法ダメージを与える(クールダウン1秒)。", defaultRound: "2-1" },
+                { name: "ポータブル フォージ", genre: ["アイテム"], icon: "t_augmenticon_portableforge_gold_big.png", effect: "4つのアーティファクトから1つを選択。アーティファクトは独自の効果を持つ強力なアイテム。", defaultRound: "2-1" },
+                { name: "ボーナスギフト", genre: ["アイテム","金策"], icon: "t_augmenticon_bonusgift.png", effect: "戦利品オーブを開けるたびに、25%の確率でグレーの戦利品オーブを1個獲得する。グレーの戦利品オーブを1個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ボーナスギフト+", genre: ["アイテム","金策"], icon: "t_augmenticon_bonusgift.png", effect: "戦利品オーブを開けるたびに、25%の確率でグレーの戦利品オーブを1個獲得する。グレーの戦利品オーブを2個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "捕食植物", genre: ["特殊"], icon: "t_augmenticon_floraaugment2.png", effect: "「フローラ・ファターリスの紋章」を1個獲得する。この紋章を所持しているチャンピオンは、「フローラ・ファターリス」から得られる効果が70%増加する。3ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ボディーガードの訓練", genre: ["戦闘"], icon: "t_augmenticon_bodyguardtraining.png", effect: "味方の物理防御と魔法防御が15増加し、プレイヤーレベル1ごとに2ずつ増加する。", defaultRound: "2-1" },
+                { name: "前借り", genre: ["金策"], icon: "t_augmenticon_advancedloan.png", effect: "20ゴールドを獲得する。次のオーグメントのティアが1つ低くなる。", defaultRound: "2-1" },
+                { name: "前借り+", genre: ["金策"], icon: "t_augmenticon_advancedloanplus.png", effect: "33ゴールドを獲得する。次のオーグメントのティアが1つ低くなる。" },
+                { name: "魔女の従者", genre: ["特殊"], icon: "t_augmenticon_covenaugment.png", effect: "「魔女」のエッセンスを集め続けることを選択すると、タクティシャンの体力を2回復する。カミール、エリス、ケイトリンを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "待つ価値あり", genre: ["特殊","金策"], icon: "t_augmenticon_worththewait.png", effect: "ランダムなコスト1のチャンピオンを1体獲得する。試合終了まで各ラウンドの開始時にそのユニットのコピーを1体得る。", defaultRound: "2-1" },
+                { name: "マックスビルド", genre: ["金策"], icon: "t_augmenticon_maxbuild.png", effect: "10回分のショップ無料リロールを獲得する。レベル9に到達すると、3回分のショップ無料リロールとチャンピオン複製器を1個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "魔法のダイス", genre: ["アイテム","戦闘","特殊","金策"], icon: "t_augmenticon_magicalroll.png", effect: "3個のダイスを振る。その合計に応じて報酬を獲得する。", defaultRound: "3-2" },
+                { name: "見定める価値", genre: ["特殊"], icon: "t_augmenticon_weight_the_worth_2.png", effect: "最初にチャンピオンを★3にした際、試合終了まで毎ラウンド、そのチャンピオンのコピーを1体獲得する。同じチャンピオンを再度★3にすると、追加でそのチャンピオンを獲得する。「小型チャンピオン複製器」を1個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "乱れる思考", genre: ["特殊","金策"], icon: "t_augmenticon_clutteredmind_gold_big.png", effect: "即座にコスト1のチャンピオンを4体獲得する。対人戦ラウンド終了時にベンチが満員の場合、3XPの経験値を獲得する。", defaultRound: "2-1" },
+                { name: "みんなでハグ II", genre: ["戦闘"], icon: "t_augmenticon_grouphug_gold.png", effect: "戦闘開始時: チャンピオンは隣接するチャンピオン(自身を除く)に10の物理防御と魔法防御を付与する。この効果はスタックする。", defaultRound: "3-2, 4-2" },
+                { name: "明鏡止水", genre: ["特殊","金策"], icon: "t_augmenticon_clearmind_gold_big.png", effect: "対人戦ラウンド終了時、ベンチにチャンピオンがいない場合は経験値を3XP獲得する。", defaultRound: "2-1" },
+                { name: "闇の儀式", genre: ["特殊"], icon: "t_augmenticon_covenaugment2.png", effect: "「魔女」エッセンスを報酬に変換すると、「魔女」チャンピオンが戦利品の代わりに魔力を獲得する。カミール、エリス、ケイトリンを1体ずつ獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "U.R.F.", genre: ["アイテム"], icon: "t_augmenticon_ultrarapidfire.png", effect: "「へら」を1個獲得する。「へら」または「フライパン」アイテムを装備しているチャンピオンの攻撃速度が20%、マナ自動回復が3増加する。", defaultRound: "2-1, 3-2" },
+                { name: "リデンプションの魂", genre: ["アイテム"], icon: "t_augmenticon_spirit-of-redemption.png", effect: "「スピリット ビサージュ」を1個獲得する。5秒ごとに、「スピリット ビサージュ」が1マス以内の味方を、減少体力の9%回復する。", defaultRound: "2-1, 3-2" },
+                { name: "料理鍋", genre: ["アイテム","戦闘"], icon: "t_augmenticon_cookingpot.png", effect: "各ラウンド開始時に、「フライパン」か「へら」アイテムを装備したすべての味方が最も近くにいるチャンピオンの体力を恒久的に70増加させる。「フライパン」を1個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "レイトゲーム スケーリング", genre: ["特殊"], icon: "t_augmenticon_lategamescaling.png", effect: "対人戦ラウンド開始時に、2XPの経験値を獲得する。味方のコスト5チャンピオンの体力が12%、攻撃速度が12%増加する。", defaultRound: "2-1" },
             ],
             prism: [
-                { name: "アーフの福袋", genre: ["アイテム"], icon: "urfs-grab-bag-iii.png", effect: "「へら」を1個、ランダムな素材アイテムを3個、5ゴールドを獲得する。", defaultRound: "4-2" },
-                { name: "甘いおやつ", genre: ["アイテム"], icon: "sweettreats_iii.png", effect: "「アーティファクトの金床」1個。装備しているアイテム1個につき体力が16増加。", defaultRound: "3-2, 4-2" },
-                { name: "歩く鍛冶場", genre: ["アイテム"], icon: "living-forge-iii.png", effect: "「アーティファクトの金床」を即座に1個獲得し、その後は対人戦ラウンドを8回終えるたびに1個獲得する。", defaultRound: "2-1" },
-                { name: "いつでも一緒", genre: ["アイテム"], icon: "westicktogether_iii.png", effect: "ランダムな紋章アイテムを1個と、「完成アイテムの金床」を1個獲得する。その紋章と同じ特性を持っている味方の攻撃速度が30%増加する。", defaultRound: "2-1" },
-                { name: "埋もれた宝物", genre: ["アイテム"], icon: "buried-treasures-iii.png", effect: "即座にランダムな素材アイテムを1個獲得し、次の5ラウンドに渡って、ラウンド開始時にランダムな素材アイテムを1個ずつ獲得する。", defaultRound: "2-1" },
-                { name: "黄金の博打", genre: ["金策"], icon: "goldengamble_iii.png", effect: "1ゴールドを獲得してコインを投げる。表が出た場合、「レディアント 幸運のアイテムチェスト」を1個獲得する。裏が出た場合、「完成アイテムの金床」を2個獲得する。", defaultRound: "2-1" },
-                { name: "黄金の博打+", genre: ["金策"], icon: "goldengamble_iii.png", effect: "2G獲得しコイントス。表なら「レディアントチェスト」、裏なら「完成品金床」2個。", defaultRound: "3-2" },
-                { name: "黄金の博打++", genre: ["金策"], icon: "goldengamble_iii.png", effect: "6G獲得しコイントス。表なら「レディアントチェスト」、裏なら「完成品金床」2個。", defaultRound: "4-2" },
-                { name: "思惑買い", genre: ["金策"], icon: "going-long-iii.png", effect: "利子を獲得しなくなる。13ゴールドを即座に獲得する。ラウンド開始時: 4 XPの経験値を獲得する。", defaultRound: "2-1" },
-                { name: "カースドのクラウン", genre: ["特殊"], icon: "cursedcrown-iii.png", effect: "チームサイズの上限が2増加し、味方チームの耐久力が4%増加するを開き、対人戦に敗北した際に受けるダメージが上昇する。", defaultRound: "2-1, 3-2" },
-                { name: "輝く悪党", genre: ["アイテム"], icon: "roll-the-dice-iii.png", effect: "「悪党のグローブ」1個。毎ラウンド、ランダムなレディアントアイテムを2個装備。", defaultRound: "3-2, 4-2" },
-                { name: "賢い買い物", genre: ["特殊"], icon: "wisespending3.png", effect: "XPを購入できなくなる。ショップをリロールしてゴールドを消費するたびに、2XPを獲得する。即座に3ゴールドを獲得する。", defaultRound: "2-1, 3-2" },
-                { name: "勝ち抜け", genre: ["特殊"], icon: "winout_iii.png", effect: "レベル9到達時に即座にレベル10になり、無料リロール8回獲得。即座に10 XP。", defaultRound: "3-2" },
-                { name: "逆転劇", genre: ["戦闘"], icon: "comebackstory_iii.png", effect: "プレイヤーの体力が減少するごとに、味方チームの体力が5、攻撃速度が0.4%増加する。", defaultRound: "2-1" },
-                { name: "金のタマゴ", genre: ["金策"], icon: "the-golden-egg-iii.png", effect: "11ターン後（勝利で加速）に孵化し、大量の戦利品が産まれるタマゴを獲得。", defaultRound: "4-2" },
-                { name: "金のモンスーン", genre: ["金策"], icon: "moneymonsoon_iii.png", effect: "即座に、および残りの試合の毎ラウンド、7ゴールドを獲得する。", defaultRound: "4-2" },
-                { name: "限定カスタマイズ II", genre: ["アイテム"], icon: "exclusivecustomization_ii.png", effect: "「幸運のアイテムチェスト」2個、「磁力式除去装置」1個、7ゴールドを獲得。", defaultRound: "4-2" },
-                { name: "豪華なサブスク", genre: ["金策"], icon: "luxurysubscription_iii.png", effect: "コスト5、★2コスト1、7Gのパック。次の2ステージ開始時にも再獲得。", defaultRound: "3-2" },
-                { name: "コマース コア", genre: ["金策"], icon: "trade3.png", effect: "即座に無料リロール16回分獲得、さらに毎ラウンド3回分獲得。", defaultRound: "4-2" },
-                { name: "混沌への呼び声", genre: ["特殊"], icon: "calltochaos_iii.png", effect: "強力でランダムな報酬を1種類獲得する。", defaultRound: "4-2" },
-                { name: "サブスクリプション", genre: ["金策"], icon: "subscriptionservice_iii.png", effect: "現在、および各ステージの開始時に、異なるコスト4チャンピオンが4体並ぶショップを開き、6ゴールドを獲得する", defaultRound: "2-1" },
-                { name: "シマースケールのエッセンス", genre: ["金策"], icon: "shimmerscaleessence_iii.png", effect: "「モーグル メイル」を1個獲得する。6ラウンド後に、「ギャンブラーの剣」を1個獲得する。", defaultRound: "2-1" },
-                { name: "ジャイアント&マイティ", genre: ["戦闘"], icon: "giantandmighty_iii.png", effect: "味方チームが大きくなり、体力が200、最大体力が10%増加する。", defaultRound: "3-2, 4-2" },
-                { name: "柔軟性", genre: ["アイテム"], icon: "flexible_ii.png", effect: "ランダムな紋章アイテムを1個獲得する。毎ステージ開始時、ランダムな紋章を1個獲得する。装備した紋章1つごとに、味方チームの体力が30増加する。", defaultRound: "2-1" },
-                { name: "ジュエル ロータス II", genre: ["戦闘"], icon: "jeweled-lotus-iii.png", effect: "チームのクリティカル率+25%、クリティカルダメージ+10%、「正確無比」を付与。", defaultRound: "3-2, 4-2" },
-                { name: "生涯ブロンズ II", genre: ["戦闘"], icon: "bronzeforlife_iii.png", effect: "ブロンズ特性1つごとに、ダメージ増加+2%および物理・魔法防御+4を獲得。", defaultRound: "3-2, 4-2" },
-                { name: "上方移動", genre: ["特殊"], icon: "upwardmobility_iii.png", effect: "経験値の購入コストが1減少する。レベルアップするたびに、体力2と無料リロールを2獲得する。。", defaultRound: "2-1" },
-                { name: "新兵", genre: ["特殊"], icon: "newrecruit3.png", effect: "最大チームサイズが1増加し、コスト4のチャンピオンを1体獲得する。", defaultRound: "3-2" },
-                { name: "新兵+", genre: ["特殊"], icon: "newrecruit3.png", effect: "最大チームサイズが1増加し、コスト4のチャンピオンを2体獲得する。", defaultRound: "4-2" },
-                { name: "崇高の冒険", genre: ["特殊"], icon: "exaltedadventure_iii.png", effect: "コスト2のチャンピオンを3体獲得する。そのうち2体を★3にすると、戦利品が詰まったオーブを1個獲得する。次の2ステージ開始時に、「小型チャンピオン複製器」を1個獲得する。", defaultRound: "2-1" },
-                { name: "スワーム ハート", genre: ["特殊"], icon: "heartoftheswarm_iii.png", effect: "すべての★3チャンピオンがスワームリングのパワーとしてカウントされる。レベル9で、異なる★3チャンピオンを6体配置している場合、「プライモーディアン」がエイペックス・プライモーディアンを召喚する。「プライモーディアン」のチャンピオン3体と「小型チャンピオン複製器」を2個獲得する。", defaultRound: "2-1" },
-                { name: "全身全霊", genre: ["アイテム"], icon: "hardcommit_iii.png", effect: "ランダムな紋章アイテムを1個獲得する。今すぐ、および各ステージ開始時に、コストがステージ数と同じで(最大5)、その紋章の特性を持つ★1のユニットと3ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "前線維持", genre: ["戦闘"], icon: "holdtheline_iii.png", effect: "前列で開始した味方1体ごとに、後列の味方の魔力が9%、攻撃力が8%増加。", defaultRound: "3-2, 4-2" },
-                { name: "想定内の意外性", genre: ["特殊"], icon: "addicted-to-rolling-iii.png", effect: "即座に、および次の2ステージの開始時に、3個のダイスを振る。その合計に応じて様々な報酬を獲得する。", defaultRound: "2-1" },
-                { name: "ソウルの目覚め", genre: ["戦闘"], icon: "awakenedsoul_iii.png", effect: "開始10秒間攻撃・魔力+1.5%。最大スタックになると12%の追加確定ダメージ。", defaultRound: "3-2, 4-2" },
-                { name: "ソード オーバーフロー", genre: ["アイテム"], icon: "bladeoverflow_iii.png", effect: "「B.F.ソード」4個獲得。味方の「B.F.ソード」が付与する攻撃速度が4%増加。", defaultRound: "2-1" },
-                { name: "素材アイテムヘイスト", genre: ["アイテム"], icon: "museumheist_iii.png", effect: "対人戦6回後、すべての素材アイテムを1個ずつ獲得。即座にランダム素材1個。", defaultRound: "4-2" },
-                { name: "代償", genre: ["特殊"], icon: "atwhatcost_iii.png", effect: "直ちにレベル6になり、12 XPの経験値を獲得する。今後、オーグメントは選択できない。", defaultRound: "2-1" },
-                { name: "タクティシャンの台所", genre: ["アイテム"], icon: "tacticianskitchen_iii.png", effect: "ランダムな紋章アイテムを1個獲得する。3ラウンド終了後に「タクティシャンのケープ」を1個獲得する。", defaultRound: "2-1" },
-                { name: "小さくても強烈", genre: ["戦闘"], icon: "tinybutdeadly_iii.png", effect: "味方チームのサイズが小さくなり、攻撃速度と移動速度が33%増加する。", defaultRound: "3-2, 4-2" },
-                { name: "力に鍛えられしもの", genre: ["アイテム"], icon: "forgedinstrength_iii.png", effect: "ランダムなアーティファクトを1個獲得する。体力が35を下回ると、ランダムなアーティファクトを追加で3個獲得する", defaultRound: "2-1" },
-                { name: "デッドリアー ブレード", genre: ["アイテム"], icon: "deadlierblades_ii.png", effect: "「デスブレード」を1個獲得する。装備者がキルまたはアシストを獲得するたび、「デスブレード」の攻撃力が恒久的に1%増加する。", defaultRound: "2-1" },
-                { name: "投資完了+", genre: ["金策"], icon: "invested-iii.png", effect: "26G。戦闘終了時、50Gを超える10Gごとにショップリロール1回(最大80G)。", defaultRound: "3-2" },
-                { name: "投資完了++", genre: ["金策"], icon: "invested-iii.png", effect: "40G。戦闘終了時、50Gを超える10Gごとにショップリロール1回(最大80G)。", defaultRound: "4-2" },
-                { name: "盗賊団 II", genre: ["アイテム"], icon: "bandthieves3.png", effect: "「盗賊のグローブ」2個を獲得。対人戦を8回行ったあとに、もう1個獲得する。", defaultRound: "2-1" },
-                { name: "盗賊団 II+", genre: ["アイテム"], icon: "bandthieves3.png", effect: "「盗賊のグローブ」2個を獲得。対人戦を6回行ったあとに、もう1個獲得する。", defaultRound: "3-2" },
-                { name: "盗賊団 II++", genre: ["アイテム"], icon: "bandthieves3.png", effect: "「盗賊のグローブ」2個を獲得。対人戦を3回行ったあとに、もう1個獲得する。", defaultRound: "4-2" },
-                { name: "特性の木", genre: ["アイテム"], icon: "thetraittree_iii.png", effect: "ランダムな紋章アイテム3個、「再合成装置」1個と2ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "特性の木+", genre: ["アイテム"], icon: "thetraittree_iii.png", effect: "ランダムな紋章アイテム3個、「再合成装置」1個と4ゴールドを獲得。", defaultRound: "3-2" },
-                { name: "トライフェクタ II", genre: ["特殊"], icon: "trifecta-iii.png", effect: "コスト3を3体。味方速度+5%。開始時ランダム3体のコスト3の体力・速度大幅強化。", defaultRound: "3-2, 4-2" },
-                { name: "仲間を作ろう", genre: ["特殊"], icon: "constructacompanion_iii.png", effect: "ランダムな★3のコスト1チャンピオンを1体獲得する。8ゴールドを獲得する。", defaultRound: "2-1" },
-                { name: "バースデープレゼント", genre: ["特殊"], icon: "golden-gifts-iii.png", effect: "プレイヤーがレベルアップするたびに、★★のチャンピオン1体と1ゴールドを獲得する。プレイヤーのレベルから4を引いた値が、獲得できるチャンピオンのコストティアになる(上限: コスト5)。", defaultRound: "2-1" },
-                { name: "バフが1つ、バフが2つ", genre: ["アイテム"], icon: "onebufftwobuff_iii.png", effect: "「レッドバフ」を1個、「ブルーバフ」を1個、「チャンピオン複製器」を1個獲得。", defaultRound: "3-2, 4-2" },
-                { name: "バロンの巣", genre: ["戦闘"], icon: "thebaronslair_iii.png", effect: "タンクアイテム1個。開始8秒後から戦闘終了まで、チームの攻撃・魔力が毎秒5%増加。", defaultRound: "3-2, 4-2" },
-                { name: "パンドラのアイテム III", genre: ["アイテム"], icon: "pandora3.png", effect: "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムなレディアントアイテムを1個獲得する。", defaultRound: "2-1, 3-2" },
-                { name: "プリズムチケット", genre: ["金策"], icon: "goldenticket3.png", effect: "ショップをリロールするたびに、50%の確率で無料リロール1回分を獲得する。", defaultRound: "2-1, 3-2" },
-                { name: "ヘッジファンド", genre: ["金策"], icon: "richgetricher3.png", effect: "25ゴールドを獲得する。利子の最大額が10まで増加する。", defaultRound: "2-1" },
-                { name: "ヘッジファンド+", genre: ["金策"], icon: "richgetricher3.png", effect: "30ゴールドを獲得する。利子の最大額が10まで増加する。", defaultRound: "3-2" },
-                { name: "ベルト オーバーフロー", genre: ["アイテム"], icon: "beltoverflow_iii.png", effect: "「ジャイアント ベルト」を4個獲得。装備すると体力が85増加する。", defaultRound: "3-2, 4-2" },
-                { name: "待つ価値あり II", genre: ["特殊"], icon: "worththewait_iii.png", effect: "ランダムなコスト2のチャンピオン1種類を2体獲得する。", defaultRound: "2-1" },
-                { name: "ミニマックス", genre: ["アイテム"], icon: "minmax_iii.png", effect: "「黄金のアイテム除去装置」1個と、ランダムな素材アイテムを4個獲得する。", defaultRound: "3-2" },
-                { name: "もっと怖いキャップ", genre: ["アイテム"], icon: "deadliercaps_ii.png", effect: "「ラバドン デスキャップ」を1個獲得する。装備者がキルまたはアシストを獲得するたび、「ラバドン デスキャップ」の魔力が恒久的に1%増加する。", defaultRound: "2-1" },
-                { name: "もっと小さな巨人", genre: ["金策"], icon: "tiniest-titaniii.png", effect: "毎ラウンド終了時プレイヤー体力+2、2G、タクティシャン速度UP。即座に10G。", defaultRound: "3-2" },
-                { name: "ラッキーグローブ", genre: ["アイテム"], icon: "lucky-gloves-iii.png", effect: "「盗賊のグローブ」が毎回、そのチャンピオンにとって理想的なアイテムを付与するようになる。「スパーリング グローブ」を2個獲得する。", defaultRound: "2-1" },
-                { name: "ラッキーグローブ+", genre: ["アイテム"], icon: "lucky-gloves-iii.png", effect: "「盗賊のグローブ」が常に推奨アイテムを付与。即座に2個、4回対人戦後もう1個。", defaultRound: "3-2" },
-                { name: "レベルアップ！", genre: ["特殊"], icon: "levelup3.png", effect: "経験値を購入する際、追加で経験値を2 XP獲得する。即座に経験値を8 XP獲得する。", defaultRound: "2-1" },
-                { name: "ワンド オーバーフロー", genre: ["アイテム"], icon: "wandoverflow_iii.png", effect: "「ムダニ デカイ ロッド」を4個獲得。ロッドが攻撃速度5%を付与するようになる。", defaultRound: "3-2, 4-2" },
+                { name: "アーフの福袋", genre: ["アイテム"], icon: "t_augmenticon_urfsgrabbag.png", effect: "「へら」を1個、ランダムな素材アイテムを3個、5ゴールドを獲得する。", defaultRound: "4-2" },
+                { name: "甘いおやつ", genre: ["アイテム"], icon: "t_augmenticon_sweettreats.png", effect: "「アーティファクトの金床」を1個獲得する。味方チームは、チャンピオンに装備しているアイテム1個につき体力が16増加する。", defaultRound: "3-2, 4-2" },
+                { name: "歩く鍛冶場", genre: ["アイテム"], icon: "t_augmenticon_livingforge_gold_big.png", effect: "「アーティファクトの金床」を即座に1個獲得し、その後は対人戦ラウンドを10回終えるたびに1個獲得する。", defaultRound: "2-1" },
+                { name: "いつでも一緒", genre: ["アイテム"], icon: "t_augmenticon_westicktogeter.png", effect: "ランダムな特性の紋章1つと「完成アイテムの金床」1つを獲得する。その特性を持つ味方は攻撃速度が30%増加する。", defaultRound: "2-1" },
+                { name: "入れ子の金床", genre: ["アイテム","金策"], icon: "t_augmenticon_nestinganvils.png", effect: "「アーティファクトの金床」を1個獲得する。開けた後、「素材アイテムの金床」を1個獲得する。それを開けた後6ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "入れ子の金床+", genre: ["アイテム","金策"], icon: "t_augmenticon_nestinganvils.png", effect: "「アーティファクトの金床」を1個獲得する。開けた後、「素材アイテムの金床」を1個獲得する。それを開けた後8ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "埋もれた宝物 III", genre: ["アイテム"], icon: "t_augmenticon_buriedtreasures_gold_big.png", effect: "即座にランダムな素材アイテムを1個獲得し、次の6ラウンド開始時にも、それぞれ1個ずつ獲得する。", defaultRound: "2-1" },
+                { name: "黄金の博打", genre: ["金策"], icon: "t_augmenticon_goldengamble.png", effect: "2ゴールドを獲得してコインを投げる。表が出た場合、「レディアント 幸運のアイテムチェスト」を1個獲得する。裏が出た場合、「完成アイテムの金床」を2個獲得する。", defaultRound: "2-1" },
+                { name: "黄金の博打+", genre: ["金策"], icon: "t_augmenticon_goldengamble.png", effect: "3ゴールドを獲得してコインを投げる。表が出た場合、「レディアント 幸運のアイテムチェスト」を1個獲得する。裏が出た場合、「完成アイテムの金床」を2個獲得する。", defaultRound: "3-2" },
+                { name: "黄金の博打++", genre: ["金策"], icon: "t_augmenticon_goldengamble.png", effect: "6ゴールドを獲得してコインを投げる。表が出た場合、「レディアント 幸運のアイテムチェスト」を1個獲得する。裏が出た場合、「完成アイテムの金床」を2個獲得する。", defaultRound: "4-2" },
+                { name: "思惑買い", genre: ["金策"], icon: "t_augmenticon_goinglong.png", effect: "利子を獲得できなくなる。即座に10ゴールドを獲得する。対人戦ごとに4XPの経験値を獲得する。（利子とは10ゴールド残しておくごとに獲得できる追加のゴールドのこと）", defaultRound: "2-1" },
+                { name: "買い物三昧", genre: ["金策"], icon: "t_augmenticon_shoppingspree_big.png", effect: "レベルアップした際、自身のレベル+1と同じ数のショップのリロールを獲得する。6ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "輝く悪党", genre: ["アイテム"], icon: "t_augmenticon_radiantrascal.png", effect: "「レディアント 盗賊のグローブ」を1個獲得する。毎ラウンド、ランダムなレディアントアイテムを2つ装備する。", defaultRound: "3-2, 4-2" },
+                { name: "逆転劇", genre: ["戦闘"], icon: "t_augmenticon_comebackstory.png", effect: "プレイヤーの体力が減少するごとに、味方チームの体力が4、攻撃速度が0.3%増加する。", defaultRound: "2-1" },
+                { name: "金のタマゴ", genre: ["金策"], icon: "t_augmenticon_the-golden-egg-iii.png", effect: "金のタマゴを1個獲得する。このタマゴは11ターン後に孵化して、大量の戦利品が産まれる。プレイヤーとの戦闘に勝利すると、孵化タイマーが追加で1ターン早まる。", defaultRound: "4-2" },
+                { name: "金のモンスーン", genre: ["金策"], icon: "t_augmenticon_money-hungry-1.png", effect: "即座に、そして残りの試合の毎ラウンド、7ゴールドを獲得する。", defaultRound: "4-2" },
+                { name: "豪華なサブスク", genre: ["金策"], icon: "t_augmenticon_luxury-subscription.png", effect: "コスト5のチャンピオンが1体と、★2のコスト1チャンピオンが1体と、5ゴールドが入ったパックを獲得する。次の2ステージの開始時に、そのパックを再び獲得する。", defaultRound: "3-2" },
+                { name: "コマース コア", genre: ["金策"], icon: "t_augmenticon_commercecore.png", effect: "ショップの無料リロールを即座に16回分獲得し、さらに試合終了まで毎ラウンド3回分獲得する。", defaultRound: "4-2" },
+                { name: "混沌への呼び声", genre: ["特殊"], icon: "t_augmenticon_calltochaos.png", effect: "強力でランダムな報酬を1種類獲得する。", defaultRound: "4-2" },
+                { name: "シマースケールのエッセンス", genre: ["金策"], icon: "t_augmenticon_shimmerscaleessence.png", effect: "「ギャンブラーの剣」を1個獲得する。対人戦を6回行うと、「モーグル メイル」を1個獲得する。", defaultRound: "2-1" },
+                { name: "ジャイアント&マイティ", genre: ["戦闘"], icon: "t_augmenticon_giantandmighty.png", effect: "味方チームが大きくなり、体力が225、最大体力が10%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "柔軟性", genre: ["アイテム"], icon: "t_augmenticon_flexible.png", effect: "ランダムな紋章を1個獲得する。毎ステージ開始時、ランダムな紋章を1個獲得する。装備している紋章1個につき、味方チームの体力が30増加する。", defaultRound: "2-1" },
+                { name: "ジュエル ロータス II", genre: ["戦闘"], icon: "t_augmenticon_jeweledlotus.png", effect: "味方チームのクリティカル率が25%、クリティカルダメージが10%増加し、「正確無比」を獲得する。（正確無比: スキルはクリティカル判定を持つ。「正確無比」を追加で獲得すると、クリティカルダメージが10%増加する）", defaultRound: "3-2, 4-2" },
+                { name: "生涯ブロンズ II", genre: ["戦闘"], icon: "t_augmenticon_bronzeforlife.png", effect: "ブロンズティアの特性1つごとに、味方チームが2.5%のダメージ増加効果、および2.5の物理防御と魔法防御を獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "上方移動", genre: ["特殊"], icon: "t_augmenticon_upwardmobility.png", effect: "経験値の購入コストが1低下する。レベルアップするたびに体力が2増加し、ショップのリロールを2回分獲得する。", defaultRound: "2-1" },
+                { name: "垂直性 III", genre: ["戦闘"], icon: "t_augmenticon_verticality.png", effect: "チャンピオンは、同じ特性を共有する味方1体ごとに攻撃力が4%、魔力が4%、物理防御が3.5、魔法防御が3.5増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ステータスマシマシ(虹)", genre: ["戦闘"], icon: "t_augmenticon_tonsofstats.png", effect: "味方チームの体力が88、攻撃力が8%、魔力が8%、物理防御が8、魔法防御が8、攻撃速度が8%、マナが8増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "すべてのオリジンの達人", genre: ["特殊"], icon: "t_augmenticon_masterofallorigins.png", effect: "アーマリーを開いて、3個の特性の中から1つを選択する。その特性を持つラックスと「ショウジンの矛」を1個獲得する。（自分のボードに配置されている特性がアーマリーに出現しやすくなる。ラックスは、選ばれた特性に+2を付与する）", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "全身全霊", genre: ["アイテム"], icon: "t_augmenticon_hard-commit_tft_set12.png", effect: "ランダムな紋章を1個獲得する。即座に、および各ステージ開始時に、コストがステージ数と同じで(最大5)、その紋章の特性を持つ★1のチャンピオンと3ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "前線維持", genre: ["戦闘"], icon: "t_augmenticon_holdtheline.png", effect: "前列で戦闘を開始した味方1体ごとに、後列2列の味方の魔力が11%、攻撃力が11%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "想定内の意外性", genre: ["特殊"], icon: "t_augmenticon_expectedunexpectedness.png", effect: "即座に、および次の2ステージの開始時に、3個のダイスを振る。その合計に応じて様々な報酬を獲得する。", defaultRound: "2-1" },
+                { name: "ソウルの目覚め", genre: ["戦闘"], icon: "t_augmenticon_soul-awakening.png", effect: "戦闘開始時: 味方チームの攻撃力と魔力が10秒間、毎秒1.5%増加する。最大スタック時、12%の追加確定ダメージを与える。", defaultRound: "3-2, 4-2" },
+                { name: "ソード オーバーフロー", genre: ["アイテム"], icon: "t_augmenticon_bladeoverflow.png", effect: "「B.F.ソード」を4個獲得する。味方の「B.F.ソード」が付与する攻撃速度が4%増加する。", defaultRound: "2-1" },
+                { name: "素材アイテムクエスト", genre: ["アイテム","金策"], icon: "t_augmenticon_componentquest.png", effect: "ランダムな素材アイテムを1個と1ゴールドを獲得する。対人戦で勝利するたびに、異なるランダムな素材アイテムを1個獲得する（最大7回）。その後、1ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "戴冠式", genre: ["アイテム","戦闘"], icon: "t_augmenticon_coronation.png", effect: "「タクティシャンの王冠」を1個獲得する。タクティシャンの王冠、ケープ、盾が装備者の攻撃速度を20%、攻撃力を25%、魔力を30%増加させる。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "タクティシャンの台所", genre: ["アイテム"], icon: "t_augmenticon_tacticians-kitchen.png", effect: "ランダムな紋章を1個獲得する。3ラウンド終了後に「タクティシャンのケープ」を1個獲得する。", defaultRound: "2-1" },
+                { name: "力に鍛えられしもの", genre: ["アイテム"], icon: "t_augmenticon_forgedinstrength.png", effect: "ランダムなアーティファクトを1個獲得する。体力が35を下回ると、追加でランダムなアーティファクトを1個、ランダムな完成アイテムを1個、ランダムな素材アイテムを2個獲得する。", defaultRound: "2-1" },
+                { name: "デッドリアー ブレード", genre: ["アイテム"], icon: "t_augmenticon_deadlierblades.png", effect: "「デスブレード」を1個獲得する。装備者がキルまたはアシストを獲得するたび、「デスブレード」の攻撃力が恒久的に1%増加する。", defaultRound: "2-1" },
+                { name: "天の祝福 III", genre: ["戦闘"], icon: "t_augmenticon_celestial-blessings-i_tft_set16.png", effect: "味方チームが25%のオムニヴァンプを獲得する。余剰の回復量は最大1000までシールドに変換される。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "投資完了+", genre: ["金策"], icon: "t_augmenticon_invested.png", effect: "26ゴールドを獲得する。各ラウンドの開始時、50ゴールドを超えるゴールド量が10ゴールドごとにショップのリロールを1回獲得する(最大80ゴールドまで)。", defaultRound: "3-2" },
+                { name: "投資完了++", genre: ["金策"], icon: "t_augmenticon_invested.png", effect: "45ゴールドを獲得する。各ラウンドの開始時、50ゴールドを超えるゴールド量が10ゴールドごとにショップのリロールを1回獲得する(最大80ゴールドまで)。", defaultRound: "4-2" },
+                { name: "投資戦略 II", genre: ["戦闘","金策"], icon: "t_augmenticon_investmentstrategy.png", effect: "獲得した利子1ゴールドにつき、味方チャンピオンの最大体力が12恒久的に増加する。最大利子が2増加する。即座に6ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "盗賊団 II", genre: ["アイテム"], icon: "t_augmenticon_bandofthieves.png", effect: "「盗賊のグローブ」2個を獲得する。対人戦を5回行うと、もう1個獲得する。", defaultRound: "2-1" },
+                { name: "盗賊団 II+", genre: ["アイテム"], icon: "t_augmenticon_bandofthieves.png", effect: "「盗賊のグローブ」2個を獲得する。対人戦を5回行うと、もう1個獲得する。", defaultRound: "3-2" },
+                { name: "盗賊団 II++", genre: ["アイテム"], icon: "t_augmenticon_bandofthieves.png", effect: "「盗賊のグローブ」2個を獲得する。対人戦を3回行うと、もう1個獲得する。", defaultRound: "4-2" },
+                { name: "特性の木", genre: ["アイテム"], icon: "t_augmenticon_thetraittree.png", effect: "ランダムな紋章3個と2ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "特性の木+", genre: ["アイテム"], icon: "t_augmenticon_thetraittree.png", effect: "ランダムな紋章3個、「再合成装置」1個、4ゴールドを獲得する。", defaultRound: "3-2" },
+                { name: "特性ラダー", genre: ["特殊"], icon: "t_augmenticon_trait_ladder.png", effect: "ランダムな紋章を1個獲得する。プレイヤーとの戦闘で2種類の重複しない特性を発動させると、報酬を獲得する。その後、必要な特性の数と報酬の量が増加する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "仲間を作ろう", genre: ["特殊"], icon: "t_augmenticon_buildabud.png", effect: "ランダムな★3のコスト1チャンピオンを1体獲得する。9ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "バースデープレゼント", genre: ["特殊"], icon: "t_augmenticon_goldengifts.png", effect: "レベルアップするたびに、★2のチャンピオン1体と1ゴールドを獲得する。プレイヤーのレベルから4を引いた値が、獲得できるチャンピオンのコストティアになる(上限: コスト5)。", defaultRound: "2-1" },
+                { name: "バフが1つ、バフが2つ", genre: ["アイテム"], icon: "t_augmenticon_onebufftwobuff.png", effect: "「レッドバフ」を1個、「ブルーバフ」を1個、「チャンピオン複製器」を1個獲得する。", defaultRound: "3-2, 4-2" },
+                { name: "バロンの巣", genre: ["戦闘"], icon: "t_augmenticon_thebaronslair.png", effect: "ランダムなタンクアイテムを1個獲得する。戦闘開始後8秒経過時点から戦闘終了まで、味方チームの攻撃力と魔力が毎秒4%増加する。", defaultRound: "3-2, 4-2" },
+                { name: "パンドラのアイテム III", genre: ["アイテム"], icon: "t_augmenticon_pandorasitems.png", effect: "ラウンド開始時: ベンチのアイテムがランダムに変更される。レディアントアイテムを1個獲得する。", defaultRound: "2-1, 3-2" },
+                { name: "プリズムチケット", genre: ["金策"], icon: "t_augmenticon_prismaticticket_big.png", effect: "ショップをリロールするたびに、45%の確率で無料リロール1回分を獲得する。", defaultRound: "2-1, 3-2" },
+                { name: "プリズムの運命", genre: ["特殊","金策"], icon: "t_augmenticon_destiny.png", effect: "ランダムなプリズムオーグメントを1個と2ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "プリズムの運命+", genre: ["特殊","金策"], icon: "t_augmenticon_destiny.png", effect: "ランダムなプリズムオーグメントを1個と7ゴールドを獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "ヘッジファンド", genre: ["金策"], icon: "t_augmenticon_hedgefund_gold_big.png", effect: "22ゴールドを獲得する。最大利子が10に増加する。", defaultRound: "2-1" },
+                { name: "ベルト オーバーフロー", genre: ["アイテム"], icon: "t_augmenticon_beltoverflow.png", effect: "「ジャイアント ベルト」を4個獲得する。「ジャイアント ベルト」を装備すると体力が85増加する。", defaultRound: "3-2, 4-2" },
+                { name: "報復", genre: ["アイテム","戦闘"], icon: "t_augmenticon_retribution.png", effect: "「ハンド オブ ジャスティス」を2個獲得する。「ハンド オブ ジャスティス」を装備した味方は「正確無比」を獲得し、クリティカル率が15%増加する。（正確無比: スキルはクリティカル判定を持つ。「正確無比」を追加で獲得すると、クリティカルダメージが10%増加する）", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "待つ価値あり II", genre: ["特殊"], icon: "t_augmenticon_worththewait.png", effect: "ランダムなコスト2のチャンピオンを2体獲得する。試合終了まで各ラウンドの開始時にそのユニットのコピーを1体得る。", defaultRound: "2-1" },
+                { name: "ミニマックス", genre: ["アイテム"], icon: "t_augmenticon_minmax_prismatic.png", effect: "「黄金のアイテム除去装置」を1個、ランダムな素材アイテムを4個､4ゴールドを獲得する。", defaultRound: "3-2" },
+                { name: "もっと怖いキャップ", genre: ["アイテム"], icon: "t_augmenticon_deadliercaps.png", effect: "「ラバドン デスキャップ」を1個獲得する。「ラバドン デスキャップ」の装備者は、キルまたはアシストを獲得するたびに、1のマナ自動回復が付与され、恒久的に1%の魔力を獲得する。", defaultRound: "2-1" },
+                { name: "ラッキーグローブ", genre: ["アイテム"], icon: "t_augmenticon_luckygloves.png", effect: "「盗賊のグローブ」が毎回、そのチャンピオンにとって理想的なアイテムを付与するようになる。「スパーリング グローブ」を2個と4ゴールドを獲得する。", defaultRound: "2-1" },
+                { name: "ラッキーグローブ+", genre: ["アイテム"], icon: "t_augmenticon_luckygloves.png", effect: "「盗賊のグローブ」が毎回、そのチャンピオンにとって理想的なアイテムを付与するようになる。即座に「スパーリング グローブ」を2個獲得し、対人戦を4回行うと、もう1個獲得する。", defaultRound: "3-2" },
+                { name: "レディアントの遺物", genre: ["アイテム"], icon: "t_augmenticon_radiantrelics_gold_big.png", effect: "5個のレディアントアイテムの中から1個を選択する。「磁力式除去装置」を1個獲得する。", defaultRound: "2-1, 3-2, 4-2" },
+                { name: "レベルアップ！", genre: ["特殊"], icon: "t_augmenticon_levelup_gold_big.png", effect: "経験値を購入する際、追加で経験値を2XP獲得する。即座に経験値を10XP獲得する。", defaultRound: "2-1" },
+                { name: "ワンド オーバーフロー", genre: ["アイテム"], icon: "t_augmenticon_wandoverflow.png", effect: "「ムダニ デカイ ロッド」を4個獲得する。自分の「ムダニ デカイ ロッド」が付与する攻撃速度が5%増加する。", defaultRound: "3-2, 4-2" },
             ]
         };
 
@@ -472,7 +467,65 @@
         function esc(s){ return String(s==null?"":s)
             .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
+        // ===== メモ・優先度の保存キー =====
+        // 以前は並び順の番号（例: prio-silver-3）で保存していたため、データの並びが変わるとズレていた。
+        // → オーグメント名で保存する方式に変更（並び替え・追加・削除・ティア移動してもズレない）。
+        function noteKey(kind, aug){ return kind + "-n:" + String((aug && aug.name) || "").trim(); }
+
+        // 名前が変わったオーグメント（旧名 → 新名）。メモ・優先度を新名へ引き継ぐ。改名があればここに追記
+        const RENAMED = {
+            "アイテム福袋": "アイテム福袋 I",
+            "一 二 三": "ワンワン、ツー、スリー",
+            "一致団結(特性)": "一致団結",
+            "パンドラのアイテム": "パンドラのアイテム I",
+            "ローリングデイズ I": "ローリングデイズ",
+            "埋もれた宝物": "埋もれた宝物 III"
+        };
+
+        // 番号キー時代の並び順（旧データ移行用。編集不要）
+        const LEGACY_ORDER = {
+            silver: ["アイテム福袋", "一 二 三", "一致団結(素材)", "一致団結(特性)", "命懸けの戦い", "AFK", "エグザイル I", "エクスペディション", "援護の弓", "オーグメントパワー", "カナとカネ", "起死回生", "キックスタート", "吸血の胆力 I", "銀の匙", "グラスキャノン I", "構成拡大", "構成拡大+", "コグニティブ タックス", "コグニティブ タックス+", "ここがセンター", "混乱回復装置", "ザ・タワー", "サイズが大事", "サバイバー", "シールドメイデン", "集中砲火", "ステラコンボ", "絶好調", "即席アーマー I", "ターミィプナル ヴェロシティー", "巧みなクラフト", "ダミー化", "小さな巨人", "小さな福袋", "チーム構築", "チャージトランスファー I", "昼食代", "ちょっとだけ魔法のダイス", "ツイてる気分", "ツインガーディアン", "盗賊団", "友を鍛える", "流れる涙", "忍耐の美徳", "はしごを登れ I", "パンドラのアイテム", "ヒーリングオーブ I", "庇護者のお供", "不完全アセンション", "腐食", "普通の日々", "ベストフレンド I", "放電 I", "ボカッ！", "ボクシングのレッスン", "ミスコネクション", "道を切り拓け", "ミッションの再開", "未来の鍛冶場", "みんなでハグ I", "有効活用 I", "ラインナップ", "レイトゲーム スペシャリスト", "連続魔法", "ローリングデイズ I", "ワン、ツー、ファイブ！"],
+            gold: ["Arcane ビクタリー", "アーフの策略", "アセンション", "アニマ司令官", "一人前プレート", "インフィニティの守護", "ウォーロードの名誉", "宇宙の再起", "英雄のラッキーバッグ", "英雄のラッキーバッグ+", "英雄のラッキーバッグ++", "エグザイル II", "エピックなロールダウン", "エポック", "エポック+", "王冠とは重きもの", "大きな福袋", "オーラ育成中", "俺だけレベルアップ", "回収箱", "回収箱+", "カフナフナ", "神の鍛冶場", "起死回生 II", "銀河を巡る旅", "金に飢えし者", "金ピカの鋼", "グラスキャノン II", "剣鍛冶", "研究熱心", "限定カスタマイズ", "後衛の設計図", "高速ダブルキル", "高電圧", "コグニティブ オーバーロード", "コンパニオン作成", "最強の四配者", "サイバネティック アップリンク", "サイバネティック インプラント", "3の軍団", "サンファイア ボード", "仕送り", "自己破壊", "邪悪な収益化", "集中", "ジュエル ロータス I", "主人公補正", "出陣", "生涯ブロンズ I", "衝突試験用ダミー", "神聖なる修正", "侵略者ゼド", "好きなだけ泣くがいい", "ステータスマシマシ", "窃盗", "セラフィムの杖", "前衛の礎", "先見性", "戦略的敗北", "早期教育", "即席アーマー II", "タイムストリーム", "宝探し", "叩きつけ", "叩きつけ+", "小さな仲間たち", "血の供物", "チャージトランスファー II", "杖鍛冶", "紡がれし魔法", "偵察なし、変更なし", "デュオキュー", "時計仕掛けの加速装置", "トライフェクタ I", "トレードセクター", "21ゴールド獲得", "2体のタンク", "熱死", "バースデー リユニオン", "鋼の心", "爆発的成長", "爆発的成長+", "はしごを登れ II", "ハスラー", "パンドラのアイテム II", "ヒーリングオーブ II", "ビッグバン", "広がる根", "広がる根+", "ブースターパック", "ブースターパック+", "ブースターパック++", "フォーが共にあらんことを", "副作用", "複製", "普通預金口座", "不適合者", "プロの殺し屋", "プロボクサー", "ベストフレンド II", "放電 II", "ポータブル フォージ", "星を目指して", "ボディーガードの訓練", "炎を強めて", "前借り", "前借り+", "待つ価値あり", "魔法のダイス", "乱れる思考", "みんなでハグ II", "無差別殺人者", "明鏡止水", "メイスの決意", "U.R.F.", "弓の誓い", "リデンプションの魂", "ルート・シンギュラリティ", "レイトゲーム スケーリング"],
+            prism: ["アーフの福袋", "甘いおやつ", "歩く鍛冶場", "いつでも一緒", "埋もれた宝物", "黄金の博打", "黄金の博打+", "黄金の博打++", "思惑買い", "カースドのクラウン", "輝く悪党", "賢い買い物", "勝ち抜け", "逆転劇", "金のタマゴ", "金のモンスーン", "限定カスタマイズ II", "豪華なサブスク", "コマース コア", "混沌への呼び声", "サブスクリプション", "シマースケールのエッセンス", "ジャイアント&マイティ", "柔軟性", "ジュエル ロータス II", "生涯ブロンズ II", "上方移動", "新兵", "新兵+", "崇高の冒険", "スワーム ハート", "全身全霊", "前線維持", "想定内の意外性", "ソウルの目覚め", "ソード オーバーフロー", "素材アイテムヘイスト", "代償", "タクティシャンの台所", "小さくても強烈", "力に鍛えられしもの", "デッドリアー ブレード", "投資完了+", "投資完了++", "盗賊団 II", "盗賊団 II+", "盗賊団 II++", "特性の木", "特性の木+", "トライフェクタ II", "仲間を作ろう", "バースデープレゼント", "バフが1つ、バフが2つ", "バロンの巣", "パンドラのアイテム III", "プリズムチケット", "ヘッジファンド", "ヘッジファンド+", "ベルト オーバーフロー", "待つ価値あり II", "ミニマックス", "もっと怖いキャップ", "もっと小さな巨人", "ラッキーグローブ", "ラッキーグローブ+", "レベルアップ！", "ワンド オーバーフロー"]
+        };
+        const KEY_MIGRATED = "noteKeyByName_v1";
+        const LEGACY_KEY_RE = /^(prio|memo)-(silver|gold|prism)-\d+$/;
+
+        function migrateNoteKeys(){
+            try {
+                // ① 番号キー → 名前キー（初回のみ。旧キーは bak- を付けて退避）
+                if(!localStorage.getItem(KEY_MIGRATED)){
+                    Object.keys(LEGACY_ORDER).forEach(tier=>{
+                        LEGACY_ORDER[tier].forEach((name, i)=>{
+                            ["prio","memo"].forEach(kind=>{
+                                const oldK = kind + "-" + tier + "-" + i;
+                                const v = localStorage.getItem(oldK);
+                                if(v === null) return;
+                                if(v !== "") localStorage.setItem(noteKey(kind, {name}), v);
+                                localStorage.setItem("bak-" + oldK, v);
+                                localStorage.removeItem(oldK);
+                            });
+                        });
+                    });
+                    localStorage.setItem(KEY_MIGRATED, "1");
+                }
+                // ② 改名の引き継ぎ（新名側が未設定のときだけ）
+                Object.keys(RENAMED).forEach(oldName=>{
+                    ["prio","memo"].forEach(kind=>{
+                        const oldK = noteKey(kind, {name: oldName});
+                        const v = localStorage.getItem(oldK);
+                        if(v === null) return;
+                        const newK = noteKey(kind, {name: RENAMED[oldName]});
+                        if(!localStorage.getItem(newK)) localStorage.setItem(newK, v);
+                        localStorage.removeItem(oldK);
+                    });
+                });
+            } catch(e) { console.warn("メモの移行に失敗", e); }
+        }
+
         function init(){
+            migrateNoteKeys();
+
             // 旧バージョンで保存された出現ラウンドのキャッシュを一度だけ掃除する
             // （出現ラウンドは常にデータ側のdefaultRoundを表示する仕様に変更したため）
             for(let i = localStorage.length - 1; i >= 0; i--){
@@ -516,8 +569,9 @@
             const gList = genreArr(aug.genre);
 
             // 保存値（編集できるのは備考[メモ]のみ。優先度・ラウンドは表示専用）
-            const savedPrio = localStorage.getItem("prio-"+rowId) || "";
-            const savedMemo = localStorage.getItem("memo-"+rowId) || "";
+            const pk = noteKey("prio", aug), mk = noteKey("memo", aug);
+            const savedPrio = localStorage.getItem(pk) || "";
+            const savedMemo = localStorage.getItem(mk) || "";
             // 出現ラウンドはデータ（defaultRound）由来の表示専用項目。
             // localStorageにはキャッシュせず、常にエディタで設定した最新の値を表示する。
             const defaultRound = aug.defaultRound || "";
@@ -573,7 +627,7 @@
               '</div>';
 
             const memo = card.querySelector("#memo-"+CSS.escape(rowId));
-            memo.addEventListener("input", ()=> localStorage.setItem("memo-"+rowId, memo.value));
+            memo.addEventListener("input", ()=> localStorage.setItem(mk, memo.value));
 
             // ▼ 追加：selectの変更イベントを拾って見た目とデータを更新 ▼
             const prioSel = card.querySelector("#prio-sel-"+CSS.escape(rowId));
@@ -583,7 +637,7 @@
                 const nextPrio = e.target.value;
 
                 // データの保存
-                localStorage.setItem("prio-"+rowId, nextPrio);
+                localStorage.setItem(pk, nextPrio);
 
                 // バッジのテキストと色の更新
                 prioBadge.className = "prio " + (PRIO_CLASS[nextPrio] || "none");
@@ -601,7 +655,8 @@
                 el: card,
                 name: (aug.name||"").toLowerCase(),
                 effect: (aug.effect||"").toLowerCase(),
-                genre: gList.join(",")
+                genre: gList.join(","),
+                pk, mk
             };
             return card;
         }
@@ -620,8 +675,8 @@
                 const rowId = activeTier + "-" + index;
                 const c = cards[rowId]; if(!c) return;
 
-                const prio  = localStorage.getItem("prio-"+rowId) || "";
-                const memo  = (localStorage.getItem("memo-"+rowId) || "").toLowerCase();
+                const prio  = localStorage.getItem(c.pk) || "";
+                const memo  = (localStorage.getItem(c.mk) || "").toLowerCase();
                 const round = (aug.defaultRound || "").toLowerCase();
 
                 const mText  = !q || c.name.includes(q) || c.effect.includes(q) || memo.includes(q);
@@ -660,9 +715,9 @@
             let n = 0;
             Object.keys(cards).forEach(rowId=>{
                 const memoEl = document.getElementById("memo-"+rowId);
-                if(memoEl){ localStorage.setItem("memo-"+rowId, memoEl.value); }
+                if(memoEl){ localStorage.setItem(cards[rowId].mk, memoEl.value); }
                 const selEl = document.getElementById("prio-sel-"+rowId);
-                if(selEl){ localStorage.setItem("prio-"+rowId, selEl.value); }
+                if(selEl){ localStorage.setItem(cards[rowId].pk, selEl.value); }
                 n++;
             });
             showToast("保存しました ✓（" + n + "件）");
@@ -703,6 +758,8 @@
                     if(keys.length === 0) throw new Error("対象データがありません");
                     if(!confirm("バックアップを読み込み、現在のメモ・優先度を上書きします。よろしいですか？")) return;
                     keys.forEach(k=> localStorage.setItem(k, data[k]));
+                    // 旧方式（番号キー）のバックアップなら、再読込時に名前キーへ移し替える
+                    if(keys.some(k=> LEGACY_KEY_RE.test(k))) localStorage.removeItem(KEY_MIGRATED);
                     showToast("読み込みました ✓（" + keys.length + "件）再描画中…");
                     setTimeout(()=> location.reload(), 750);
                 } catch(err){

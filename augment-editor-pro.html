@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>オーグメント エディタ</title>
+<style>
+  :root{
+    --bg:#f7f9fc; --panel:#fff; --ink:#333; --accent:#ffde6a;
+    --ok:#16a34a; --bad:#dc2626; --pending:#f59e0b; --line:#e2e8f0;
+    --money:#d97706; --money-bg:#fef9c3;
+    --battle:#dc2626; --battle-bg:#fee2e2;
+    --item:#2563eb; --item-bg:#dbeafe;
+    --special:#7c3aed; --special-bg:#ede9fe;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:'Helvetica Neue',Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans',Meiryo,sans-serif;
+    background:var(--bg); color:var(--ink); margin:0; padding:10px;
+  }
+  h1{font-size:20px; color:#4a5568; text-align:center; margin:6px 0 14px;
+     text-shadow:1px 1px 0 #fff,2px 2px 0 var(--accent);}
+  .wrap{max-width:1300px; margin:0 auto;}
+
+  /* アクション */
+  .actions{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;}
+  .btn{padding:8px 14px; font-weight:bold; font-size:13px; border:2px solid #333;
+       border-radius:10px; background:var(--accent); box-shadow:2px 2px 0 #333; cursor:pointer;}
+  .btn.alt{background:#fff;}
+  .btn.add{background:#bbf7d0;}
+  .btn:active{transform:translate(1px,1px); box-shadow:0 0 0 #333;}
+  .hint{font-size:12px; color:#64748b; margin:0 0 14px; line-height:1.6;}
+  .hint b{color:#dc2626;}
+
+  /* ツールバー */
+  .toolbar{
+    position:sticky; top:0; z-index:20; background:var(--panel);
+    border:2px solid #333; border-radius:14px; box-shadow:0 4px 0 #333;
+    padding:10px 12px; margin-bottom:14px;
+    display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  }
+  .tabs{display:flex; gap:6px; overflow-x:auto;}
+  .tab{padding:6px 14px; font-weight:bold; font-size:14px; border:2px solid #333;
+       border-radius:10px; background:#fff; box-shadow:2px 2px 0 #333; cursor:pointer; white-space:nowrap;}
+  .tab:active{transform:translate(1px,1px); box-shadow:0 0 0 #333;}
+  .tab.active[data-tier="all"]{background:#cbd5e1;}
+  .tab.active[data-tier="silver"]{background:#cbd5e1;}
+  .tab.active[data-tier="gold"]{background:#fef08a;}
+  .tab.active[data-tier="prism"]{background:#fbcfe8;}
+  .spacer{flex:1 1 12px;}
+  .search{flex:1 1 180px; min-width:140px; padding:7px 10px; border:2px solid #333;
+          border-radius:10px; font-size:14px; font-family:inherit;}
+  .chk{display:flex; align-items:center; gap:6px; font-weight:bold; font-size:13px;
+       border:2px solid #333; border-radius:10px; padding:6px 10px; background:#fff; cursor:pointer;}
+  .badge{font-weight:bold; font-size:13px; padding:6px 10px; border-radius:10px; border:2px solid #333; white-space:nowrap;}
+  .badge.zero{background:#dcfce7;}
+  .badge.some{background:#fee2e2;}
+
+  /* セクション見出し */
+  .tier-head{grid-column:1/-1; display:flex; align-items:center; gap:10px; margin:8px 2px 0; font-weight:bold;}
+  .tier-head .lbl{font-size:15px;}
+  .tier-head .cnt{font-size:12px; color:#64748b;}
+  .tier-head .rule{flex:1; height:2px; background:#e2e8f0;}
+
+  /* グリッド */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:12px;}
+  .card{display:flex; flex-direction:column; gap:8px; background:var(--panel);
+        border:2px solid #333; border-radius:12px; padding:10px; box-shadow:2px 2px 0 #333;}
+  .card.bad{border-color:var(--bad); box-shadow:2px 2px 0 var(--bad); background:#fff8f8;}
+  .card.ok{border-color:#86efac;}
+  .card.isnew{border-color:#16a34a; box-shadow:2px 2px 0 #16a34a; background:#f4fff7;}
+
+  .row1{display:flex; gap:10px; align-items:center;}
+  .thumb{width:52px; height:52px; border-radius:8px; border:1px solid #333; background:#222;
+         flex:0 0 auto; object-fit:contain;}
+  .card.bad .thumb{opacity:.3;}
+  .namewrap{flex:1 1 auto; min-width:0;}
+  .nm-input{width:100%; font-weight:bold; font-size:14px; padding:6px 8px;
+            border:1px solid #cbd5e1; border-radius:6px; font-family:inherit; background:#f8fafc;}
+  .nm-input:focus{border-color:#333; background:#fff; outline:none;}
+  .del{flex:0 0 auto; width:30px; height:30px; border:2px solid #333; border-radius:8px;
+       background:#fff; box-shadow:1px 1px 0 #333; cursor:pointer; font-weight:bold; color:#dc2626; line-height:1;}
+  .del:active{transform:translate(1px,1px); box-shadow:0 0 0 #333;}
+
+  .row2{display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap;}
+  .field{display:flex; flex-direction:column; gap:3px;}
+  .field.tier{flex:0 0 70px;}
+  .field.grow{flex:1 1 auto; min-width:0;}
+  .field > label{font-size:10px; font-weight:bold; color:#64748b; padding-left:2px;}
+  select{padding:5px 6px; border:1px solid #cbd5e1; border-radius:6px;
+          font-size:12px; font-family:inherit; background:#f8fafc; width:100%;}
+  select:focus, .icon-input:focus, .eff-input:focus{border-color:#333; background:#fff; outline:none;}
+
+  /* チェックボックス・チップ */
+  .chips{display:flex; flex-wrap:wrap; gap:5px;}
+  .chip{display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:bold;
+        border:1px solid #cbd5e1; border-radius:14px; padding:3px 9px; cursor:pointer;
+        background:#f8fafc; color:#94a3b8; user-select:none; transition:background .12s,color .12s,border-color .12s;}
+  .chip input{position:absolute; opacity:0; width:0; height:0;}
+  .chip.on{color:#333; border-color:#333;}
+  .chip.g-money.on{background:var(--money-bg); color:var(--money); border-color:var(--money);}
+  .chip.g-battle.on{background:var(--battle-bg); color:var(--battle); border-color:var(--battle);}
+  .chip.g-item.on{background:var(--item-bg); color:var(--item); border-color:var(--item);}
+  .chip.g-special.on{background:var(--special-bg); color:var(--special); border-color:var(--special);}
+  .chip.r.on{background:var(--accent); color:#333; border-color:#333;}
+
+  .row3{display:flex; align-items:center; gap:6px;}
+  .dot{width:11px; height:11px; border-radius:50%; flex:0 0 auto; border:1px solid #333;}
+  .dot.ok{background:var(--ok);} .dot.bad{background:var(--bad);} .dot.pending{background:var(--pending);}
+  .icon-input{flex:1 1 auto; min-width:0; padding:5px 8px; border:1px solid #cbd5e1; border-radius:6px;
+              font-size:12px; font-family:ui-monospace,Menlo,monospace; background:#f8fafc;}
+
+  .eff-input{width:100%; min-height:38px; padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px;
+             font-size:12px; font-family:inherit; background:#f8fafc; resize:vertical; line-height:1.5;}
+
+  .empty{text-align:center; color:#94a3b8; padding:30px; font-weight:bold; grid-column:1/-1;}
+
+  /* I/O テキストエリア */
+  textarea.io{width:100%; height:120px; margin-top:8px; border:2px solid #333; border-radius:10px;
+              padding:8px; font-family:ui-monospace,Menlo,monospace; font-size:12px; display:none;}
+
+  /* トースト */
+  .toast{position:fixed; left:50%; bottom:20px; transform:translateX(-50%);
+         background:#333; color:#fff; padding:10px 18px; border-radius:10px; font-weight:bold;
+         font-size:13px; opacity:0; transition:opacity .25s; pointer-events:none; z-index:50; max-width:90%;}
+  .toast.show{opacity:1;}
+
+  @media(max-width:480px){
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>オーグメント エディタ 🛠️</h1>
+
+  <div class="actions">
+    <button class="btn add" id="addBtn">＋ オーグメント追加</button>
+    <button class="btn" id="applyBtn">augument.htmlに反映してDL</button>
+    <input type="file" id="fileInput" accept=".html" style="display:none">
+    <button class="btn alt" id="exportJson">データJSONをDL</button>
+    <button class="btn alt" id="importJson">データJSONを読込</button>
+    <input type="file" id="jsonInput" accept=".json" style="display:none">
+    <button class="btn alt" id="resetBtn">初期データに戻す</button>
+  </div>
+  <div class="hint">
+    画像はmetatftから読み込みます。<b>赤いカード＝画像読み込み失敗</b>＝ファイル名を要修正。名前・ジャンル・出現ラウンド・効果・ティアもこの画面で直接編集できます。<br>
+    編集が終わったら「augument.htmlに反映してDL」で元の <code>augument.html</code>（または index.html）を選ぶと、<b style="color:#16a34a">追加・削除・全項目の変更を反映した版</b>がDLされます。編集内容はこのブラウザに自動保存されます。<br>
+    ※ <b style="color:#64748b">追加したオーグメントは各ティアの末尾に入ります</b>（既存行の優先度／メモのズレ防止）。出現ラウンドは常にこのエディタで設定した値が反映先に反映されます（反映先のブラウザ側キャッシュは自動でクリアされます）。
+  </div>
+
+  <div class="toolbar">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tier="all">全</button>
+      <button class="tab" data-tier="silver">銀</button>
+      <button class="tab" data-tier="gold">金</button>
+      <button class="tab" data-tier="prism">虹</button>
+    </div>
+    <input class="search" id="search" placeholder="名前・効果で検索…">
+    <label class="chk"><input type="checkbox" id="onlyBad"> 失敗のみ</label>
+    <span class="spacer"></span>
+    <span class="badge zero" id="badge">失敗 0 / 259</span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script id="appscript">
+  const DATA = [{"tier": "silver", "tierJp": "銀", "name": "アイテム福袋 I", "genre": ["アイテム"], "icon": "t_augmenticon_itemgrabbag_gold_big.png", "effect": "ランダムな完成アイテム1個を獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "イカサマダイス", "genre": ["金策"], "icon": "t_augmenticon_loaded_dice.png", "effect": "ダイスを振ると、出た目の数と同じ量のゴールドを獲得する。その後コインを投げ、表が出ると1ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "一致団結", "genre": ["戦闘"], "icon": "t_augmenticon_standunited_gold_big.png", "effect": "チーム内で発動している特性1つにつき(固有特性を除く)、味方ユニットの攻撃力が1.5%、魔力が1.5%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "ウィスプ リベート+", "genre": ["金策"], "icon": "t_augmenticon_wisprebate.png", "effect": "ウィスプを1体購入するたびに2ゴールドを獲得する。即座に4ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "ウィスプ リベート++", "genre": ["金策"], "icon": "t_augmenticon_wisprebate.png", "effect": "ウィスプを1体購入するたびに2ゴールドを獲得する。即座に8ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "エクスペディション", "genre": ["アイテム", "特殊"], "icon": "t_augmenticon_expedition.png", "effect": "各ラウンドの開始時、ベンチの一番右にいるチャンピオンを失う。この方法で33ゴールド分のチャンピオンを失うと、強力な報酬を獲得する。即座にコスト3のチャンピオンを1体獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "援護の弓", "genre": ["アイテム"], "icon": "t_augmenticon_backupbows.png", "effect": "「リカーブ ボウ」を1個獲得する。味方チャンピオンが通常攻撃を1000回行うと、さらに2個獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "王殺し", "genre": ["金策"], "icon": "t_augmenticon_kingslayer_silver.png", "effect": "対人戦に勝利すると、1ゴールドを獲得する。相手プレイヤーの体力が自身よりも多かった場合は、代わりに6ゴールドを獲得する。1ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "オーグメントパワー", "genre": ["特殊"], "icon": "t_augmenticon_augmentedpower.png", "effect": "次のオーグメントのティアが1つ高くなる。", "defaultRound": "2-1, 3-2"}, {"tier": "silver", "tierJp": "銀", "name": "カナとカネ", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_ironassets_silver_big.png", "effect": "「素材アイテムの金床」を1個と3ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "キックスタート", "genre": ["戦闘", "特殊", "金策"], "icon": "t_augmenticon_kickstart.png", "effect": "ランダムな★2のコスト2チャンピオンを1体と、1ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "キャピタルゲイン I", "genre": ["金策"], "icon": "t_augmenticon_capitalgains.png", "effect": "獲得した利子に等しいゴールドを蓄える。3-3で、獲得した利子の100%に等しいゴールドを蓄える。即座に1ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "銀の匙", "genre": ["戦闘", "金策"], "icon": "t_augmenticon_silverspoon_gold_big.png", "effect": "経験値を10XP獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "クイックストリーク", "genre": ["金策"], "icon": "t_augmenticon_rapidstreaker.png", "effect": "連勝および連敗のカウントが2倍になる。2ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "グラスキャノン I", "genre": ["戦闘"], "icon": "t_augmenticon_glasscannon.png", "effect": "後列で戦闘を開始した味方が80%の体力で戦闘を開始するが、ダメージ増加効果を16%獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "構成拡大", "genre": ["特殊"], "icon": "t_augmenticon_branchingout.png", "effect": "ランダムな紋章を1個獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "構成拡大+", "genre": ["特殊"], "icon": "t_augmenticon_branchingout.png", "effect": "ランダムな紋章アイテムを1個と「再合成装置」を1個獲得する。", "defaultRound": "3-2"}, {"tier": "silver", "tierJp": "銀", "name": "コールショット", "genre": ["金策"], "icon": "t_augmenticon_calledshot.png", "effect": "連勝数を+4に設定する。4ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "コグニティブ タックス", "genre": ["金策"], "icon": "t_augmenticon_cognitive-tax_tft_set17.png", "effect": "8ゴールドと1XPを獲得する。", "defaultRound": "2-1, 3-2"}, {"tier": "silver", "tierJp": "銀", "name": "コグニティブ タックス+", "genre": ["金策"], "icon": "t_augmenticon_cognitive-tax_tft_set17.png", "effect": "12ゴールドと3XPを獲得する。", "defaultRound": ""}, {"tier": "silver", "tierJp": "銀", "name": "ここがセンター", "genre": ["戦闘"], "icon": "t_augmenticon_findyourcenter_silver.png", "effect": "前列の中央で戦闘を開始した味方チャンピオンは、ダメージ増加効果が15%、最大体力が25%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "混乱回復装置", "genre": ["特殊"], "icon": "t_augmenticon_recombobulator.png", "effect": "フィールド上のチャンピオンを、コストティアが1つ上のランダムなチャンピオンに恒久的に変化させる(最大コストティア5)。「磁力式除去装置」を2個と3回分の無料リロールを獲得する。", "defaultRound": "3-2"}, {"tier": "silver", "tierJp": "銀", "name": "ザ・タワー", "genre": ["戦闘"], "icon": "t_augmenticon_thetower.png", "effect": "巨大な「ダミー」を獲得する。4秒ごとに、最も近くにいる敵3体に対して電撃を放ち、それぞれに最大体力の5%にあたる確定ダメージを与える。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "集中砲火", "genre": ["戦闘"], "icon": "t_augmenticon_focusedfire.png", "effect": "味方チームの攻撃力が10%増加する。5秒ごとにさらに5%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "自由奔放", "genre": ["特殊", "金策"], "icon": "t_augmenticon_youngandwildandfree.png", "effect": "ドラフトラウンドで常に自由に移動できる。5ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "シルバーの運命", "genre": ["特殊", "金策"], "icon": "t_augmenticon_destiny.png", "effect": "ランダムなシルバーオーグメントを1個と2ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "シルバーの運命+", "genre": ["特殊", "金策"], "icon": "t_augmenticon_destiny.png", "effect": "ランダムなシルバーオーグメントを1個と4ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "シルバーの運命++", "genre": ["特殊", "金策"], "icon": "t_augmenticon_destiny.png", "effect": "ランダムなシルバーオーグメントを1個と7ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "垂直性 I", "genre": ["戦闘"], "icon": "t_augmenticon_verticality.png", "effect": "チャンピオンは、同じ特性を共有する味方1体ごとに攻撃力が1.5%、魔力が1.5%、物理防御が1.5、魔法防御が1.5増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "即席アーマー I", "genre": ["戦闘"], "icon": "t_augmenticon_makeshiftarmor.png", "effect": "アイテムを装備していないチャンピオンの物理防御と魔法防御が30増加する。", "defaultRound": "2-1, 3-2"}, {"tier": "silver", "tierJp": "銀", "name": "太陽の加護と共に", "genre": ["特殊"], "icon": "t_augmenticon_solaraugment.png", "effect": "レオナ、ケイル、セジュアニを1体ずつ獲得する。レオナが毎ラウンド70の最大体力を恒久的に獲得する。この効果は配置した種類の異なる★3のチャンピオン1体につき10増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "宅配チャンピオン", "genre": ["特殊", "金策"], "icon": "t_augmenticon_champdelivery.png", "effect": "コスト2のチャンピオンを3体獲得する。6ラウンド後、さらに3体獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "宅配チャンピオン+", "genre": ["特殊", "金策"], "icon": "t_augmenticon_champdelivery.png", "effect": "コスト3のチャンピオンを3体獲得する。6ラウンド後、さらに3個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "宅配チャンピオン++", "genre": ["特殊", "金策"], "icon": "t_augmenticon_champdelivery.png", "effect": "コスト4チャンピオンを3体獲得する。6ラウンド後、さらに3体獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "巧みなクラフト", "genre": ["金策"], "icon": "t_augmenticon_craftedcrafting.png", "effect": "完成アイテムを作成するたびに、リロールを2回獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "ダミー化", "genre": ["戦闘", "特殊"], "icon": "t_augmenticon_dummify.png", "effect": "ボードとベンチにいるすべてのチャンピオンを失う。それらのユニットの合計体力の60%の体力を持つ「ダミー」を1体獲得する。ステージごとにダミーの体力が1150増加する。タンク以外のランダムな★2のコスト2チャンピオンを1体獲得する。", "defaultRound": "3-2"}, {"tier": "silver", "tierJp": "銀", "name": "小さな福袋", "genre": ["アイテム"], "icon": "t_augmenticon_smallgrabbag.png", "effect": "ランダムな素材アイテムを2個獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "チーム構築", "genre": ["金策"], "icon": "t_augmenticon_teambuilding_silver.png", "effect": "「小型チャンピオン複製器」を1個獲得する。対人戦を5回行うと、さらにもう1個獲得する。（このアイテムを使うとコスト3以下のチャンピオンを1体獲得できる）", "defaultRound": "2-1, 3-2"}, {"tier": "silver", "tierJp": "銀", "name": "ちょっとだけ魔法のダイス", "genre": ["アイテム", "戦闘", "特殊", "金策"], "icon": "t_augmenticon_slightlymagicroll_silver.png", "effect": "ダイスを振る。出た目に応じて報酬を獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "追加のバックル", "genre": ["アイテム"], "icon": "t_augmenticon_extrabuckles_silver.png", "effect": "「ジャイアント ベルト」を1個獲得する。味方チャンピオンが75000ダメージを受けると、さらに2個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "ツイてる気分", "genre": ["金策"], "icon": "t_augmenticon_feelinglucky.png", "effect": "12ゴールドを獲得し、コインを投げる。表が出た場合、4ゴールド多く獲得する。", "defaultRound": "3-2"}, {"tier": "silver", "tierJp": "銀", "name": "ツインガーディアン", "genre": ["戦闘"], "icon": "t_augmenticon_twinguardians.png", "effect": "最前列にちょうど2体の味方が配置されている場合、それらの味方の体力が100、物理防御が35、魔法防御が35増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "天の祝福 I", "genre": ["戦闘"], "icon": "t_augmenticon_celestial-blessings-i_tft_set16.png", "effect": "味方チームが12%のオムニヴァンプを獲得する。余剰の回復量は最大200までシールドに変換される。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "盗賊団", "genre": ["アイテム"], "icon": "t_augmenticon_bandofthieves.png", "effect": "「盗賊のグローブ」1個を獲得する。", "defaultRound": "2-1, 3-2"}, {"tier": "silver", "tierJp": "銀", "name": "友を鍛える", "genre": ["特殊"], "icon": "t_augmenticon_constructacompanion.png", "effect": "次に購入するコスト1チャンピオンが★3になる。5ゴールドを獲得する。", "defaultRound": "4-2"}, {"tier": "silver", "tierJp": "銀", "name": "流れる涙", "genre": ["アイテム"], "icon": "t_augmenticon_flowingtears_i.png", "effect": "「女神の涙」を1個獲得する。味方チャンピオンが7000マナを使用すると、さらに2個獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "忍耐の美徳", "genre": ["特殊", "金策"], "icon": "t_augmenticon_patienceisavirtue.png", "effect": "即座に5回分のリロールを獲得する。直前のラウンドでチャンピオンを購入していない場合、毎ラウンド1回分のリロールを無料で獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "パンドラのアイテム I", "genre": ["アイテム", "特殊"], "icon": "t_augmenticon_pandorasitems.png", "effect": "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを1個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "パンドラのベンチ", "genre": ["特殊"], "icon": "t_augmenticon_pandorasbench.png", "effect": "各ラウンドの開始時に、ベンチの右側3スロットにいるチャンピオンが、同じコストのランダムなチャンピオンに変化する。1ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "ヒーリングオーブ I", "genre": ["戦闘"], "icon": "t_augmenticon_healingorbs_gold_big.png", "effect": "敵が倒されると、近くにいる味方1体の体力が250回復する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "庇護者のお供", "genre": ["特殊", "金策"], "icon": "t_augmenticon_caretakersally.png", "effect": "今すぐランダムなコスト2のチャンピオンを1体獲得する。レベルアップするごとに同じユニットをもう1体獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "不完全アセンション", "genre": ["戦闘"], "icon": "t_augmenticon_ascension.png", "effect": "戦闘開始から12秒経過すると、味方ユニットのダメージ増加効果が20%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "腐食", "genre": ["戦闘"], "icon": "t_augmenticon_corrosion.png", "effect": "前衛2列の敵の物理防御と魔法防御が2秒ごとに4低下する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "普通の日々", "genre": ["特殊", "金策"], "icon": "t_augmenticon_sliceoflife.png", "effect": "ステージごとに2回、ランダムなチャンピオンを1体獲得する。そのコストはステージごとに増加する。この効果はコスト5のチャンピオンを1体入手すると終了する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "放電 I", "genre": ["戦闘"], "icon": "t_augmenticon_electrocharge-i.png", "effect": "味方が4回攻撃を受けるたびに、周囲の敵に25-80(現在のステージに応じて)の魔法ダメージを与える(クールダウン1秒)。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "ボクシングのレッスン", "genre": ["戦闘"], "icon": "t_augmenticon_boxinglessons.png", "effect": "最前列で戦闘を開始したチャンピオン1体ごとに、味方チームの体力が30増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "魔法の残滓", "genre": ["戦闘"], "icon": "t_augmenticon_residual_magic.png", "effect": "味方チームの体力が60増加する。ウィスプを購入するたびに、この効果が10増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "魔法の残滓+", "genre": ["戦闘"], "icon": "t_augmenticon_residual_magic.png", "effect": "味方チームの体力が75増加する。ウィスプを購入するたびに、この効果が10増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "魔法の残滓++", "genre": ["戦闘"], "icon": "t_augmenticon_residual_magic.png", "effect": "味方チームの体力が90増加する。ウィスプを購入するたびに、この効果が10増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "ミスコネクション", "genre": ["金策"], "icon": "t_augmenticon_missedconnections_gold_big.png", "effect": "すべてのコスト1チャンピオンを1体ずつ獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "道を切り拓け", "genre": ["アイテム"], "icon": "t_augmenticon_carve-a-path.png", "effect": "「B.F.ソード」を1個獲得する。味方チャンピオンが65000の物理ダメージを与えると、さらに2個獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "未来に集中", "genre": ["特殊", "金策"], "icon": "t_augmenticon_futurefocused.png", "effect": "タクティシャンは体力を20失うが、対人戦を5回行うと、コスト4のチャンピオン3体と5ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "未来の鍛冶場", "genre": ["アイテム", "特殊"], "icon": "t_augmenticon_latentforge_gold_big.png", "effect": "対人戦を8回終えると、「アーティファクトの金床」を1個獲得する。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "みんなでハグ I", "genre": ["戦闘"], "icon": "t_augmenticon_group-hug-1_tft_set17.png", "effect": "戦闘開始時: チャンピオンは隣接するチャンピオン(自身を除く)に7の物理防御と魔法防御を付与する。この効果はスタックする。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "有効活用 I", "genre": ["特殊", "金策"], "icon": "t_augmenticon_goodforsomething.png", "effect": "アイテムを装備していないチャンピオンは、倒された時に40%の確率で1ゴールドをドロップする。", "defaultRound": "2-1"}, {"tier": "silver", "tierJp": "銀", "name": "レイトゲーム スペシャリスト", "genre": ["特殊"], "icon": "t_augmenticon_lategamespecialist.png", "effect": "レベル9に到達すると、27ゴールドを獲得する。", "defaultRound": "3-2"}, {"tier": "silver", "tierJp": "銀", "name": "ローリングデイズ", "genre": ["金策"], "icon": "t_augmenticon_rollingfordays_gold_big.png", "effect": "10回分のショップ無料リロールを獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "silver", "tierJp": "銀", "name": "ワン、ツー、ファイブ！", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_onetwofive.png", "effect": "ランダムな素材アイテム1個、2ゴールド、ランダムなコスト5のチャンピオン1体を獲得する。", "defaultRound": "4-2"}, {"tier": "silver", "tierJp": "銀", "name": "ワンワン、ツー、スリー", "genre": ["特殊", "金策"], "icon": "t_augmenticon_onetwosthree.png", "effect": "コスト1のチャンピオンを2体、コスト2のチャンピオンを1体、コスト3のチャンピオンを1体獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "Arcane ビクタリー", "genre": ["戦闘"], "icon": "t_augmenticon_arcaneviktory_augmentmasks.png", "effect": "戦闘開始から8秒後、敵チームを1.5秒間スタンさせる。戦闘開始から18秒後にこれを繰り返す。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "アイテム抽出", "genre": ["アイテム", "特殊"], "icon": "t_augmenticon_eldritchaugment.png", "effect": "「ブラックソーン」のマスでチャンピオンを生贄にしたとき、最初の3回まではそのチャンピオンが装備している素材アイテムのコピーをランダムで1つ獲得する。アジールとレク＝サイを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "アセンション", "genre": ["戦闘"], "icon": "t_augmenticon_ascension.png", "effect": "戦闘開始から12秒経過すると、味方ユニットのダメージ増加効果が35%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "一人前プレート", "genre": ["アイテム", "戦闘"], "icon": "t_augmenticon_soloplate.png", "effect": "「ガーゴイル ストーンプレート」を1個獲得する。戦闘開始時に「ガーゴイル ストーンプレート」を装備している味方の列に他のユニットがいない場合、最大体力が17%増加する。", "defaultRound": "2-1, 3-2"}, {"tier": "gold", "tierJp": "金", "name": "イッツミー ベイビー", "genre": ["戦闘", "金策"], "icon": "t_augmenticon_itsmebaby.png", "effect": "右下の角にチャンピオンシップマスを1つ獲得する。スポットライト内にいるチャンピオンは15%のダメージ増加効果と15%の攻撃速度を獲得する。また、キルまたはアシストを5回獲得するごとに1ゴールドをドロップする。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "ウォーパス", "genre": ["特殊", "金策"], "icon": "t_augmenticon_warpath.png", "effect": "★2のコスト2チャンピオンを1体獲得する。プレイヤーに80ダメージを与えると、高コストのチャンピオンとアイテムが入ったチェストを1個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "内なる獣(ニダリー)", "genre": ["特殊"], "icon": "t_augmenticon_primalaugment.png", "effect": "「プライマル」がもう1つ「祝福」を付与する。今すぐヴァイを1体獲得し、3ラウンド後にニダリーを1体獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "内なる獣(シヴィア)", "genre": ["特殊"], "icon": "t_augmenticon_primalaugment.png", "effect": "「プライマル」がもう1つ「祝福」を付与する。今すぐヴァイを1体獲得し、3ラウンド後にシヴィアを1体獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "内なる獣+(ニダリー)", "genre": ["特殊"], "icon": "t_augmenticon_primalaugment.png", "effect": "「プライマル」がもう1つ「祝福」を付与する。ヴァイとニダリーを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "内なる獣+(シヴィア)", "genre": ["特殊"], "icon": "t_augmenticon_primalaugment.png", "effect": "「プライマル」がもう1つ「祝福」を付与する。ヴァイとシヴィアを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "英雄のラッキーバッグ", "genre": ["特殊", "金策"], "icon": "t_augmenticon_heroicgrabbag.png", "effect": "「小型チャンピオン複製器」を2個獲得する。6ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "英雄のラッキーバッグ+", "genre": ["特殊", "金策"], "icon": "t_augmenticon_heroicgrabbag.png", "effect": "「小型チャンピオン複製器」を2個獲得する。8ゴールドを獲得する。", "defaultRound": "3-2"}, {"tier": "gold", "tierJp": "金", "name": "英雄のラッキーバッグ++", "genre": ["特殊", "金策"], "icon": "t_augmenticon_heroicgrabbag.png", "effect": "「小型チャンピオン複製器」を2個獲得する。14ゴールドを獲得する。", "defaultRound": "4-2"}, {"tier": "gold", "tierJp": "金", "name": "エピックなロールダウン", "genre": ["金策"], "icon": "t_augmenticon_epicrolldown.png", "effect": "レベル8に到達すると、ショップのリロールを20獲得する。", "defaultRound": "3-2"}, {"tier": "gold", "tierJp": "金", "name": "エポック", "genre": ["金策"], "icon": "t_augmenticon_epoch.png", "effect": "このオーグメント獲得時、および各ステージ開始時に4XPの経験値を獲得する。また、2回分の無料リロールを獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "エポック+", "genre": ["金策"], "icon": "t_augmenticon_epoch.png", "effect": "このオーグメント獲得時、および各ステージ開始時に8 XPの経験値を獲得する。また、2回分の無料リロールを獲得する。", "defaultRound": "3-2"}, {"tier": "gold", "tierJp": "金", "name": "黄金の龍", "genre": ["アイテム", "戦闘"], "icon": "t_augmenticon_thegoldendragon_ii.png", "effect": "「モーグル メイル」を1個獲得する。「モーグル メイル」を装備しているチャンピオンはチームスロットを1つ多く使用するが、体力が600、耐久力が15%増加する。（「モーグル メイル」はゴールドと戦闘力を付与する）", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "大きな福袋", "genre": ["アイテム"], "icon": "t_augmenticon_biggrabbag_gold_big.png", "effect": "ランダムな素材アイテム3個、2ゴールド、「再合成装置」を1個獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "オメガ リフトビースト", "genre": ["特殊"], "icon": "t_augmenticon_riftbeastaugment.png", "effect": "2体目の「アルファ リフトビースト」を選択できるようになる。「アルファ リフトビースト」が8%の最大体力と8%の攻撃速度を獲得する。スカトルクラブ、シンダーリング、小石を1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "俺だけレベルアップ", "genre": ["特殊"], "icon": "t_augmenticon_sololeveling.png", "effect": "次の5回の対人戦で、味方チームのサイズが1になるが、ボードに配置したチャンピオンはステータスが大幅に増加する。そのチャンピオンがキルを獲得するたびに1 XPの経験値を獲得する。その後、素材アイテムを2個獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "回収箱", "genre": ["アイテム"], "icon": "t_augmenticon_salvage1.png", "effect": "即座にランダムな完成アイテムを1個獲得する。また、対人戦を8回行うと、素材アイテムを1個獲得する。チャンピオンを売却すると、完成アイテムが素材に解体される(タクティシャンアイテムと紋章は除く)。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "回収箱+", "genre": ["アイテム"], "icon": "t_augmenticon_salvage1.png", "effect": "即座にランダムな完成アイテムを1個獲得する。また、対人戦を4回行うと、素材アイテムを1個獲得する。チャンピオンを売却すると、完成アイテムが素材に解体される(タクティシャンアイテムと紋章は除く)。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "確約された守護", "genre": ["アイテム", "戦闘"], "icon": "t_augmenticon_promisedprotection_ii.png", "effect": "「プロテクターの誓い」を1個獲得する。「プロテクターの誓い」の装備者は、あらゆるソースから獲得するマナが20%、最大体力が175増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "キャピタルゲイン II", "genre": ["金策"], "icon": "t_augmenticon_capitalgains.png", "effect": "獲得した利子に等しいゴールドを蓄える。3-3で、獲得した利子の125%に等しいゴールドを蓄える。即座に3ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "強制四配", "genre": ["戦闘", "特殊"], "icon": "t_augmenticon_fourcing.png", "effect": "ランダムなコスト4のチャンピオンを1体獲得する。そのチャンピオンが装備しているアイテム1個につき、味方チームの体力が100増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "極大化", "genre": ["特殊"], "icon": "t_augmenticon_faeaugment2.png", "effect": "「フェイ」の妖精が大きくなり、付与する攻撃力と魔力が50%増加する。「フェイ」チャンピオンの攻撃力と魔力が即座に18%増加する。ザヤとラカンを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "金に飢えし者", "genre": ["金策"], "icon": "t_augmenticon_money-hungry-1.png", "effect": "即座に7ゴールドを獲得し、その後は各ステージ開始時に7ゴールドを獲得する。ゴールドを拾うとタクティシャンが大きくなる。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "金に飢えし者+", "genre": ["金策"], "icon": "t_augmenticon_money-hungry-2.png", "effect": "即座に13ゴールドを獲得し、その後は各ステージ開始時に7ゴールドを獲得する。ゴールドを拾うとタクティシャンが大きくなる。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "金ピカの鋼", "genre": ["戦闘"], "icon": "t_augmenticon_gildedsteel.png", "effect": "コスト5のチャンピオンを2体獲得する。コスト5のチャンピオンを1体以上配置すると、コスト1～4のチャンピオンが8%の耐久力を獲得する。", "defaultRound": "4-2"}, {"tier": "gold", "tierJp": "金", "name": "グラスキャノン II", "genre": ["戦闘"], "icon": "t_augmenticon_glasscannon.png", "effect": "後列で戦闘を開始した味方が80%の体力で戦闘を開始するが、ダメージ増加効果を25%獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "剣鍛冶", "genre": ["アイテム"], "icon": "t_augmenticon_swordsmith.png", "effect": "「B.F.ソード」から派生したランダムな完成アイテムを2個獲得する。", "defaultRound": "4-2"}, {"tier": "gold", "tierJp": "金", "name": "研究熱心", "genre": ["金策"], "icon": "t_augmenticon_patientstudy_gold_big.png", "effect": "対人戦ラウンドに勝利すると経験値を2XP、敗北すると経験値を3XP獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "限定カスタマイズ", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_exclusivecustomization.png", "effect": "「幸運のアイテムチェスト」を1個、「磁力式除去装置」を1個、7ゴールドを獲得する。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "後衛の設計図", "genre": ["特殊"], "icon": "t_augmenticon_backlineblueprint.png", "effect": "タンク以外のコスト3チャンピオン1体と、そのチャンピオンのクラスに対応する「紋章」を1個獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "高速ダブルキル", "genre": ["アイテム"], "icon": "t_augmenticon_speedydoublekill_ii.png", "effect": "「グインソー レイジブレード」を1個獲得する。2人のプレイヤーが敗退すると、40ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "ゴールドの運命", "genre": ["特殊", "金策"], "icon": "t_augmenticon_destiny.png", "effect": "ランダムなゴールドオーグメントを1個と3ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "ゴールドの運命+", "genre": ["特殊", "金策"], "icon": "t_augmenticon_destiny.png", "effect": "ランダムなゴールドオーグメントを1個と5ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "コグニティブ オーバーロード", "genre": ["金策"], "icon": "t_augmenticon_cognitiveoverload.png", "effect": "7ゴールド、★2のコスト1チャンピオンを1体、コスト2のチャンピオンを1体、コスト3のチャンピオンを2体、1XP、無料リロール1回を獲得する。", "defaultRound": "3-2"}, {"tier": "gold", "tierJp": "金", "name": "コンパニオン作成", "genre": ["特殊"], "icon": "t_augmenticon_constructacompanion.png", "effect": "次に購入するコスト1チャンピオンが★3になる。2ゴールドを獲得する。", "defaultRound": "3-2"}, {"tier": "gold", "tierJp": "金", "name": "サイバネティック アップリンク", "genre": ["戦闘"], "icon": "t_augmenticon_cyberneticuplink.png", "effect": "アイテムを装備した味方チャンピオンの体力が100、マナ自動回復が2増加する。「女神の涙」を1個獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "サイバネティック インプラント", "genre": ["戦闘"], "icon": "t_augmenticon_cybernetic_gold_big.png", "effect": "アイテムを装備した味方チャンピオンの体力が100、攻撃力が15%増加する。「B.F.ソード」を1個獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "3の軍団", "genre": ["戦闘"], "icon": "t_augmenticon_legionofthrees.png", "effect": "ランダムな紋章を1個獲得する。味方のコスト3チャンピオンと紋章アイテムを装備したすべての味方の体力が150、攻撃速度が12%増加する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "時間スキップ", "genre": ["特殊", "金策"], "icon": "t_augmenticon_timeskip.png", "effect": "次の3ラウンドの間、自分のショップが無効になる。その後、32XPを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "邪悪な収益化", "genre": ["特殊", "金策"], "icon": "t_augmenticon_maliciousmonetization.png", "effect": "6ゴールドを獲得する。次の2ラウンドの間、敵チャンピオンが倒された際に2ゴールドをドロップする。", "defaultRound": "4-2"}, {"tier": "gold", "tierJp": "金", "name": "ジュエル ロータス I", "genre": ["戦闘"], "icon": "t_augmenticon_jeweledlotus.png", "effect": "味方チームのクリティカル率が15%増加し、「正確無比」を獲得する。（正確無比: スキルはクリティカル判定を持つ。「正確無比」を追加で獲得すると、クリティカルダメージが10%増加する）", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "主人公補正", "genre": ["戦闘"], "icon": "t_augmenticon_plotarmor.png", "effect": "味方チームの物理防御と魔法防御が8増加する。自身の体力が50%未満になると、戦闘終了までこの値が40に増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "生涯ブロンズ I", "genre": ["戦闘"], "icon": "t_augmenticon_bronzeforlife.png", "effect": "ブロンズティアの特性1つごとに、味方チームが2.5%のダメージ増加効果を獲得する。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "垂直性 II", "genre": ["戦闘"], "icon": "t_augmenticon_verticality.png", "effect": "チャンピオンは、同じ特性を共有する味方1体ごとに攻撃力が2.5%、魔力が2.5%、物理防御が2、魔法防御が2増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "好きなだけ泣くがいい", "genre": ["アイテム"], "icon": "t_augmenticon_crymeariver.png", "effect": "「女神の涙」を1個獲得する。味方チームが1のマナ自動回復を獲得する。戦闘開始から12秒後にこの効果は3になる。", "defaultRound": "2-1, 3-2"}, {"tier": "gold", "tierJp": "金", "name": "ステータスマシマシ", "genre": ["戦闘"], "icon": "t_augmenticon_tonsofstats.png", "effect": "味方チームの体力が44、攻撃力が4%、魔力が4%、物理防御が4、魔法防御が4、攻撃速度が4%、マナが4増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "窃盗", "genre": ["特殊", "金策"], "icon": "t_augmenticon_pilfer.png", "effect": "毎ラウンド、前回の戦闘で最初に倒したチャンピオンの★1コピーを獲得する。この方法で獲得したチャンピオンの総価値が最初に21ゴールドに到達した際に、「盗賊のグローブ」1個を獲得する。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "セラフィムの杖", "genre": ["アイテム"], "icon": "t_augmenticon_seraphimsstaff.png", "effect": "「アークエンジェル スタッフ」を1個獲得する。装備者の魔力が110%以上だった場合、「アークエンジェル スタッフ」から2のマナ自動回復を追加で獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "前衛の礎", "genre": ["アイテム", "特殊"], "icon": "t_augmenticon_frontlinefoundation.png", "effect": "★2のコスト1タンクチャンピオン1体と、そのチャンピオンのクラスに対応する「紋章」を1個獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "戦略的敗北", "genre": ["特殊", "金策"], "icon": "t_augmenticon_calculatedloss_gold_big.png", "effect": "戦闘に敗北すると、2ゴールドとショップの無料リロール1回分を獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "早期教育", "genre": ["戦闘"], "icon": "t_augmenticon_earlylearning.png", "effect": "味方チームの攻撃力と魔力が3%増加する。この効果は各対人戦終了後に1%増加する。コスト1のチャンピオンは2倍の効果を得る。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "即席アーマー II", "genre": ["戦闘"], "icon": "t_augmenticon_makeshiftarmor.png", "effect": "アイテムを装備していないチャンピオンの物理防御と魔法防御が50増加する。", "defaultRound": "2-1, 3-2"}, {"tier": "gold", "tierJp": "金", "name": "太陽と月", "genre": ["特殊"], "icon": "t_augmenticon_lunaraugment.png", "effect": "配置した種類の異なる「ソーラー」のチャンピオン1体ごとに、「ルナー」のチャンピオンの体力が100増加し、8%のダメージ増加効果を獲得する。レオナ、ケイル、ダイアナを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "太陽と月+", "genre": ["特殊"], "icon": "t_augmenticon_lunaraugment2.png", "effect": "配置した種類の異なる「ソーラー」のチャンピオン1体ごとに、「ルナー」のチャンピオンの体力が100増加し、8%のダメージ増加効果を獲得する。レオナ、ケイル、アフェリオスを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "叩きつけ", "genre": ["特殊", "金策"], "icon": "t_augmenticon_slammin.png", "effect": "3ゴールドを獲得する。対人戦ラウンドが終了するたび、ベンチに消費アイテム以外のアイテムがなければ、2XPの経験値を獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "叩きつけ+", "genre": ["特殊", "金策"], "icon": "t_augmenticon_slammin.png", "effect": "即座に4ゴールドと10XPを獲得する。対人戦ラウンドが終了するたび、ベンチに消費アイテム以外のアイテムがなければ、2XPの経験値を獲得する。", "defaultRound": "3-2"}, {"tier": "gold", "tierJp": "金", "name": "小さなモフモフのお友達", "genre": ["特殊"], "icon": "t_augmenticon_sprykinaugment.png", "effect": "「スプライキン」が発動中は、45%の強さを持つ2体目の「大きなモフモフのお友達」を召喚する。ティーモ、ベイガー、コブコを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "挑戦者の気品", "genre": ["戦闘"], "icon": "t_augmenticon_challengersgrace.png", "effect": "戦闘開始時、味方の攻撃速度が4秒間30%増加する。キルまたはアシスト獲得時に、味方チャンピオンが次の対象に向かってダッシュし、この追加効果を再度獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "杖鍛冶", "genre": ["アイテム"], "icon": "t_augmenticon_staffsmith.png", "effect": "「ムダニ デカイ ロッド」から派生したランダムな完成アイテムを2個獲得する。", "defaultRound": "4-2"}, {"tier": "gold", "tierJp": "金", "name": "紡がれし魔法", "genre": ["アイテム"], "icon": "t_augmenticon_wovenmagic.png", "effect": "ランダムな素材アイテムを1個獲得する。味方チャンピオンが2200マナを消費するごとに、追加の素材アイテムを獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "偵察なし、変更なし", "genre": ["戦闘", "特殊"], "icon": "t_augmenticon_noscoutnopivot_ii_tft_set13.png", "effect": "対人戦に参加するチャンピオンはベンチに戻すことも、売却することもできない。対人戦後、味方チームの体力が1%、攻撃力と魔力が1%増加する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "デュオキュー", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_duoqueue.png", "effect": "ランダムなコスト5チャンピオンを2体、ランダムな素材アイテムのコピーを2個獲得する。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "天然シェルター", "genre": ["特殊"], "icon": "t_augmenticon_elderwoodaugment.png", "effect": "戦闘開始時に「エルダーウッド」の植物に隣接しているチャンピオンは、攻撃速度が15%増加し、2秒ごとに自身の最大体力の2%を回復する。アリスター、オーン、ザヤを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "天の祝福 II", "genre": ["戦闘"], "icon": "t_augmenticon_celestial-blessings-i_tft_set16.png", "effect": "味方チームが18%のオムニヴァンプを獲得する。余剰の回復量は最大400までシールドに変換される。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "投資戦略 I", "genre": ["戦闘", "金策"], "icon": "t_augmenticon_investmentstrategy.png", "effect": "獲得した利子1ゴールドにつき、味方チャンピオンの最大体力が9恒久的に増加する。即座に3ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "時計仕掛けの加速装置", "genre": ["戦闘"], "icon": "t_augmenticon_clockworkaccelerator.png", "effect": "戦闘中3秒ごとに味方チームの攻撃速度が10%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "トレードセクター", "genre": ["金策"], "icon": "t_augmenticon_tradesector_big.png", "effect": "毎ラウンド、ショップのリロール1回分を獲得する。2ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "トレードセクター+", "genre": ["金策"], "icon": "t_augmenticon_tradesector_big.png", "effect": "毎ラウンド、ショップのリロール1回分を獲得する。8ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "21ゴールド獲得", "genre": ["金策"], "icon": "t_augmenticon_gaingold.png", "effect": "21ゴールドを獲得する。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "値切り上手", "genre": ["金策"], "icon": "t_augmenticon_hardbargain.png", "effect": "ドラフトの報酬を選択できなくなる。ドラフトラウンドごとに、プレイヤー体力が6増加し、8ゴールドを獲得する。（ドラフト報酬を選択しなかった場合、ピックされなかったチャンピオンとそれが所有するアイテムを獲得する）", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "バースデー リユニオン", "genre": ["特殊"], "icon": "t_augmenticon_birthdayreunion.png", "effect": "ランダムな★2のコスト2チャンピオンを1体獲得する。レベル6でランダムな素材アイテムを1個獲得する。レベル9に到達すると、ランダムな★2のコスト5チャンピオンを1体獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "爆発的成長", "genre": ["特殊", "金策"], "icon": "t_augmenticon_explosive-growth.png", "effect": "即座に、および次の3ラウンドに渡って、ラウンド開始時に7XPの経験値を獲得する。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "爆発的成長+", "genre": ["特殊", "金策"], "icon": "t_augmenticon_explosive-growth.png", "effect": "即座に、および次の3ラウンドに渡って、ラウンド開始時に9XPの経験値を獲得する。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "ハスラー", "genre": ["金策"], "icon": "t_augmenticon_hustler.png", "effect": "利子を獲得できなくなる代わりに、対人戦ラウンドの開始時に毎回3ゴールドを獲得する。即座に3ゴールドを獲得する。（利子とは10ゴールド残しておくごとに獲得できる追加のゴールドのこと）", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "花の呼び声", "genre": ["特殊"], "icon": "t_augmenticon_blossomaugment2.png", "effect": "ウィスプを購入すると、そのコストに応じたランダムな「ブロッサム」のチャンピオンを1体獲得する。ユナラ、ヨリック、カルマを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "パンドラのアイテム II", "genre": ["アイテム"], "icon": "t_augmenticon_pandorasitems.png", "effect": "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを2個と、1ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "パンドラのアイテム II+", "genre": ["アイテム"], "icon": "t_augmenticon_pandorasitems.png", "effect": "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを2個と、4ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "パンドラのアイテム II++", "genre": ["アイテム"], "icon": "t_augmenticon_pandorasitems.png", "effect": "ラウンド開始時: ベンチのアイテムがランダムに変更される。ランダムな素材アイテムを2個と、6ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "ヒーリングオーブ II", "genre": ["戦闘"], "icon": "t_augmenticon_healingorbs_gold_big.png", "effect": "敵が倒されると、近くにいる味方1体の体力が575回復する。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "庇護者の祝福", "genre": ["アイテム"], "icon": "t_augmenticon_caretakersally.png", "effect": "レベル5、6、7、8に到達した際に「素材アイテムの金床」を1個獲得する。（「素材アイテムの金床」を使うと4つのアイテムから1つ選ぶことができる）", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "比類なき存在", "genre": ["特殊"], "icon": "t_augmenticon_rivalstofriends.png", "effect": "レンガーとカ＝ジックスを一緒にボードに出してもペナルティを受けない。さらにお互いのスキル発動時にボーナスを獲得する。レンガーとカ＝ジックスを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "広がる根", "genre": ["特殊"], "icon": "t_augmenticon_spreadingroots.png", "effect": "ランダムな紋章を1個獲得する。戦闘を3回行ったあとに、もう1個獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "広がる根+", "genre": ["特殊"], "icon": "t_augmenticon_spreadingroots.png", "effect": "ランダムな紋章2個と2ゴールドを獲得する。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "ブースターパック", "genre": ["金策"], "icon": "t_augmenticon_boosterpack1.png", "effect": "ランダムなチャンピオンを合計12ゴールド分獲得する(コスト3が1体以上確定！)。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "ブースターパック+", "genre": ["金策"], "icon": "t_augmenticon_boosterpack3.png", "effect": "ランダムなチャンピオンを合計18ゴールド分獲得する(コスト4が1体以上確定！)。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "ブースターパック++", "genre": ["金策"], "icon": "t_augmenticon_boosterpack2.png", "effect": "ランダムなチャンピオンを合計26ゴールド分獲得する(コスト5が1体以上確定！)。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "複製", "genre": ["アイテム"], "icon": "t_augmenticon_replication.png", "effect": "3つの素材アイテムから1つを選択。次の2ラウンドの間、その素材アイテムのコピーを1個獲得する。", "defaultRound": "2-1, 3-2"}, {"tier": "gold", "tierJp": "金", "name": "放電 II", "genre": ["戦闘"], "icon": "t_augmenticon_electrocharge-i.png", "effect": "味方が4回攻撃を受けるたびに、周囲の敵に50-140(現在のステージに応じて)の魔法ダメージを与える(クールダウン1秒)。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "ポータブル フォージ", "genre": ["アイテム"], "icon": "t_augmenticon_portableforge_gold_big.png", "effect": "4つのアーティファクトから1つを選択。アーティファクトは独自の効果を持つ強力なアイテム。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "ボーナスギフト", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_bonusgift.png", "effect": "戦利品オーブを開けるたびに、25%の確率でグレーの戦利品オーブを1個獲得する。グレーの戦利品オーブを1個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "ボーナスギフト+", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_bonusgift.png", "effect": "戦利品オーブを開けるたびに、25%の確率でグレーの戦利品オーブを1個獲得する。グレーの戦利品オーブを2個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "捕食植物", "genre": ["特殊"], "icon": "t_augmenticon_floraaugment2.png", "effect": "「フローラ・ファターリスの紋章」を1個獲得する。この紋章を所持しているチャンピオンは、「フローラ・ファターリス」から得られる効果が70%増加する。3ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "ボディーガードの訓練", "genre": ["戦闘"], "icon": "t_augmenticon_bodyguardtraining.png", "effect": "味方の物理防御と魔法防御が15増加し、プレイヤーレベル1ごとに2ずつ増加する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "前借り", "genre": ["金策"], "icon": "t_augmenticon_advancedloan.png", "effect": "20ゴールドを獲得する。次のオーグメントのティアが1つ低くなる。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "前借り+", "genre": ["金策"], "icon": "t_augmenticon_advancedloanplus.png", "effect": "33ゴールドを獲得する。次のオーグメントのティアが1つ低くなる。", "defaultRound": ""}, {"tier": "gold", "tierJp": "金", "name": "魔女の従者", "genre": ["特殊"], "icon": "t_augmenticon_covenaugment.png", "effect": "「魔女」のエッセンスを集め続けることを選択すると、タクティシャンの体力を2回復する。カミール、エリス、ケイトリンを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "待つ価値あり", "genre": ["特殊", "金策"], "icon": "t_augmenticon_worththewait.png", "effect": "ランダムなコスト1のチャンピオンを1体獲得する。試合終了まで各ラウンドの開始時にそのユニットのコピーを1体得る。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "マックスビルド", "genre": ["金策"], "icon": "t_augmenticon_maxbuild.png", "effect": "10回分のショップ無料リロールを獲得する。レベル9に到達すると、3回分のショップ無料リロールとチャンピオン複製器を1個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "魔法のダイス", "genre": ["アイテム", "戦闘", "特殊", "金策"], "icon": "t_augmenticon_magicalroll.png", "effect": "3個のダイスを振る。その合計に応じて報酬を獲得する。", "defaultRound": "3-2"}, {"tier": "gold", "tierJp": "金", "name": "見定める価値", "genre": ["特殊"], "icon": "t_augmenticon_weight_the_worth_2.png", "effect": "最初にチャンピオンを★3にした際、試合終了まで毎ラウンド、そのチャンピオンのコピーを1体獲得する。同じチャンピオンを再度★3にすると、追加でそのチャンピオンを獲得する。「小型チャンピオン複製器」を1個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "乱れる思考", "genre": ["特殊", "金策"], "icon": "t_augmenticon_clutteredmind_gold_big.png", "effect": "即座にコスト1のチャンピオンを4体獲得する。対人戦ラウンド終了時にベンチが満員の場合、3XPの経験値を獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "みんなでハグ II", "genre": ["戦闘"], "icon": "t_augmenticon_grouphug_gold.png", "effect": "戦闘開始時: チャンピオンは隣接するチャンピオン(自身を除く)に10の物理防御と魔法防御を付与する。この効果はスタックする。", "defaultRound": "3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "明鏡止水", "genre": ["特殊", "金策"], "icon": "t_augmenticon_clearmind_gold_big.png", "effect": "対人戦ラウンド終了時、ベンチにチャンピオンがいない場合は経験値を3XP獲得する。", "defaultRound": "2-1"}, {"tier": "gold", "tierJp": "金", "name": "闇の儀式", "genre": ["特殊"], "icon": "t_augmenticon_covenaugment2.png", "effect": "「魔女」エッセンスを報酬に変換すると、「魔女」チャンピオンが戦利品の代わりに魔力を獲得する。カミール、エリス、ケイトリンを1体ずつ獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "U.R.F.", "genre": ["アイテム"], "icon": "t_augmenticon_ultrarapidfire.png", "effect": "「へら」を1個獲得する。「へら」または「フライパン」アイテムを装備しているチャンピオンの攻撃速度が20%、マナ自動回復が3増加する。", "defaultRound": "2-1, 3-2"}, {"tier": "gold", "tierJp": "金", "name": "リデンプションの魂", "genre": ["アイテム"], "icon": "t_augmenticon_spirit-of-redemption.png", "effect": "「スピリット ビサージュ」を1個獲得する。5秒ごとに、「スピリット ビサージュ」が1マス以内の味方を、減少体力の9%回復する。", "defaultRound": "2-1, 3-2"}, {"tier": "gold", "tierJp": "金", "name": "料理鍋", "genre": ["アイテム", "戦闘"], "icon": "t_augmenticon_cookingpot.png", "effect": "各ラウンド開始時に、「フライパン」か「へら」アイテムを装備したすべての味方が最も近くにいるチャンピオンの体力を恒久的に70増加させる。「フライパン」を1個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "gold", "tierJp": "金", "name": "レイトゲーム スケーリング", "genre": ["特殊"], "icon": "t_augmenticon_lategamescaling.png", "effect": "対人戦ラウンド開始時に、2XPの経験値を獲得する。味方のコスト5チャンピオンの体力が12%、攻撃速度が12%増加する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "アーフの福袋", "genre": ["アイテム"], "icon": "t_augmenticon_urfsgrabbag.png", "effect": "「へら」を1個、ランダムな素材アイテムを3個、5ゴールドを獲得する。", "defaultRound": "4-2"}, {"tier": "prism", "tierJp": "虹", "name": "甘いおやつ", "genre": ["アイテム"], "icon": "t_augmenticon_sweettreats.png", "effect": "「アーティファクトの金床」を1個獲得する。味方チームは、チャンピオンに装備しているアイテム1個につき体力が16増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "歩く鍛冶場", "genre": ["アイテム"], "icon": "t_augmenticon_livingforge_gold_big.png", "effect": "「アーティファクトの金床」を即座に1個獲得し、その後は対人戦ラウンドを10回終えるたびに1個獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "いつでも一緒", "genre": ["アイテム"], "icon": "t_augmenticon_westicktogeter.png", "effect": "ランダムな特性の紋章1つと「完成アイテムの金床」1つを獲得する。その特性を持つ味方は攻撃速度が30%増加する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "入れ子の金床", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_nestinganvils.png", "effect": "「アーティファクトの金床」を1個獲得する。開けた後、「素材アイテムの金床」を1個獲得する。それを開けた後6ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "入れ子の金床+", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_nestinganvils.png", "effect": "「アーティファクトの金床」を1個獲得する。開けた後、「素材アイテムの金床」を1個獲得する。それを開けた後8ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "埋もれた宝物 III", "genre": ["アイテム"], "icon": "t_augmenticon_buriedtreasures_gold_big.png", "effect": "即座にランダムな素材アイテムを1個獲得し、次の6ラウンド開始時にも、それぞれ1個ずつ獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "黄金の博打", "genre": ["金策"], "icon": "t_augmenticon_goldengamble.png", "effect": "2ゴールドを獲得してコインを投げる。表が出た場合、「レディアント 幸運のアイテムチェスト」を1個獲得する。裏が出た場合、「完成アイテムの金床」を2個獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "黄金の博打+", "genre": ["金策"], "icon": "t_augmenticon_goldengamble.png", "effect": "3ゴールドを獲得してコインを投げる。表が出た場合、「レディアント 幸運のアイテムチェスト」を1個獲得する。裏が出た場合、「完成アイテムの金床」を2個獲得する。", "defaultRound": "3-2"}, {"tier": "prism", "tierJp": "虹", "name": "黄金の博打++", "genre": ["金策"], "icon": "t_augmenticon_goldengamble.png", "effect": "6ゴールドを獲得してコインを投げる。表が出た場合、「レディアント 幸運のアイテムチェスト」を1個獲得する。裏が出た場合、「完成アイテムの金床」を2個獲得する。", "defaultRound": "4-2"}, {"tier": "prism", "tierJp": "虹", "name": "思惑買い", "genre": ["金策"], "icon": "t_augmenticon_goinglong.png", "effect": "利子を獲得できなくなる。即座に10ゴールドを獲得する。対人戦ごとに4XPの経験値を獲得する。（利子とは10ゴールド残しておくごとに獲得できる追加のゴールドのこと）", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "買い物三昧", "genre": ["金策"], "icon": "t_augmenticon_shoppingspree_big.png", "effect": "レベルアップした際、自身のレベル+1と同じ数のショップのリロールを獲得する。6ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "輝く悪党", "genre": ["アイテム"], "icon": "t_augmenticon_radiantrascal.png", "effect": "「レディアント 盗賊のグローブ」を1個獲得する。毎ラウンド、ランダムなレディアントアイテムを2つ装備する。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "逆転劇", "genre": ["戦闘"], "icon": "t_augmenticon_comebackstory.png", "effect": "プレイヤーの体力が減少するごとに、味方チームの体力が4、攻撃速度が0.3%増加する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "金のタマゴ", "genre": ["金策"], "icon": "t_augmenticon_the-golden-egg-iii.png", "effect": "金のタマゴを1個獲得する。このタマゴは11ターン後に孵化して、大量の戦利品が産まれる。プレイヤーとの戦闘に勝利すると、孵化タイマーが追加で1ターン早まる。", "defaultRound": "4-2"}, {"tier": "prism", "tierJp": "虹", "name": "金のモンスーン", "genre": ["金策"], "icon": "t_augmenticon_money-hungry-1.png", "effect": "即座に、そして残りの試合の毎ラウンド、7ゴールドを獲得する。", "defaultRound": "4-2"}, {"tier": "prism", "tierJp": "虹", "name": "豪華なサブスク", "genre": ["金策"], "icon": "t_augmenticon_luxury-subscription.png", "effect": "コスト5のチャンピオンが1体と、★2のコスト1チャンピオンが1体と、5ゴールドが入ったパックを獲得する。次の2ステージの開始時に、そのパックを再び獲得する。", "defaultRound": "3-2"}, {"tier": "prism", "tierJp": "虹", "name": "コマース コア", "genre": ["金策"], "icon": "t_augmenticon_commercecore.png", "effect": "ショップの無料リロールを即座に16回分獲得し、さらに試合終了まで毎ラウンド3回分獲得する。", "defaultRound": "4-2"}, {"tier": "prism", "tierJp": "虹", "name": "混沌への呼び声", "genre": ["特殊"], "icon": "t_augmenticon_calltochaos.png", "effect": "強力でランダムな報酬を1種類獲得する。", "defaultRound": "4-2"}, {"tier": "prism", "tierJp": "虹", "name": "シマースケールのエッセンス", "genre": ["金策"], "icon": "t_augmenticon_shimmerscaleessence.png", "effect": "「ギャンブラーの剣」を1個獲得する。対人戦を6回行うと、「モーグル メイル」を1個獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "ジャイアント&マイティ", "genre": ["戦闘"], "icon": "t_augmenticon_giantandmighty.png", "effect": "味方チームが大きくなり、体力が225、最大体力が10%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "柔軟性", "genre": ["アイテム"], "icon": "t_augmenticon_flexible.png", "effect": "ランダムな紋章を1個獲得する。毎ステージ開始時、ランダムな紋章を1個獲得する。装備している紋章1個につき、味方チームの体力が30増加する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "ジュエル ロータス II", "genre": ["戦闘"], "icon": "t_augmenticon_jeweledlotus.png", "effect": "味方チームのクリティカル率が25%、クリティカルダメージが10%増加し、「正確無比」を獲得する。（正確無比: スキルはクリティカル判定を持つ。「正確無比」を追加で獲得すると、クリティカルダメージが10%増加する）", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "生涯ブロンズ II", "genre": ["戦闘"], "icon": "t_augmenticon_bronzeforlife.png", "effect": "ブロンズティアの特性1つごとに、味方チームが2.5%のダメージ増加効果、および2.5の物理防御と魔法防御を獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "上方移動", "genre": ["特殊"], "icon": "t_augmenticon_upwardmobility.png", "effect": "経験値の購入コストが1低下する。レベルアップするたびに体力が2増加し、ショップのリロールを2回分獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "垂直性 III", "genre": ["戦闘"], "icon": "t_augmenticon_verticality.png", "effect": "チャンピオンは、同じ特性を共有する味方1体ごとに攻撃力が4%、魔力が4%、物理防御が3.5、魔法防御が3.5増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "ステータスマシマシ(虹)", "genre": ["戦闘"], "icon": "t_augmenticon_tonsofstats.png", "effect": "味方チームの体力が88、攻撃力が8%、魔力が8%、物理防御が8、魔法防御が8、攻撃速度が8%、マナが8増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "すべてのオリジンの達人", "genre": ["特殊"], "icon": "t_augmenticon_masterofallorigins.png", "effect": "アーマリーを開いて、3個の特性の中から1つを選択する。その特性を持つラックスと「ショウジンの矛」を1個獲得する。（自分のボードに配置されている特性がアーマリーに出現しやすくなる。ラックスは、選ばれた特性に+2を付与する）", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "全身全霊", "genre": ["アイテム"], "icon": "t_augmenticon_hard-commit_tft_set12.png", "effect": "ランダムな紋章を1個獲得する。即座に、および各ステージ開始時に、コストがステージ数と同じで(最大5)、その紋章の特性を持つ★1のチャンピオンと3ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "前線維持", "genre": ["戦闘"], "icon": "t_augmenticon_holdtheline.png", "effect": "前列で戦闘を開始した味方1体ごとに、後列2列の味方の魔力が11%、攻撃力が11%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "想定内の意外性", "genre": ["特殊"], "icon": "t_augmenticon_expectedunexpectedness.png", "effect": "即座に、および次の2ステージの開始時に、3個のダイスを振る。その合計に応じて様々な報酬を獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "ソウルの目覚め", "genre": ["戦闘"], "icon": "t_augmenticon_soul-awakening.png", "effect": "戦闘開始時: 味方チームの攻撃力と魔力が10秒間、毎秒1.5%増加する。最大スタック時、12%の追加確定ダメージを与える。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "ソード オーバーフロー", "genre": ["アイテム"], "icon": "t_augmenticon_bladeoverflow.png", "effect": "「B.F.ソード」を4個獲得する。味方の「B.F.ソード」が付与する攻撃速度が4%増加する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "素材アイテムクエスト", "genre": ["アイテム", "金策"], "icon": "t_augmenticon_componentquest.png", "effect": "ランダムな素材アイテムを1個と1ゴールドを獲得する。対人戦で勝利するたびに、異なるランダムな素材アイテムを1個獲得する（最大7回）。その後、1ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "戴冠式", "genre": ["アイテム", "戦闘"], "icon": "t_augmenticon_coronation.png", "effect": "「タクティシャンの王冠」を1個獲得する。タクティシャンの王冠、ケープ、盾が装備者の攻撃速度を20%、攻撃力を25%、魔力を30%増加させる。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "タクティシャンの台所", "genre": ["アイテム"], "icon": "t_augmenticon_tacticians-kitchen.png", "effect": "ランダムな紋章を1個獲得する。3ラウンド終了後に「タクティシャンのケープ」を1個獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "力に鍛えられしもの", "genre": ["アイテム"], "icon": "t_augmenticon_forgedinstrength.png", "effect": "ランダムなアーティファクトを1個獲得する。体力が35を下回ると、追加でランダムなアーティファクトを1個、ランダムな完成アイテムを1個、ランダムな素材アイテムを2個獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "デッドリアー ブレード", "genre": ["アイテム"], "icon": "t_augmenticon_deadlierblades.png", "effect": "「デスブレード」を1個獲得する。装備者がキルまたはアシストを獲得するたび、「デスブレード」の攻撃力が恒久的に1%増加する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "天の祝福 III", "genre": ["戦闘"], "icon": "t_augmenticon_celestial-blessings-i_tft_set16.png", "effect": "味方チームが25%のオムニヴァンプを獲得する。余剰の回復量は最大1000までシールドに変換される。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "投資完了+", "genre": ["金策"], "icon": "t_augmenticon_invested.png", "effect": "26ゴールドを獲得する。各ラウンドの開始時、50ゴールドを超えるゴールド量が10ゴールドごとにショップのリロールを1回獲得する(最大80ゴールドまで)。", "defaultRound": "3-2"}, {"tier": "prism", "tierJp": "虹", "name": "投資完了++", "genre": ["金策"], "icon": "t_augmenticon_invested.png", "effect": "45ゴールドを獲得する。各ラウンドの開始時、50ゴールドを超えるゴールド量が10ゴールドごとにショップのリロールを1回獲得する(最大80ゴールドまで)。", "defaultRound": "4-2"}, {"tier": "prism", "tierJp": "虹", "name": "投資戦略 II", "genre": ["戦闘", "金策"], "icon": "t_augmenticon_investmentstrategy.png", "effect": "獲得した利子1ゴールドにつき、味方チャンピオンの最大体力が12恒久的に増加する。最大利子が2増加する。即座に6ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "盗賊団 II", "genre": ["アイテム"], "icon": "t_augmenticon_bandofthieves.png", "effect": "「盗賊のグローブ」2個を獲得する。対人戦を5回行うと、もう1個獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "盗賊団 II+", "genre": ["アイテム"], "icon": "t_augmenticon_bandofthieves.png", "effect": "「盗賊のグローブ」2個を獲得する。対人戦を5回行うと、もう1個獲得する。", "defaultRound": "3-2"}, {"tier": "prism", "tierJp": "虹", "name": "盗賊団 II++", "genre": ["アイテム"], "icon": "t_augmenticon_bandofthieves.png", "effect": "「盗賊のグローブ」2個を獲得する。対人戦を3回行うと、もう1個獲得する。", "defaultRound": "4-2"}, {"tier": "prism", "tierJp": "虹", "name": "特性の木", "genre": ["アイテム"], "icon": "t_augmenticon_thetraittree.png", "effect": "ランダムな紋章3個と2ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "特性の木+", "genre": ["アイテム"], "icon": "t_augmenticon_thetraittree.png", "effect": "ランダムな紋章3個、「再合成装置」1個、4ゴールドを獲得する。", "defaultRound": "3-2"}, {"tier": "prism", "tierJp": "虹", "name": "特性ラダー", "genre": ["特殊"], "icon": "t_augmenticon_trait_ladder.png", "effect": "ランダムな紋章を1個獲得する。プレイヤーとの戦闘で2種類の重複しない特性を発動させると、報酬を獲得する。その後、必要な特性の数と報酬の量が増加する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "仲間を作ろう", "genre": ["特殊"], "icon": "t_augmenticon_buildabud.png", "effect": "ランダムな★3のコスト1チャンピオンを1体獲得する。9ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "バースデープレゼント", "genre": ["特殊"], "icon": "t_augmenticon_goldengifts.png", "effect": "レベルアップするたびに、★2のチャンピオン1体と1ゴールドを獲得する。プレイヤーのレベルから4を引いた値が、獲得できるチャンピオンのコストティアになる(上限: コスト5)。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "バフが1つ、バフが2つ", "genre": ["アイテム"], "icon": "t_augmenticon_onebufftwobuff.png", "effect": "「レッドバフ」を1個、「ブルーバフ」を1個、「チャンピオン複製器」を1個獲得する。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "バロンの巣", "genre": ["戦闘"], "icon": "t_augmenticon_thebaronslair.png", "effect": "ランダムなタンクアイテムを1個獲得する。戦闘開始後8秒経過時点から戦闘終了まで、味方チームの攻撃力と魔力が毎秒4%増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "パンドラのアイテム III", "genre": ["アイテム"], "icon": "t_augmenticon_pandorasitems.png", "effect": "ラウンド開始時: ベンチのアイテムがランダムに変更される。レディアントアイテムを1個獲得する。", "defaultRound": "2-1, 3-2"}, {"tier": "prism", "tierJp": "虹", "name": "プリズムチケット", "genre": ["金策"], "icon": "t_augmenticon_prismaticticket_big.png", "effect": "ショップをリロールするたびに、45%の確率で無料リロール1回分を獲得する。", "defaultRound": "2-1, 3-2"}, {"tier": "prism", "tierJp": "虹", "name": "プリズムの運命", "genre": ["特殊", "金策"], "icon": "t_augmenticon_destiny.png", "effect": "ランダムなプリズムオーグメントを1個と2ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "プリズムの運命+", "genre": ["特殊", "金策"], "icon": "t_augmenticon_destiny.png", "effect": "ランダムなプリズムオーグメントを1個と7ゴールドを獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "ヘッジファンド", "genre": ["金策"], "icon": "t_augmenticon_hedgefund_gold_big.png", "effect": "22ゴールドを獲得する。最大利子が10に増加する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "ベルト オーバーフロー", "genre": ["アイテム"], "icon": "t_augmenticon_beltoverflow.png", "effect": "「ジャイアント ベルト」を4個獲得する。「ジャイアント ベルト」を装備すると体力が85増加する。", "defaultRound": "3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "報復", "genre": ["アイテム", "戦闘"], "icon": "t_augmenticon_retribution.png", "effect": "「ハンド オブ ジャスティス」を2個獲得する。「ハンド オブ ジャスティス」を装備した味方は「正確無比」を獲得し、クリティカル率が15%増加する。（正確無比: スキルはクリティカル判定を持つ。「正確無比」を追加で獲得すると、クリティカルダメージが10%増加する）", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "待つ価値あり II", "genre": ["特殊"], "icon": "t_augmenticon_worththewait.png", "effect": "ランダムなコスト2のチャンピオンを2体獲得する。試合終了まで各ラウンドの開始時にそのユニットのコピーを1体得る。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "ミニマックス", "genre": ["アイテム"], "icon": "t_augmenticon_minmax_prismatic.png", "effect": "「黄金のアイテム除去装置」を1個、ランダムな素材アイテムを4個､4ゴールドを獲得する。", "defaultRound": "3-2"}, {"tier": "prism", "tierJp": "虹", "name": "もっと怖いキャップ", "genre": ["アイテム"], "icon": "t_augmenticon_deadliercaps.png", "effect": "「ラバドン デスキャップ」を1個獲得する。「ラバドン デスキャップ」の装備者は、キルまたはアシストを獲得するたびに、1のマナ自動回復が付与され、恒久的に1%の魔力を獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "ラッキーグローブ", "genre": ["アイテム"], "icon": "t_augmenticon_luckygloves.png", "effect": "「盗賊のグローブ」が毎回、そのチャンピオンにとって理想的なアイテムを付与するようになる。「スパーリング グローブ」を2個と4ゴールドを獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "ラッキーグローブ+", "genre": ["アイテム"], "icon": "t_augmenticon_luckygloves.png", "effect": "「盗賊のグローブ」が毎回、そのチャンピオンにとって理想的なアイテムを付与するようになる。即座に「スパーリング グローブ」を2個獲得し、対人戦を4回行うと、もう1個獲得する。", "defaultRound": "3-2"}, {"tier": "prism", "tierJp": "虹", "name": "レディアントの遺物", "genre": ["アイテム"], "icon": "t_augmenticon_radiantrelics_gold_big.png", "effect": "5個のレディアントアイテムの中から1個を選択する。「磁力式除去装置」を1個獲得する。", "defaultRound": "2-1, 3-2, 4-2"}, {"tier": "prism", "tierJp": "虹", "name": "レベルアップ！", "genre": ["特殊"], "icon": "t_augmenticon_levelup_gold_big.png", "effect": "経験値を購入する際、追加で経験値を2XP獲得する。即座に経験値を10XP獲得する。", "defaultRound": "2-1"}, {"tier": "prism", "tierJp": "虹", "name": "ワンド オーバーフロー", "genre": ["アイテム"], "icon": "t_augmenticon_wandoverflow.png", "effect": "「ムダニ デカイ ロッド」を4個獲得する。自分の「ムダニ デカイ ロッド」が付与する攻撃速度が5%増加する。", "defaultRound": "3-2, 4-2"}];
+  const PREFIX = "https://cdn.metatft.com/cdn-cgi/image/width=64,height=64,fit=cover,format=auto/https://cdn.metatft.com/file/metatft/augments/";
+  const LS_KEY = "augFullEdits_v5"; // v5: Set18 銀・金・虹を反映（古い編集キャッシュを読み込まないようキー更新）
+  const OLD_KEY = "augIconEdits_v1"; // 旧・画像名のみ版からの引き継ぎ用
+
+  const TIER_ORDER = ["silver","gold","prism"];
+  const TIER_JP = {silver:"銀", gold:"金", prism:"虹"};
+  const GENRES = ["アイテム","戦闘","特殊","金策"];
+  const GENRE_CLASS = {"金策":"g-money","戦闘":"g-battle","アイテム":"g-item","特殊":"g-special"};
+  const ROUND_OPTS = ["2-1","3-2","4-2"];
+  // DATA は build 時に注入される（Set18: 全248件、全フィールド）
+  // const DATA = [...];
+
+  // ---- 正規化ヘルパ ----
+  function toGenreArr(v){
+    if(Array.isArray(v)) return v.filter(Boolean);
+    if(typeof v === "string" && v) return v.split(/[,\/、・\s]+/).map(s=>s.trim()).filter(Boolean);
+    return [];
+  }
+  function toRoundArr(v){
+    if(Array.isArray(v)) return v.filter(Boolean);
+    if(typeof v === "string" && v) return v.split(/[,\s]+/).map(s=>s.trim()).filter(Boolean);
+    return [];
+  }
+
+  // ---- 状態の構築 ----
+  let _uid = 1;
+  function newItem(d){
+    const round = (d.round !== undefined) ? d.round : d.defaultRound;
+    return {
+      id: _uid++,
+      tier: d.tier || "silver",
+      name: d.name || "",
+      genre: toGenreArr(d.genre),
+      icon: d.icon || "",
+      effect: d.effect || "",
+      round: toRoundArr(round),
+      isNew: !!d.isNew,
+      status: "pending"
+    };
+  }
+
+  function loadItems(){
+    try {
+      const saved = JSON.parse(localStorage.getItem(LS_KEY) || "null");
+      if (Array.isArray(saved) && saved.length) return saved.map(newItem);
+    } catch(e){}
+    let oldEdits = {};
+    try { oldEdits = JSON.parse(localStorage.getItem(OLD_KEY) || "{}"); } catch(e){}
+    return DATA.map((d,i)=>{
+      const it = newItem(d);
+      if (oldEdits[i] !== undefined) it.icon = oldEdits[i];
+      return it;
+    });
+  }
+
+  let items = loadItems();
+
+  let filterTier = "all";
+  let filterText = "";
+  let onlyBad = false;
+  const els = {}; // id -> {card,img,dot}
+
+  const grid  = document.getElementById("grid");
+  const badge = document.getElementById("badge");
+
+  function saveItems(){
+    const slim = items.map(it=>({
+      tier:it.tier, name:it.name, genre:it.genre,
+      icon:it.icon, effect:it.effect, round:it.round, isNew:it.isNew
+    }));
+    try { localStorage.setItem(LS_KEY, JSON.stringify(slim)); } catch(e){}
+  }
+  function urlFor(icon){ return PREFIX + encodeURIComponent((icon||"").trim()); }
+
+  // ---- 描画 ----
+  function build(){
+    grid.innerHTML = "";
+    Object.keys(els).forEach(k=>delete els[k]);
+
+    TIER_ORDER.forEach(tier=>{
+      const inTier = items.filter(it=>it.tier===tier);
+      const head = document.createElement("div");
+      head.className = "tier-head"; head.dataset.tier = tier;
+      head.innerHTML = '<span class="lbl">'+TIER_JP[tier]+'オーグメント</span>'+
+                       '<span class="cnt">'+inTier.length+'件</span>'+
+                       '<span class="rule"></span>';
+      grid.appendChild(head);
+      inTier.forEach(it=> grid.appendChild(makeCard(it)));
+    });
+
+    const empty = document.createElement("div");
+    empty.className = "empty"; empty.id = "empty"; empty.style.display = "none";
+    empty.textContent = "該当なし";
+    grid.appendChild(empty);
+    applyFilter();
+  }
+
+  // チェックボックス・チップ群を作る
+  function makeChips(opts, selectedArr, classFn, onChange){
+    const wrap = document.createElement("div"); wrap.className = "chips";
+    opts.forEach(opt=>{
+      const lab = document.createElement("label");
+      lab.className = "chip " + (classFn ? classFn(opt) : "");
+      const cb = document.createElement("input");
+      cb.type = "checkbox"; cb.value = opt;
+      cb.checked = selectedArr.includes(opt);
+      if(cb.checked) lab.classList.add("on");
+      const span = document.createElement("span"); span.textContent = opt;
+      cb.addEventListener("change", ()=>{
+        lab.classList.toggle("on", cb.checked);
+        const vals = Array.from(wrap.querySelectorAll("input:checked")).map(x=>x.value);
+        onChange(vals);
+      });
+      lab.append(cb, span);
+      wrap.appendChild(lab);
+    });
+    return wrap;
+  }
+
+  function makeCard(it){
+    const card = document.createElement("div");
+    card.className = "card" + (it.isNew ? " isnew" : "");
+    card.dataset.id = it.id;
+
+    // 行1: サムネ / 名前 / 削除
+    const row1 = document.createElement("div"); row1.className = "row1";
+    const img = document.createElement("img");
+    img.className = "thumb"; img.loading = "lazy"; img.alt = "";
+    img.addEventListener("load",  ()=>setStatus(it.id,"ok"));
+    img.addEventListener("error", ()=>setStatus(it.id,"bad"));
+    img.src = urlFor(it.icon);
+
+    const namewrap = document.createElement("div"); namewrap.className = "namewrap";
+    const nm = document.createElement("input");
+    nm.className = "nm-input"; nm.type = "text"; nm.value = it.name; nm.spellcheck = false;
+    nm.placeholder = "オーグメント名";
+    nm.addEventListener("input", ()=>{ it.name = nm.value; saveItems(); applyFilterRow(it); });
+    namewrap.appendChild(nm);
+
+    const del = document.createElement("button");
+    del.className = "del"; del.title = "削除"; del.textContent = "✕";
+    del.addEventListener("click", ()=>{
+      if(!confirm('「'+(it.name||"無題")+'」を削除します。よろしいですか？')) return;
+      items = items.filter(x=>x.id!==it.id);
+      saveItems(); build(); updateBadge(); toast("削除しました");
+    });
+    row1.append(img, namewrap, del);
+
+    // 行2: ティア + ジャンル（チェックボックス複数選択）
+    const row2 = document.createElement("div"); row2.className = "row2";
+    const tF = document.createElement("div"); tF.className = "field tier";
+    tF.innerHTML = '<label>ティア</label>';
+    const tSel = document.createElement("select");
+    TIER_ORDER.forEach(t=>{
+      const o = document.createElement("option"); o.value = t; o.textContent = TIER_JP[t];
+      if(t===it.tier) o.selected = true; tSel.appendChild(o);
+    });
+    tSel.addEventListener("change", ()=>{
+      it.tier = tSel.value; it.isNew = true;
+      items = items.filter(x=>x.id!==it.id).concat([it]); // 移動先ティアの末尾へ
+      saveItems(); build(); updateBadge(); toast(TIER_JP[it.tier]+"へ移動しました");
+    });
+    tF.appendChild(tSel);
+
+    const gF = document.createElement("div"); gF.className = "field grow";
+    gF.innerHTML = '<label>ジャンル（複数選択可）</label>';
+    gF.appendChild(makeChips(GENRES, it.genre,
+      g=>GENRE_CLASS[g], vals=>{ it.genre = vals; saveItems(); }));
+    row2.append(tF, gF);
+
+    // 行3: 出現ラウンド（チェックボックス・3択）
+    const rRow = document.createElement("div"); rRow.className = "field grow";
+    rRow.innerHTML = '<label>出現ラウンド（複数選択可）</label>';
+    rRow.appendChild(makeChips(ROUND_OPTS, it.round,
+      ()=>"r", vals=>{ it.round = vals; saveItems(); }));
+
+    // 行4: 状態ドット / 画像ファイル名
+    const row4 = document.createElement("div"); row4.className = "row3";
+    const dot = document.createElement("span"); dot.className = "dot pending";
+    const iconIn = document.createElement("input");
+    iconIn.className = "icon-input"; iconIn.type = "text"; iconIn.value = it.icon;
+    iconIn.placeholder = "画像ファイル名（例: itemgrabbag1.png）"; iconIn.spellcheck = false;
+    let t = null;
+    iconIn.addEventListener("input", ()=>{
+      it.icon = iconIn.value.trim();
+      setStatus(it.id,"pending");
+      clearTimeout(t);
+      t = setTimeout(()=>{ img.src = urlFor(it.icon); saveItems(); }, 400);
+    });
+    row4.append(dot, iconIn);
+
+    // 行5: 効果
+    const eff = document.createElement("textarea");
+    eff.className = "eff-input"; eff.value = it.effect; eff.placeholder = "効果テキスト"; eff.rows = 2;
+    eff.addEventListener("input", ()=>{ it.effect = eff.value; saveItems(); applyFilterRow(it); });
+
+    card.append(row1, row2, rRow, row4, eff);
+    els[it.id] = {card, img, dot};
+    return card;
+  }
+
+  function setStatus(id, st){
+    const it = items.find(x=>x.id===id); if(!it) return;
+    it.status = st;
+    const e = els[id]; if(!e) return;
+    e.card.classList.remove("ok","bad");
+    e.dot.className = "dot " + st;
+    if(st==="ok" && !it.isNew) e.card.classList.add("ok");
+    if(st==="bad") e.card.classList.add("bad");
+    updateBadge();
+    if(onlyBad) applyFilter();
+  }
+
+  function updateBadge(){
+    const bad = items.filter(it=>it.status==="bad").length;
+    badge.textContent = "失敗 " + bad + " / " + items.length;
+    badge.className = "badge " + (bad===0 ? "zero" : "some");
+  }
+
+  function rowVisible(it){
+    const okTier = (filterTier==="all" || it.tier===filterTier);
+    const q = filterText;
+    const okText = (!q || (it.name||"").toLowerCase().includes(q)
+                       || (it.icon||"").toLowerCase().includes(q)
+                       || (it.effect||"").toLowerCase().includes(q));
+    const okBad  = (!onlyBad || it.status==="bad");
+    return okTier && okText && okBad;
+  }
+  function applyFilterRow(it){
+    const e = els[it.id]; if(!e) return;
+    e.card.style.display = rowVisible(it) ? "" : "none";
+  }
+  function applyFilter(){
+    let shown = 0; const perTier = {silver:0, gold:0, prism:0};
+    items.forEach(it=>{
+      const e = els[it.id]; if(!e) return;
+      const vis = rowVisible(it);
+      e.card.style.display = vis ? "" : "none";
+      if(vis){ shown++; perTier[it.tier]++; }
+    });
+    document.querySelectorAll(".tier-head").forEach(h=>{
+      h.style.display = (perTier[h.dataset.tier] > 0) ? "" : "none";
+    });
+    const empty = document.getElementById("empty");
+    if(empty) empty.style.display = shown===0 ? "" : "none";
+  }
+
+  // ---- ツールバー ----
+  document.getElementById("tabs").addEventListener("click", ev=>{
+    const b = ev.target.closest(".tab"); if(!b) return;
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    b.classList.add("active"); filterTier = b.dataset.tier; applyFilter();
+  });
+  document.getElementById("search").addEventListener("input", e=>{
+    filterText = e.target.value.trim().toLowerCase(); applyFilter();
+  });
+  document.getElementById("onlyBad").addEventListener("change", e=>{
+    onlyBad = e.target.checked; applyFilter();
+  });
+
+  // ---- 追加 ----
+  document.getElementById("addBtn").addEventListener("click", ()=>{
+    const tier = (filterTier==="all") ? "silver" : filterTier;
+    const it = newItem({tier, name:"", genre:["特殊"], icon:"", effect:"", round:["2-1"], isNew:true});
+    items.push(it);
+    saveItems(); build(); updateBadge();
+    const e = els[it.id];
+    if(e){ e.card.scrollIntoView({behavior:"smooth", block:"center"});
+           const nm = e.card.querySelector(".nm-input"); if(nm) nm.focus(); }
+    toast(TIER_JP[tier]+"に1件追加しました");
+  });
+
+  // ---- トースト ----
+  let toastT = null;
+  function toast(msg){
+    const el = document.getElementById("toast");
+    el.textContent = msg; el.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(()=>el.classList.remove("show"), 2200);
+  }
+  function download(fname, text, type){
+    const blob = new Blob([text], {type: type || "application/octet-stream"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = fname; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+  }
+
+  // ---- JSON 入出力 ----
+  function exportData(){
+    const out = TIER_ORDER.flatMap(t=>
+      items.filter(it=>it.tier===t).map(it=>({
+        tier:it.tier, name:it.name, genre:it.genre,
+        icon:it.icon, effect:it.effect, round:it.round
+      }))
+    );
+    return JSON.stringify(out, null, 2);
+  }
+  document.getElementById("exportJson").addEventListener("click", ()=>{
+    download("augments-data.json", exportData(), "application/json"); toast("データJSONをDLしました");
+  });
+  document.getElementById("importJson").addEventListener("click", ()=>document.getElementById("jsonInput").click());
+  document.getElementById("jsonInput").addEventListener("change", ev=>{
+    const f = ev.target.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = ()=>{
+      try{
+        const arr = JSON.parse(r.result);
+        if(!Array.isArray(arr)) throw 0;
+        items = arr.map(newItem);
+        saveItems(); build(); updateBadge(); toast("JSONを読み込みました ("+items.length+"件)");
+      }catch(e){ toast("JSONの形式が不正です"); }
+      ev.target.value = "";
+    };
+    r.readAsText(f, "utf-8");
+  });
+
+  // ---- augument.html へ反映 ----
+  function jsStr(s){ return JSON.stringify(s==null ? "" : String(s)); }
+
+  function buildDataBlock(i1){
+    const i2 = i1 + "    ", i3 = i1 + "        ";
+    let s = "const augmentsData = {\n";
+    TIER_ORDER.forEach((tier, ti)=>{
+      s += i2 + tier + ": [\n";
+      items.filter(it=>it.tier===tier).forEach(it=>{
+        let o = "{ name: " + jsStr(it.name) +
+                ", genre: " + JSON.stringify(it.genre || []) +   // 複数ジャンル → 配列リテラル
+                ", icon: "  + jsStr(it.icon) +
+                ", effect: "+ jsStr(it.effect);
+        const rnd = (it.round || []).filter(Boolean);
+        if(rnd.length) o += ", defaultRound: " + jsStr(rnd.join(", "));  // 複数ラウンド → "2-1, 3-2"
+        o += " }";
+        s += i3 + o + ",\n";
+      });
+      s += i2 + "]" + (ti < TIER_ORDER.length-1 ? "," : "") + "\n";
+    });
+    s += i1 + "};";
+    return s;
+  }
+
+  // 反映先のジャンル表示・フィルタを「配列(複数)対応」へ自動パッチ
+  function patchViewerGenre(html){
+    let applied = 0;
+    const p1src =
+"                    let genreClass = '';\n" +
+"                    if(aug.genre === '金策') genreClass = 'genre-money';\n" +
+"                    if(aug.genre === '戦闘') genreClass = 'genre-battle';\n" +
+"                    if(aug.genre === 'アイテム') genreClass = 'genre-item';\n" +
+"                    if(aug.genre === '特殊') genreClass = 'genre-special';";
+    const p1dst =
+"                    const genreList = Array.isArray(aug.genre) ? aug.genre : String(aug.genre||'').split(',').map(s=>s.trim()).filter(Boolean);\n" +
+"                    const genreClassMap = {'金策':'genre-money','戦闘':'genre-battle','アイテム':'genre-item','特殊':'genre-special'};\n" +
+"                    const genreBadges = genreList.map(g=>`<span class=\"badge ${genreClassMap[g]||''}\">${g}</span>`).join(' ');";
+    if(html.includes(p1src)){ html = html.replace(p1src, p1dst); applied++; }
+
+    const p2src = "tr.setAttribute('data-genre', aug.genre);";
+    const p2dst = "tr.setAttribute('data-genre', (typeof genreList!=='undefined'?genreList.join(','):aug.genre));";
+    if(html.includes(p2src)){ html = html.replace(p2src, p2dst); applied++; }
+
+    const p3src = '<td class="col-genre"><span class="badge ${genreClass}">${aug.genre}</span></td>';
+    const p3dst = '<td class="col-genre">${(typeof genreBadges!=="undefined"?genreBadges:aug.genre)}</td>';
+    if(html.includes(p3src)){ html = html.replace(p3src, p3dst); applied++; }
+
+    const p4src = "const matchGenre = !genreFilter || currentGenre === genreFilter;";
+    const p4dst = "const matchGenre = !genreFilter || (currentGenre||'').split(',').includes(genreFilter);";
+    if(html.includes(p4src)){ html = html.replace(p4src, p4dst); applied++; }
+
+    return {html, applied};
+  }
+
+  document.getElementById("applyBtn").addEventListener("click", ()=>document.getElementById("fileInput").click());
+  document.getElementById("fileInput").addEventListener("change", ev=>{
+    const f = ev.target.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = ()=>{
+      let html = r.result;
+      const re = /([ \t]*)const augmentsData\s*=\s*\{[\s\S]*?\n[ \t]*\};/;
+      const m = html.match(re);
+      if(!m){
+        toast("反映先に augmentsData が見つかりません。元のaugument.html/index.htmlを選んでください");
+        ev.target.value = ""; return;
+      }
+      const indent = m[1] || "        ";
+      html = html.replace(re, indent + buildDataBlock(indent));
+
+      const patched = patchViewerGenre(html);
+      html = patched.html;
+
+      const base = (f.name || "augument.html").replace(/\.html$/i, "");
+      download(base + "_updated.html", html, "text/html");
+      const note = patched.applied >= 4 ? "（複数ジャンル対応も反映）"
+                 : patched.applied === 0 ? "（※既にパッチ済み or 別構造）" : "（一部パッチのみ）";
+      toast("反映版をDLしました "+items.length+"件 "+note);
+      ev.target.value = "";
+    };
+    r.readAsText(f, "utf-8");
+  });
+
+  // ---- リセット ----
+  document.getElementById("resetBtn").addEventListener("click", ()=>{
+    if(!confirm("すべての編集（追加・削除・変更）を破棄して初期データに戻します。よろしいですか？")) return;
+    try{ localStorage.removeItem(LS_KEY); }catch(e){}
+    _uid = 1;
+    items = DATA.map(newItem);
+    saveItems(); build(); updateBadge(); toast("初期データに戻しました");
+  });
+
+  build();
+  updateBadge();
+
+</script>
+</body>
+</html>
