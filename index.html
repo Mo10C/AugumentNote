@@ -140,6 +140,16 @@
         }
         .memo::placeholder { color:#A3ABBA; }
         .memo:focus { outline:none; border-color:var(--ink); background:#FFFDF3; }
+        .memo.has-memo { background:var(--accent-soft); border-color:#E5C449; border-left:5px solid var(--accent); font-weight:700; color:var(--ink); }
+        .memo.has-memo:focus { border-color:var(--ink); }
+        .memo-note {
+            margin:0; padding:8px 10px; border:1.5px solid #E5C449; border-left:5px solid var(--accent); border-radius:10px;
+            background:var(--accent-soft); font-size:13px; font-weight:700; line-height:1.55; white-space:pre-wrap; word-break:break-word;
+        }
+        .offer-memo {
+            display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+            margin-top:1px; font-size:11px; font-weight:700; color:#7A6413; white-space:pre-wrap; word-break:break-word;
+        }
         .effect { margin:0; font-size:13px; line-height:1.65; color:#363A48; }
         .card .effect, .slot .effect { flex:1 1 auto; }
 
@@ -304,6 +314,10 @@
         .pmark.p-da    { background:var(--da-bg);    color:var(--da); }
         .pmark.p-batsu { background:var(--batsu-bg); color:var(--batsu); }
         .cand:disabled { opacity:.35; cursor:default; }
+        .cand.has-memo::after {
+            content:"メモ"; position:absolute; top:3px; left:5px; padding:0 4px; border:1.5px solid var(--ink); border-radius:6px;
+            background:var(--accent); font-size:10px; font-weight:800; line-height:15px;
+        }
         .cand:disabled .pmark { font-size:10px; }
 
         /* 結果・履歴 */
@@ -968,6 +982,15 @@
             return '<div class="pseg" role="group" aria-label="優先度">' + PRIOS.map(o=>
                 '<button data-prio="'+o.v+'" aria-pressed="'+(p===o.v)+'" title="'+o.t+'">'+o.l+'</button>').join("") + '</div>';
         }
+        // メモ欄（中身があるときは付箋っぽく目立たせる）
+        function memoTA(it, rows){
+            const m = getMemo(it);
+            return '<textarea class="memo'+(m.trim() ? " has-memo" : "")+'" rows="'+(rows || 1)+'" placeholder="メモ" aria-label="'+esc(it.name)+'のメモ">'+esc(m)+'</textarea>';
+        }
+        function memoNote(it, cls){
+            const m = it && it.mk ? getMemo(it).trim() : "";
+            return m ? '<p class="'+(cls || "memo-note")+'">'+esc(m)+'</p>' : '';
+        }
         function tierTag(it){
             return '<span class="tier-tag t-'+it.tier+'">'+TIER_JP[it.tier]+'</span>';
         }
@@ -1011,7 +1034,7 @@
                     '<div class="rwrap"><span class="lbl">出現</span><div class="rounds">'+roundChips(it)+'</div></div>'+
                     prioSeg(p)+
                 '</div>'+
-                '<textarea class="memo" rows="1" placeholder="メモ" aria-label="'+esc(it.name)+'のメモ">'+esc(getMemo(it))+'</textarea>'+
+                memoTA(it)+
             '</article>';
         }
         function renderList(){
@@ -1268,8 +1291,8 @@
                 '</div>'+
                 (from ? '<p class="reroll-note">リロール前：'+esc(from.name)+'</p>' : '')+
                 (sl.pending ? '<p class="pending-note">リロールで出たものを下の一覧から選んでください。<button class="linkbtn" data-act="cancel-reroll">やめる</button></p>' : '')+
-                '<p class="effect">'+esc(it.effect)+'</p>'+
-                '<textarea class="memo" rows="1" placeholder="メモ" aria-label="'+esc(it.name)+'のメモ">'+esc(getMemo(it))+'</textarea>'+
+                (getMemo(it).trim() ? memoTA(it) + '<p class="effect">'+esc(it.effect)+'</p>'
+                                    : '<p class="effect">'+esc(it.effect)+'</p>' + memoTA(it))+
                 '<div class="slot-tools">'+prioSeg(p)+
                     (ui.pickMode === "manual" ? '<button class="slot-x" data-act="unpick" aria-label="'+esc(it.name)+'を外す" title="外す">×</button>' : '')+
                 '</div>'+
@@ -1302,7 +1325,8 @@
             $("#cand-count").textContent = "（" + TIER_JP[st.tier] + "・" + st.round + "：" + list.length + "件）";
             $("#cand-grid").innerHTML = list.length ? list.map(it=>{
                 const p = getPrio(it), sel = inSlots.has(it.key), got = taken.has(it.key);
-                return '<button class="cand'+(p === "batsu" ? " is-batsu" : "")+'" data-key="'+esc(it.key)+'" aria-pressed="'+sel+'"'+(got ? ' disabled' : '')+' title="'+esc(it.name)+'">'+
+                const m = getMemo(it).trim();
+                return '<button class="cand'+(p === "batsu" ? " is-batsu" : "")+(m ? " has-memo" : "")+'" data-key="'+esc(it.key)+'" aria-pressed="'+sel+'"'+(got ? ' disabled' : '')+' title="'+esc(it.name + (m ? "\nメモ：" + m : ""))+'">'+
                     iconHTML(it,"md")+'<span class="cand-name">'+esc(it.name)+'</span>'+
                     (got ? '<span class="pmark">取得済み</span>' : (p ? '<span class="pmark p-'+p+'">'+PRIO_LABEL[p]+'</span>' : ''))+'</button>';
             }).join("") : '<div class="empty"><p>'+(q ? "「"+esc(ui.pickQ)+"」に合う候補がありません。" : "このラウンドとティアで出るオーグメントが登録されていません。")+'</p></div>';
@@ -1330,11 +1354,13 @@
                         '<div class="c-titles"><h3 class="slot-name">'+esc(ch.name)+'</h3><div class="genres">'+genreBadges(ch)+'</div></div>'+
                         '<span class="pbig '+(p ? "p-"+p : "p-none")+'">'+(PRIO_LABEL[p] || "−")+'</span>'+
                     '</div>'+
+                    memoNote(ch)+
                     (v.text ? '<p class="verdict '+v.cls+'">'+esc(v.text)+'</p>' : '')+
                     '<div class="offered"><span class="lbl">出ていた候補</span>'+ st.slots.map(s=>{
                         const it = itemOf(s.key), pp = prioOfKey(s.key);
                         return '<div class="offer'+(s.key === st.chosen ? " chosen" : "")+'">'+iconHTML(it,"sm")+
-                            '<span class="offer-name">'+esc(it.name)+(s.from ? '<span class="from">リロール前：'+esc(itemOf(s.from).name)+'</span>' : '')+'</span>'+
+                            '<span class="offer-name">'+esc(it.name)+(s.from ? '<span class="from">リロール前：'+esc(itemOf(s.from).name)+'</span>' : '')+
+                                (s.key !== st.chosen ? memoNote(it, "offer-memo").replace(/^<p/, "<span").replace(/<\/p>$/, "</span>") : '')+'</span>'+
                             (pp ? '<span class="pmark p-'+pp+'">'+PRIO_LABEL[pp]+'</span>' : '')+
                             (s.key === st.chosen ? '<span class="chosen-tag">選択</span>' : '')+
                         '</div>';
@@ -1460,7 +1486,7 @@
                 '<div class="c-head">'+iconHTML(it,"lg")+'<div class="c-titles"><h3 class="c-title">'+esc(it.name)+'</h3><div class="genres">'+tierTag(it)+genreBadges(it)+'</div></div></div>'+
                 '<p class="effect">'+esc(it.effect)+'</p>'+
                 '<div class="row-between"><div class="rwrap c-foot"><span class="lbl">出現</span><div class="rounds">'+roundChips(it)+'</div></div>'+prioSeg(p)+'</div>'+
-                '<textarea class="memo" rows="2" placeholder="メモ" aria-label="'+esc(it.name)+'のメモ">'+esc(getMemo(it))+'</textarea>';
+                memoTA(it, 2);
             dlg.showModal();
             autoGrow($("textarea.memo", dlg));
         }
@@ -1636,6 +1662,9 @@
             syncToolbar();
             showView();
             window.addEventListener("resize", ()=>$$("textarea.memo").forEach(autoGrow));
+            document.addEventListener("input", e=>{
+                if(e.target.matches("textarea.memo")) e.target.classList.toggle("has-memo", !!e.target.value.trim());
+            });
         }
         window.addEventListener("DOMContentLoaded", init);
 </script>
