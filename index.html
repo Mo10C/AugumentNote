@@ -339,12 +339,31 @@
         .verdict.none { background:var(--soft); color:var(--sub); }
         .offered { display:flex; flex-direction:column; gap:6px; padding-top:10px; border-top:1.5px dashed var(--line); }
         .offered .lbl { font-size:11px; font-weight:800; color:var(--sub); }
-        .offer { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; }
-        .offer .pmark { position:static; flex:0 0 auto; }
-        .offer-name { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; line-height:1.3; }
-        .offer .from { font-size:11px; font-weight:700; color:var(--sub); }
-        .offer.chosen .offer-name { font-weight:800; }
-        .chosen-tag { flex:0 0 auto; padding:0 8px; border:1.5px solid var(--ink); border-radius:999px; background:var(--accent); font-size:11px; font-weight:800; }
+        .offer-row { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:7px; align-items:stretch; }
+        .offer {
+            position:relative; display:flex; flex-direction:column; align-items:center; gap:4px; min-width:0;
+            padding:9px 4px 8px; border:1.5px dashed #CBD3DF; border-radius:10px; text-align:center;
+        }
+        .offer.t-silver { --tc:#8C99AB; } .offer.t-gold { --tc:#D9A21B; } .offer.t-prism { --tc:#B58CFF; }
+        .offer.chosen { border:2px solid var(--tc, var(--ink)); background:var(--soft); }
+        .offer:not(.chosen) > .ic, .offer:not(.chosen) > .nm { opacity:.5; }
+        .offer:not(.chosen) > .ic img { filter:grayscale(.5); }
+        .offer .nm {
+            display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-all;
+            font-size:12px; font-weight:700; line-height:1.2; color:var(--sub);
+        }
+        .offer.chosen > .nm { font-weight:800; color:var(--ink); }
+        .offer-from { display:flex; flex-direction:column; align-items:center; gap:2px; width:100%; margin-bottom:2px; }
+        .offer-from .ic { width:26px; height:26px; padding:2px; border-width:1.5px; border-radius:7px; opacity:.6; }
+        .offer-from .ic img { border-radius:5px; filter:grayscale(.8); }
+        .offer-from .nm { font-size:10px; font-weight:700; text-decoration:line-through; }
+        .offer-from .arrow { font-size:10px; line-height:1; color:var(--da); }
+        .offer .offer-memo { -webkit-line-clamp:3; text-align:left; width:100%; padding:0 2px; font-size:10px; }
+        .offer .pmark { top:4px; right:auto; left:4px; font-size:10px; line-height:14px; min-width:16px; }
+        .offer .check {
+            position:absolute; top:-8px; right:-8px; width:20px; height:20px; display:grid; place-items:center;
+            border:2px solid #fff; border-radius:50%; background:var(--da); color:#fff; font-size:11px; font-weight:800;
+        }
         .res-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
         .hist { margin-top:22px; background:var(--panel); border:2px solid var(--ink); border-radius:var(--r-lg); }
         .hist > summary { padding:12px 14px; font-weight:800; cursor:pointer; }
@@ -1356,15 +1375,19 @@
                     '</div>'+
                     memoNote(ch)+
                     (v.text ? '<p class="verdict '+v.cls+'">'+esc(v.text)+'</p>' : '')+
-                    '<div class="offered"><span class="lbl">出ていた候補</span>'+ st.slots.map(s=>{
-                        const it = itemOf(s.key), pp = prioOfKey(s.key);
-                        return '<div class="offer'+(s.key === st.chosen ? " chosen" : "")+'">'+iconHTML(it,"sm")+
-                            '<span class="offer-name">'+esc(it.name)+(s.from ? '<span class="from">リロール前：'+esc(itemOf(s.from).name)+'</span>' : '')+
-                                (s.key !== st.chosen ? memoNote(it, "offer-memo").replace(/^<p/, "<span").replace(/<\/p>$/, "</span>") : '')+'</span>'+
+                    // 出ていた候補：3枠を横並び。リロールした枠は元のオーグメントを取り消し線＋▼で上に出す
+                    '<div class="offered"><span class="lbl">出ていた候補</span><div class="offer-row">'+ st.slots.map(s=>{
+                        const it = itemOf(s.key), pp = prioOfKey(s.key), picked = s.key === st.chosen;
+                        const from = s.from ? itemOf(s.from) : null;
+                        return '<div class="offer t-'+it.tier+(picked ? " chosen" : "")+'">'+
+                            (from ? '<div class="offer-from">'+iconHTML(from,"sm")+'<span class="nm">'+esc(from.name)+'</span><span class="arrow">▼</span></div>' : '')+
+                            iconHTML(it,"sm")+
+                            '<span class="nm">'+esc(it.name)+'</span>'+
+                            memoNote(it, "offer-memo")+
                             (pp ? '<span class="pmark p-'+pp+'">'+PRIO_LABEL[pp]+'</span>' : '')+
-                            (s.key === st.chosen ? '<span class="chosen-tag">選択</span>' : '')+
+                            (picked ? '<span class="check" aria-label="選択">✓</span>' : '')+
                         '</div>';
-                    }).join("") +'</div>'+
+                    }).join("") +'</div></div>'+
                 '</article>';
             }).join("") + '</div>';
         }
